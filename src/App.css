@@ -1026,6 +1026,8 @@ overflow: hidden;
 
 .headingcontainer{
   display: flex;
+  
+  padding-left: 10px;
  
 }
 .headingcontainer button{
@@ -1050,6 +1052,7 @@ overflow: hidden;
   flex-direction: row;
  
   height: auto;
+  padding-left: 10px;
 
  
 }
@@ -1145,6 +1148,7 @@ margin-top: 2px;
  .tryimagecontainer h2{
   font-family: Loto, sans-serif;
   color: rgb(160, 157, 157);
+  padding-left: 10px;
  }
  .imagecontainer{
   display: flex;
