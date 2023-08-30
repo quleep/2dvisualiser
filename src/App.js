@@ -426,13 +426,13 @@ let scale = 1;
 scrollimage  && scrollimage.addEventListener("wheel", (event) => {
     event.preventDefault();
     const delta = Math.max(-1, Math.min(1, (event.deltaY || -event.detail)));
-    scale += delta * 0.1; 
-
+    scale -= delta * 0.1; 
+     console.log(scale)
      
-     if(scale > 1){
-      scrollimage.style.transform = `scale(${scale})`;
+     if(scale < 1){
+       scale = 1
      }else{
-      scale = 1
+      scrollimage.style.transform = `scale(${scale})`;
      }
    
 });
@@ -442,13 +442,14 @@ let scalemobile = 1;
 scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
     event.preventDefault();
     const delta = Math.max(-1, Math.min(1, (event.deltaY || -event.detail)));
-    scalemobile += delta * 0.1; 
+    scalemobile -= delta * 0.1; 
 
-    
-     if(scalemobile > 1){
+    console.log(scalemobile)
+     if(scalemobile < 1){
+      scalemobile =1
       scrollimagemobile.style.transform = `scale(${scalemobile})`;
      }else{
-      scalemobile = 1
+      scrollimagemobile.style.transform = `scale(${scalemobile})`;
      }
    
 });
