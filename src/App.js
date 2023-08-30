@@ -46,6 +46,7 @@ function App() {
   useEffect(()=>{
     setTimeout(() => {
       document.getElementById("modalContainer").style.bottom = "0"
+      document.querySelector('.loadingbox').style.display = 'none'
     }, 2000);
   },[])
 
@@ -85,14 +86,15 @@ function App() {
 
   const handlesearchclick =()=>{
    
-    document.querySelector('.inputsearch').style.display = 'flex'
-    document.querySelector('.searchbar').style.display = 'none'
+   document.querySelector('.inputsearch').classList.toggle('show')
+   document.querySelector('.searchbar').style.display= 'none'
+   
    
     
   }
   const handlesearchclose= ()=>{
-    document.querySelector('.inputsearch').style.display = 'none'
-    document.querySelector('.searchbar').style.display = 'block'
+    document.querySelector('.inputsearch').classList.toggle('show')
+    document.querySelector('.searchbar').style.display= 'block'
   }
   const handlesearchclickmain =()=>{
    
@@ -101,6 +103,7 @@ function App() {
    
     
   }
+
   const handlesearchclosemain= ()=>{
     document.querySelector('.inputsearchmain').style.display = 'none'
     document.querySelector('.searchbarmain').style.display = 'block'
@@ -453,8 +456,33 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
   return (
 
  
-   <div  >
+   <div>
+ 
+ <div className='loadingbox'>
+      
+  <div className='loadingboxinside'>
+    <div className='loadingimagediv'>
+      <img src= {logo}/>
+      
+    </div>
+     <div className='loadingtextloader'>
+      <p>Loading...</p>
+     </div>
+     <div class="containerbox">
+        <div class="loading-container">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="box"></div>
+        </div>
+        </div>
+    <div className='poweredbottomdiv'>
+      <p>Powered by  ARnxt</p>
+    </div>
     
+   
+
+  </div>
+      </div>
   <div id="modalContainer" class="modal-container">
     <div id="modalContent" class="modal-content">
     <div className='loadercontainer'>
@@ -578,7 +606,7 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
             <h2>Products</h2>
             <div className='searchtabcontainer'>
                 <div className='searchbarmain'>
-                  <div className='searchicondiv' onClick={handlesearchclickmain} >
+                  <div className='searchicondivmain' onClick={handlesearchclickmain} >
                   <BsSearch className='searchicon'/>
                   </div>
                 
