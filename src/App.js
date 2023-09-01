@@ -19,6 +19,9 @@ import arnxtlogo from './images/arnxtreg.png'
 
 
 import { Rating } from 'react-simple-star-rating'
+import ReactPlayer from 'react-player';
+import vid  from './images/VID-20230830-WA0292 (1).gif'
+
 
 
 
@@ -167,6 +170,15 @@ function App() {
 
   const itemarray = [
     "Item1", "Item2", "Item3","Item4","Item5", "Item6", "Item7","Item8"
+  ]
+  const imgarray = [
+    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
+    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
+    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
+    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
+    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
+    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3
+
   ]
 
  let newitemarray = []
@@ -362,6 +374,12 @@ const imagefilechange=(e)=>{
 
 
 }
+useEffect(()=>{
+  document.querySelector('.searchiconbardiv').classList.add('gridviewactive')
+  document.querySelector('.searchiconbardivmain').classList.add('gridviewactive')
+
+
+},[])
 
 const handlesearchmobileclick = ()=>{
   document.querySelector('.mobilemaindiv').style.display = 'none'
@@ -376,11 +394,32 @@ const handlesearchdivclose = ()=>{
 const handlegridclick = ()=>{
   document.querySelector('.searchiconbardiv').classList.toggle('gridviewactive')
   document.querySelector('.searchicongriddiv').classList.remove('gridviewactive')
+  document.querySelector('.searchitemscontainer').style.display = 'flex'
+  document.querySelector('.searchitemgrid').style.display = 'none'
+
+}
+const handlegridclickmob = ()=>{
+  document.querySelector('.searchiconbardivmain').classList.toggle('gridviewactive')
+  document.querySelector('.searchicongriddivmain').classList.remove('gridviewactive')
+  document.querySelector('.searchitemscontainermob').style.display = 'flex'
+  document.querySelector('.searchitemgridmob').style.display = 'none'
 
 }
 const handlegridchangeclick = ()=>{
   document.querySelector('.searchicongriddiv').classList.toggle('gridviewactive')
   document.querySelector('.searchiconbardiv').classList.remove('gridviewactive')
+  document.querySelector('.searchitemscontainer').style.display = 'none'
+  document.querySelector('.searchitemgrid').style.display = 'flex'
+
+
+
+}
+const handlegridchangeclickmob = ()=>{
+  document.querySelector('.searchicongriddivmain').classList.toggle('gridviewactive')
+  document.querySelector('.searchiconbardivmain').classList.remove('gridviewactive')
+  document.querySelector('.searchitemscontainermob').style.display = 'none'
+  document.querySelector('.searchitemgridmob').style.display = 'flex'
+
 
 
 }
@@ -427,7 +466,7 @@ scrollimage  && scrollimage.addEventListener("wheel", (event) => {
     event.preventDefault();
     const delta = Math.max(-1, Math.min(1, (event.deltaY || -event.detail)));
     scale -= delta * 0.1; 
-     console.log(scale)
+   
      
      if(scale < 1){
        scale = 1
@@ -444,7 +483,7 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
     const delta = Math.max(-1, Math.min(1, (event.deltaY || -event.detail)));
     scalemobile -= delta * 0.1; 
 
-    console.log(scalemobile)
+ 
      if(scalemobile < 1){
       scalemobile =1
       scrollimagemobile.style.transform = `scale(${scalemobile})`;
@@ -453,6 +492,35 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
      }
    
 });
+
+
+
+
+
+function showTooltip(image, text, len) {
+  const tooltip = document.getElementById(`tooltip_${len}`);
+
+  tooltip.style.display = 'flex';
+ tooltip.style.width = '100%'
+ tooltip.style.left= '-10px'
+ 
+  setTimeout(() => {
+      tooltip.style.display = 'none';
+  }, 3000); 
+}
+
+function showTooltipmob(image, text, len) {
+  const tooltip = document.getElementById(`tooltipmob_${len}`);
+
+  tooltip.style.display = 'flex';
+ tooltip.style.width = '100%'
+ tooltip.style.left= '-10px'
+ 
+  setTimeout(() => {
+      tooltip.style.display = 'none';
+  }, 3000); 
+}
+
 
   return (
 
@@ -621,115 +689,89 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
 
                 <div className='gridchange'>
                   <div className='gridviewinside'> 
-                  <BsList className='searchiconbarmain'  />
+                  <div className='searchiconbardivmain' onClick={handlegridclickmob}>
+                  <BsList className='searchiconbarmain'   />
+                  </div>
+                  <div className='searchicongriddivmain' onClick={handlegridchangeclickmob}>
                   <BsGrid className='searchicongridmain'  />
+
+                  </div>
 
                   </div>
                 </div>
 
             </div>
             <div className='inputsearchmain'>
-              <BsSearch className='newicons'/>
+              <BsSearch className='newicons'  />
               <input placeholder='search...' />
-              <BsX className='newicons' onClick={handlesearchclosemain}  />
+              <BsX className='newicons' onClick={handlesearchclosemain}   />
             </div>
-            <div className='searchitemscontainer'>
-              <div>
-                <div className='itemdetailscontainer'>
-                  <div className='wallpaperimage'>
-                  <img  src= {wall1}/>
-                </div>
-                <div className='wallpaperdetails'>
-                
+            <div className='searchitemgridmob'>
 
-                  <div className='wallpaperdetailsinside'>
-                    <p>newallpapers</p>
-                    <p className='categoryname'>newrovement</p>
-                    <p >368956</p>
-                    <div className='dimensions'>
-                    <p className='productid'>size: 36*25</p>
-                    <p>link</p>
-                    </div>
+{
+  imgarray && imgarray.map((item,i)=>(
+    <div>
+    <div className='searchitemgridinside' onClick={()=>showTooltipmob(item, 'image1', i)}>
+     <img src= {item}/>
+   
+    </div>
+    <div class="tooltip" id={`tooltipmob_${i}`}>
+      <div className='tooltipinside'>
+        <h3>Non-woven wallpaper 393465</h3>
+        <p>Size: 125 * 152 mm</p>
+        <div className='productpagelinkgrid'>
+        <p>Go to product page</p>
+        </div>
+        </div>
+    </div>
+    
+  </div>
+
+  ))
+}
+
+
+
+
+
+
+</div>
+            <div className='searchitemscontainermob'>
+            {
+                imgarray && imgarray.map((item,i)=>(
+                  <div>
+                  <div className='itemdetailscontainer'>
+                    <div className='wallpaperimage'>
+                    <img  src= {item}/>
+                  </div>
+                  <div className='wallpaperdetails'>
                   
-                  </div>
-
-                </div>
-                </div>
-             
-                
-              </div>
-              <div>
-              <div className='itemdetailscontainer'>
-                  <div className='wallpaperimage'>
-                  <img  src= {wall2}/>
-                </div>
-                <div className='wallpaperdetails'>
-                
-
-                  <div className='wallpaperdetailsinside'>
-                    <p>newallpapers</p>
-                    <p className='categoryname'>newrovement</p>
-                    <p >368956</p>
-                    <div className='dimensions'>
-                    <p className='productid'>size: 36*25</p>
-                    <p>link</p>
+  
+                    <div className='wallpaperdetailsinside'>
+                      <p>newallpapers</p>
+                      <p className='categoryname'>newrovement</p>
+                      <p >368956</p>
+                      <div className='dimensions'>
+                      <p className='productid'>size: 36*25</p>
+                      <p>link</p>
+                      </div>
+                      
+  
+  
+  
                     </div>
-                    
-
-
-
+  
                   </div>
-
-                </div>
-                </div>
-              </div>
-              <div>
-              <div className='itemdetailscontainer'>
-                  <div className='wallpaperimage'>
-                  <img  src= {wall3}/>
-                </div>
-                <div className='wallpaperdetails'>
-                
-
-                  <div className='wallpaperdetailsinside'>
-                    <p>newallpapers</p>
-                    <p className='categoryname'>newrovement</p>
-                    <p >368956</p>
-                    <div className='dimensions'>
-                    <p className='productid'>size: 36*25</p>
-                    <p>link</p>
-                    </div>
-                    
-
-
-
                   </div>
-
+               
+                  
                 </div>
-                </div>
-              </div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
+                ))
+              }
+        
        
+       
+         
 
 
             </div>
@@ -970,105 +1012,71 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
               <input placeholder='search...' />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
-            <div className='searchitemscontainer'>
-              <div>
-                <div className='itemdetailscontainer'>
-                  <div className='wallpaperimage'>
-                  <img  src= {wall1}/>
-                </div>
-                <div className='wallpaperdetails'>
-                
+             <div className='searchitemgrid'>
 
-                  <div className='wallpaperdetailsinside'>
-                    <p>newallpapers</p>
-                    <p className='categoryname'>newrovement</p>
-                    <p >368956</p>
-                    <div className='dimensions'>
-                    <p className='productid'>size: 36*25</p>
-                    <p>link</p>
-                    </div>
-                    
-
-
-
+              {
+                imgarray && imgarray.map((item,i)=>(
+                  <div>
+                  <div className='searchitemgridinside' onClick={()=>showTooltip(item, 'image1', i)}>
+                   <img src= {item}/>
+                 
                   </div>
-
+                  <div class="tooltip" id={`tooltip_${i}`}>
+                    <div className='tooltipinside'>
+                      <h3>Non-woven wallpaper 393465</h3>
+                      <p>Size: 125 * 152 mm</p>
+                      <div className='productpagelinkgrid'>
+                      <p>Go to product page</p>
+                      </div>
+                      </div>
+                  </div>
+                  
                 </div>
-                </div>
+              
+                ))
+              }
+        
+     
+         
              
-                
-              </div>
-              <div>
-              <div className='itemdetailscontainer'>
-                  <div className='wallpaperimage'>
-                  <img  src= {wall2}/>
-                </div>
-                <div className='wallpaperdetails'>
-                
-
-                  <div className='wallpaperdetailsinside'>
-                    <p>newallpapers</p>
-                    <p className='categoryname'>newrovement</p>
-                    <p >368956</p>
-                    <div className='dimensions'>
-                    <p className='productid'>size: 36*25</p>
-                    <p>link</p>
-                    </div>
-                    
 
 
+             </div>
+            <div className='searchitemscontainer'  >
 
+              {
+                imgarray && imgarray.map((item,i)=>(
+                  <div>
+                  <div className='itemdetailscontainer'>
+                    <div className='wallpaperimage'>
+                    <img  src= {item}/>
                   </div>
-
-                </div>
-                </div>
-              </div>
-              <div>
-              <div className='itemdetailscontainer'>
-                  <div className='wallpaperimage'>
-                  <img  src= {wall3}/>
-                </div>
-                <div className='wallpaperdetails'>
-                
-
-                  <div className='wallpaperdetailsinside'>
-                    <p>newallpapers</p>
-                    <p className='categoryname'>newrovement</p>
-                    <p >368956</p>
-                    <div className='dimensions'>
-                    <p className='productid'>size: 36*25</p>
-                    <p>link</p>
+                  <div className='wallpaperdetails'>
+                  
+  
+                    <div className='wallpaperdetailsinside'>
+                      <p>newallpapers</p>
+                      <p className='categoryname'>newrovement</p>
+                      <p >368956</p>
+                      <div className='dimensions'>
+                      <p className='productid'>size: 36*25</p>
+                      <p>link</p>
+                      </div>
+                      
+  
+  
+  
                     </div>
-                    
-
-
-
+  
                   </div>
-
+                  </div>
+               
+                  
                 </div>
-                </div>
-              </div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
+                ))
+              }
+        
+        
        
 
 
@@ -1176,7 +1184,9 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
              
           </div>
           <div className='uploaddivgif'>
-
+        
+             
+          <img src= {vid}/>
           </div>
 
           </div>
