@@ -339,7 +339,7 @@ const rightArrowClick = async (e)=>{
      setProcessImg(res.data)
      }).catch(error=>{
        console.log(error)
-       window.alert('Sorry unable to process')
+       window.alert('please try again...')
        
      document.querySelector('.loadingcontainermobile').style.display = 'none' 
     
@@ -385,7 +385,7 @@ const mobileImageClick= async (e, len, val)=>{
    setProcessImg(res.data)
    }).catch(error=>{
      console.log(error)
-     window.alert('Sorry unable to process')
+     window.alert('Please try again...')
      
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
   
@@ -429,7 +429,7 @@ const leftArrowClick = async (e)=>{
    setProcessImg(res.data)
    }).catch(error=>{
      console.log(error)
-     window.alert('Sorry unable to process')
+     window.alert('Please try again...')
      
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
   
@@ -744,7 +744,7 @@ const handlewallpaperclick = async (len, val)=>{
         setProcessImg(res.data)
         }).catch(error=>{
           console.log(error)
-          window.alert('Sorry unable to process')
+          window.alert('Please try again...')
           document.querySelector('.loadingcontainermain').style.display= 'none'
 
         })
@@ -785,7 +785,7 @@ const handlewallpaperclick = async (len, val)=>{
        setSegmentImg(true)
        setProcessImg(res.data)
        }).catch(error=>{
-        window.alert('Sorry unable to process')
+        window.alert('Please try again...')
          console.log(error)
          document.querySelector('.loadingcontainermain').style.display= 'none'
 
@@ -836,7 +836,7 @@ const handlegriditemclick =  async (len, val)=>{
        setProcessImg(res.data)
        }).catch(error=>{
          console.log(error)
-         window.alert('Sorry unable to process')
+         window.alert('Please try again...')
          document.querySelector('.loadingcontainermain').style.display= 'none'
 
        })
@@ -876,7 +876,7 @@ const handlegriditemclick =  async (len, val)=>{
        setProcessImg(res.data)
        }).catch(error=>{
          console.log(error)
-         window.alert('Sorry unable to process')
+         window.alert('Please try again...')
          document.querySelector('.loadingcontainermain').style.display= 'none'
 
        })
