@@ -3,11 +3,11 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaBars, FaCamera, FaCameraRetro, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
-import img1 from './images/tryimage1.jpg'
-import img2 from './images/tryimage2.jpg'
+import img1 from './images/demoimage1.jpg'
+import img2 from './images/demoimage2.jpg'
 
-import img3 from './images/tryimage3.jpg'
-import img4 from './images/tryimage4.jpg'
+import img3 from './images/demoimage3.jpg'
+import img4 from './images/demoimage4.jpg'
 import wall1 from './images/wallpaper1.jpg'
 import wall2 from './images/wallpaper2.jpg'
 import wall3 from './images/wallpaper3.jpg'
