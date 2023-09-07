@@ -1,7 +1,7 @@
 
 import './App.css';
 import { useEffect, useState } from 'react';
-import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaBars, FaCamera, FaCameraRetro, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
+import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaBars, FaCamera, FaCameraRetro, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/tryimage1.jpg'
 import img2 from './images/tryimage2.jpg'
@@ -11,6 +11,16 @@ import img4 from './images/tryimage4.jpg'
 import wall1 from './images/wallpaper1.jpg'
 import wall2 from './images/wallpaper2.jpg'
 import wall3 from './images/wallpaper3.jpg'
+import wallnew1 from './images/AS389772.jpg'
+import wallnew2 from './images/WA_2608-1 (1).jpg'
+import wallnew3 from './images/WA_2608-1.jpg'
+import wallnew4 from './images/AS389772.jpg'
+import wallnew5 from './images/AS389063.jpg'
+import wallnew6 from './images/AS389762.jpg'
+
+
+
+
 import { RxCross2 } from 'react-icons/rx';
 import logo from './images/excellogo.png'
 import facebook from './images/facebookicon.jpg'
@@ -21,6 +31,7 @@ import arnxtlogo from './images/arnxtreg.png'
 import { Rating } from 'react-simple-star-rating'
 import ReactPlayer from 'react-player';
 import vid  from './images/VID-20230830-WA0292 (1).gif'
+import axios from 'axios';
 
 
 
@@ -31,13 +42,18 @@ function App() {
 
 
   const [image,setImage] = useState()
+  const [orgimg, setOrgImg] = useState()
   const [checkarray, setCheckArray ] = useState([])
   const [viewall, setViewAll ] = useState(false)
   const [ratingValue, setRatingValue] = useState(0)
   const [displaydiv, setDisplayDiv] = useState(false)
   const [sidenavopen, setSideNavOpen] = useState(false)
   const [imagefile,setImageFile] = useState('')
+  const [processimg, setProcessImg] = useState()
+  const [segmentimg, setSegmentImg] = useState(false)
 
+  const newimg = ''
+  const formdata = new FormData()
   const handlemodalopen =()=>{
     document.getElementById("modalContainer").style.bottom = "0"
   }
@@ -66,10 +82,16 @@ function App() {
       
     }, 2000);
     setImage(val)
+    setOrgImg(val)
     setDisplayDiv(true)
+    setSegmentImg(false)
+    setProcessImg('')
   }
   const handlechangeroomclick = ()=>{
+    
     setImage('')
+    setOrgImg('')
+
     setDisplayDiv(false)
     document.querySelector('.modalinsidecontent').style.display = 'flex'
     
@@ -79,7 +101,7 @@ function App() {
 
     document.querySelector('.viewallcontainer').classList.toggle('viewmain')
     document.querySelector('.viewallmobile').classList.toggle('viewmobile')
-
+    window.scrollTo(0,0)
     
    
   }
@@ -172,12 +194,8 @@ function App() {
     "Item1", "Item2", "Item3","Item4","Item5", "Item6", "Item7","Item8"
   ]
   const imgarray = [
-    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
-    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
-    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
-    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
-    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3,
-    wall1, wall2, wall3, wall1, wall2, wall3, wall1, wall2, wall3
+    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
+    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6
 
   ]
 
@@ -236,6 +254,8 @@ document.addEventListener('click', (event) => {
    if(event.target.classList[0] === 'hamburger-button'){
     document.querySelector('.sidebar').style.display = 'flex'
     document.getElementById('sidebar').style.width = '250px'
+ 
+
   
    }else{
     document.querySelector('.sidebar').style.display = 'none'
@@ -251,7 +271,10 @@ const nextButton = document.getElementById('nextButton');
 const slider = document.querySelector('.slider');
 let currentIndex = 0;
 
-function showSlide(index) {
+let wallimgmobile =''
+let desginimgmobile = ''
+ 
+ async function showSlide(index) {
  slides &&  slides.forEach((slide, i) => {
 
     if (i === index) {
@@ -262,19 +285,158 @@ function showSlide(index) {
   });
   const slideWidth =  slides[0].clientWidth;
    slider.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+
+
+  
+}
+async function showSlideMob(index){
+  slides &&  slides.forEach((slide, i) => {
+
+    if (i === index) {
+      slide.classList.add('active');
+    } else {
+      slide.classList.remove('active');
+    }
+  });
+  const slideWidth =  slides[0].clientWidth;
+}
+
+  
+const rightArrowClick = async (e)=>{
+  e.preventDefault()
+  e.stopPropagation()
+  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+   await showSlide(currentIndex);
+    document.querySelector('.loadingcontainermobile').style.display = 'block'
+
+
+    await  getBase64FromUrl(orgimg).then(res=>{
+        wallimgmobile = res
+      })
+    await  getBase64FromUrl(imgarray[currentIndex]).then(res=>{
+       desginimgmobile = res
+      })
+    
+  
+    
+     const body={
+       wallimg: wallimgmobile,
+       designimg: desginimgmobile,
+        detectionmode: 'walls'
+     }
+    
+     const config = {
+       headers: {
+         'Access-Control-Allow-Origin': '*',
+         'Content-Type': 'application/json',
+         'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+       },
+     };
+   axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+    
+     document.querySelector('.loadingcontainermobile').style.display = 'none' 
+     setSegmentImg(true)
+     setProcessImg(res.data)
+     }).catch(error=>{
+       console.log(error)
+       window.alert('Sorry unable to process')
+       
+     document.querySelector('.loadingcontainermobile').style.display = 'none' 
+    
+     })
+    
+
+
+}
+
+const mobileImageClick= async (e, len, val)=>{
+  e.preventDefault()
+  e.stopPropagation()
+  showSlideMob(len);
+  document.querySelector('.loadingcontainermobile').style.display = 'block'
+
+
+  await  getBase64FromUrl(orgimg).then(res=>{
+      wallimgmobile = res
+    })
+  await  getBase64FromUrl(val).then(res=>{
+     desginimgmobile = res
+    })
+  
+
+  
+   const body={
+     wallimg: wallimgmobile,
+     designimg: desginimgmobile,
+      detectionmode: 'walls'
+   }
+  
+   const config = {
+     headers: {
+       'Access-Control-Allow-Origin': '*',
+       'Content-Type': 'application/json',
+       'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+     },
+   };
+ axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+  
+   document.querySelector('.loadingcontainermobile').style.display = 'none' 
+   setSegmentImg(true)
+   setProcessImg(res.data)
+   }).catch(error=>{
+     console.log(error)
+     window.alert('Sorry unable to process')
+     
+   document.querySelector('.loadingcontainermobile').style.display = 'none' 
+  
+   })
+}
+const leftArrowClick = async (e)=>{
+  e.preventDefault()
+  e.stopPropagation()
+  currentIndex = (currentIndex + 1) % slides.length;
+  showSlide(currentIndex);
+  console.log(currentIndex)
+  document.querySelector('.loadingcontainermobile').style.display = 'block'
+
+
+  await  getBase64FromUrl(orgimg).then(res=>{
+      wallimgmobile = res
+    })
+  await  getBase64FromUrl(imgarray[currentIndex]).then(res=>{
+     desginimgmobile = res
+    })
+  
+
+  
+   const body={
+     wallimg: wallimgmobile,
+     designimg: desginimgmobile,
+      detectionmode: 'walls'
+   }
+  
+   const config = {
+     headers: {
+       'Access-Control-Allow-Origin': '*',
+       'Content-Type': 'application/json',
+       'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+     },
+   };
+ axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+  
+   document.querySelector('.loadingcontainermobile').style.display = 'none' 
+   setSegmentImg(true)
+   setProcessImg(res.data)
+   }).catch(error=>{
+     console.log(error)
+     window.alert('Sorry unable to process')
+     
+   document.querySelector('.loadingcontainermobile').style.display = 'none' 
+  
+   })
   
 }
 
-prevButton && prevButton.addEventListener('click', () => {
-  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-  showSlide(currentIndex);
- 
-});
-
-nextButton && nextButton.addEventListener('click', () => {
-  currentIndex = (currentIndex + 1) % slides.length;
-  showSlide(currentIndex);
-});
 
 
 if(displaydiv){
@@ -322,16 +484,13 @@ const imagefilechange=(e)=>{
   if(filetype === "jpg"  || filetype === "png" || filetype === "jpeg" )
   {
 
-  
-  
- 
-  
  let files = Array.from(e.target.files) 
  files.forEach(file => {
   fileToBase64(file, (err, result) => {
    
     if (result) {
       setImage(result)
+      setOrgImg(result)
       setDisplayDiv(true)
       document.querySelector('.loadercontainer').style.display = 'block'
    
@@ -345,7 +504,8 @@ const imagefilechange=(e)=>{
       
     }, 2000);
    
-   
+     setSegmentImg(false)
+     setProcessImg('')
 
     }
   })
@@ -497,7 +657,8 @@ scrollimagemobile  && scrollimagemobile.addEventListener("wheel", (event) => {
 
 
 
-function showTooltip(image, text, len) {
+function showTooltip(e, image, text, len) {
+ 
   const tooltip = document.getElementById(`tooltip_${len}`);
 
   tooltip.style.display = 'flex';
@@ -507,6 +668,21 @@ function showTooltip(image, text, len) {
   setTimeout(() => {
       tooltip.style.display = 'none';
   }, 3000); 
+}
+
+     
+
+const getBase64FromUrl = async (url) => {
+  const data = await fetch(url);
+  const blob = await data.blob();
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob); 
+    reader.onloadend = () => {
+      const base64data = reader.result;   
+      resolve(base64data);
+    }
+  });
 }
 
 function showTooltipmob(image, text, len) {
@@ -521,7 +697,200 @@ function showTooltipmob(image, text, len) {
   }, 3000); 
 }
 
+let wall64img =''
+let design64img =''
+const allmaincontainer = document.querySelectorAll('.maincontaineritems')
+const  allgriditems = document.querySelectorAll('.maincontainergrid')
+const handlewallpaperclick = async (len, val)=>{
+  console.log(val)
 
+  allmaincontainer && allmaincontainer.forEach(item=>{
+   
+      item.classList.remove('activesearchitem')
+    
+   })
+      if(document.getElementById(`checkboxitem_${len}`).checked){
+        
+        document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
+         document.querySelector('.loadingcontainermain').style.display= 'block'
+  
+       
+       await  getBase64FromUrl(orgimg).then(res=>{
+          wall64img = res
+         })
+       await  getBase64FromUrl(val).then(res=>{
+          design64img = res
+         })
+
+
+    
+        const body={
+          wallimg: wall64img,
+          designimg: design64img,
+           detectionmode: 'walls'
+        }
+    
+        const config = {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+          },
+        };
+        axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+       
+        document.querySelector('.loadingcontainermain').style.display= 'none'   
+        setSegmentImg(true)
+        setProcessImg(res.data)
+        }).catch(error=>{
+          console.log(error)
+          window.alert('Sorry unable to process')
+          document.querySelector('.loadingcontainermain').style.display= 'none'
+
+        })
+
+   
+       }else{
+        document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
+       
+        document.querySelector('.loadingcontainermain').style.display= 'block'
+ 
+      
+     
+        await  getBase64FromUrl(orgimg).then(res=>{
+          wall64img = res
+         })
+       await  getBase64FromUrl(val).then(res=>{
+          design64img = res
+         })
+
+
+     
+       const body={
+         wallimg: wall64img,
+         designimg: design64img,
+          detectionmode: 'walls'
+       }
+   
+       const config = {
+         headers: {
+           'Access-Control-Allow-Origin': '*',
+           'Content-Type': 'application/json',
+           'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+         },
+       };
+       axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+      
+       document.querySelector('.loadingcontainermain').style.display= 'none'   
+       setSegmentImg(true)
+       setProcessImg(res.data)
+       }).catch(error=>{
+        window.alert('Sorry unable to process')
+         console.log(error)
+         document.querySelector('.loadingcontainermain').style.display= 'none'
+
+       })
+
+       }
+}
+
+const handlegriditemclick =  async (len, val)=>{
+ 
+  allgriditems && allgriditems.forEach(item=>{
+   
+    item.classList.remove('activegriditem')
+  
+ })
+    if(document.getElementById(`checkboxgrid_${len}`).checked){
+      
+      document.getElementById(`maincontainergrid_${len}`).classList.add('activegriditem')
+      document.querySelector('.loadingcontainermain').style.display= 'block'
+  
+       
+      await  getBase64FromUrl(orgimg).then(res=>{
+         wall64img = res
+        })
+      await  getBase64FromUrl(val).then(res=>{
+         design64img = res
+        })
+
+
+   
+       const body={
+         wallimg: wall64img,
+         designimg: design64img,
+          detectionmode: 'walls'
+       }
+   
+       const config = {
+         headers: {
+           'Access-Control-Allow-Origin': '*',
+           'Content-Type': 'application/json',
+           'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+         },
+       };
+       axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+      
+       document.querySelector('.loadingcontainermain').style.display= 'none'   
+       setSegmentImg(true)
+       setProcessImg(res.data)
+       }).catch(error=>{
+         console.log(error)
+         window.alert('Sorry unable to process')
+         document.querySelector('.loadingcontainermain').style.display= 'none'
+
+       })
+
+ 
+     }else{
+      document.getElementById(`maincontainergrid_${len}`).classList.add('activegriditem')
+      document.querySelector('.loadingcontainermain').style.display= 'block'
+  
+       
+      await  getBase64FromUrl(orgimg).then(res=>{
+         wall64img = res
+        })
+      await  getBase64FromUrl(val).then(res=>{
+         design64img = res
+        })
+
+
+   
+       const body={
+         wallimg: wall64img,
+         designimg: design64img,
+          detectionmode: 'walls'
+       }
+   
+       const config = {
+         headers: {
+           'Access-Control-Allow-Origin': '*',
+           'Content-Type': 'application/json',
+           'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+         },
+       };
+       axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+      
+       document.querySelector('.loadingcontainermain').style.display= 'none'   
+       setSegmentImg(true)
+       setProcessImg(res.data)
+       }).catch(error=>{
+         console.log(error)
+         window.alert('Sorry unable to process')
+         document.querySelector('.loadingcontainermain').style.display= 'none'
+
+       })
+
+     }
+}
+
+
+
+const handleremovewallpaper = ()=>{
+ 
+  setSegmentImg(false)
+  setProcessImg(orgimg)
+}
   return (
 
  
@@ -884,8 +1253,13 @@ function showTooltipmob(image, text, len) {
      </div>
     </div>
     <div className='mobilemaindisplay' id= 'mobilemaindisplay'>
-
-    <img src= {image}/>
+      <div className='loadingcontainermobile'>
+      <div className='loaderdiv'>
+      <span class="loader"> </span>
+      <p  className='loadingtext'>Loading..</p>
+        </div> 
+      </div>
+    <img  src= { segmentimg ? `data:image/png;base64, ${processimg}` : image }/>
     </div>
     <div className='imageslider'> 
      <button className='changeproductbutton'  onClick={handlechangeproductmobile}>Change product <FaChevronUp className='upicon'/></button>
@@ -929,29 +1303,19 @@ function showTooltipmob(image, text, len) {
     <div class="slider-container">
     
     <div class="slider">
-      <img class="slide active" src={wall1} alt="Image 1"/>
-      <img class="slide" src={wall2} alt="Image 2"/>
-      <img class="slide" src={wall3} alt="Image 3"/>
-      <img class="slide " src={wall1} alt="Image 1"/>
-      <img class="slide" src={wall2} alt="Image 2"/>
-      <img class="slide " src={wall1} alt="Image 1"/>
-      <img class="slide" src={wall2} alt="Image 2"/>
-      <img class="slide" src={wall3} alt="Image 3"/>
-      <img class="slide " src={wall1} alt="Image 1"/>
-      <img class="slide" src={wall2} alt="Image 2"/>
-      <img class="slide " src={wall1} alt="Image 1"/>
-      <img class="slide" src={wall2} alt="Image 2"/>
-     
- 
+      {
+        imgarray && imgarray.map((item,i)=>(
+          <img class="slide " src={item} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item)}/>
+        ))
+      }
+  
     </div>
-    <button class="prev" id="prevButton">&#10094;</button>
-    <button class="next" id="nextButton">&#10095;</button>
+    <button class="prev" id="prevButton" onClick={rightArrowClick}>&#10094;</button>
+    <button class="next" id="nextButton"  onClick={leftArrowClick}>&#10095;</button>
   </div>
 
       </div>
    
-   
-
   </div>
     <div className='viewallcontainer'>
 
@@ -965,7 +1329,7 @@ function showTooltipmob(image, text, len) {
           <div className='navitems'>
             <p> <FaPlus className='navicons'/> COMPARE</p>
           </div >
-          <div className='navitems'>
+          <div className='navitems' onClick={handleremovewallpaper}>
             <p> <FaTrash className='navicons'/> REMOVE PRODUCT</p>
           </div>
           <div className='navitems'>
@@ -1016,8 +1380,11 @@ function showTooltipmob(image, text, len) {
 
               {
                 imgarray && imgarray.map((item,i)=>(
-                  <div>
-                  <div className='searchitemgridinside' onClick={()=>showTooltip(item, 'image1', i)}>
+                  <div  className='maincontainergrid' id ={`maincontainergrid_${i}`}>
+                    <label className='labelcontainergrid'>
+
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item)}/>
+                  <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item, 'image1', i)}>
                    <img src= {item}/>
                  
                   </div>
@@ -1030,7 +1397,7 @@ function showTooltipmob(image, text, len) {
                       </div>
                       </div>
                   </div>
-                  
+                  </label>
                 </div>
               
                 ))
@@ -1046,8 +1413,11 @@ function showTooltipmob(image, text, len) {
 
               {
                 imgarray && imgarray.map((item,i)=>(
-                  <div>
-                  <div className='itemdetailscontainer'>
+                  <div className='maincontaineritems' id= {`maincontaineritems_${i}`}>
+                     <label  className='labelcontainer' >
+
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i,item)}  />
+                    <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
                     <img  src= {item}/>
                   </div>
@@ -1070,7 +1440,10 @@ function showTooltipmob(image, text, len) {
   
                   </div>
                   </div>
-               
+
+                  
+            
+               </label>
                   
                 </div>
                 ))
@@ -1085,7 +1458,13 @@ function showTooltipmob(image, text, len) {
 
         </div>
         <div className='imagecontainermain' id='imagecontainermain'>
-          <img src= {image}/>
+        <div className='loadingcontainermain'>
+    <div className='loaderdiv'>
+      <span class="loader"> </span>
+      <p  className='loadingtext'>Loading..</p>
+        </div>  
+    </div>
+          <img  src= { segmentimg ? `data:image/png;base64, ${processimg}` : image } />
 
         </div>
         <div className='sitedetailscontainer'>
@@ -1163,7 +1542,7 @@ function showTooltipmob(image, text, len) {
         <div  className='modalinsidecontent'>
           <div className='modaltopcontainer'>
           <div  className='headingcontainer'>
-            <span  onClick={handlemodalclose}>
+            <span style={{cursor:'pointer'}} onClick={handlemodalclose}>
             <FaTimes/>
             </span>
        
