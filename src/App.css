@@ -647,6 +647,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+  
 }
 .loadingtextloader p{
   font-family: Loto,sans-serif;
@@ -933,9 +934,9 @@ body {
   
 }
 .loadingtext{
-  color: white;
+  color: rgb(129, 124, 124);
   font-family: Loto,sans-serif;
-  margin-left: 10px;
+  margin-left: 20px;
   
 }
 .inputsearchmain input{
@@ -1503,7 +1504,7 @@ margin-top: 2px;
  z-index: 100;
  align-items: center;
 
- background-color: rgba(132, 133, 134, 0.75);
+ background-color: rgba(226, 226, 226, 0.75);
 
  opacity: 1;
  transition: opacity 250ms 700ms ease;

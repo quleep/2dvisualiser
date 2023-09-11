@@ -928,7 +928,7 @@ const handleremovewallpaper = ()=>{
     <div className='loadercontainer'>
     <div className='loaderdiv'>
       <span class="loader"> </span>
-      <p  className='loadingtext'>Loading..</p>
+      <p  className='loadingtext'>Loading...</p>
         </div>  
     </div>
     <div class="modalscan">		
