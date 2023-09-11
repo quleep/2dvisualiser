@@ -901,9 +901,11 @@ const handlebacktotopclick = (e)=>{
   document.querySelector('.searchitemscontainer').scrollTop = 0;
 }
 
-document.querySelector('.searchitemscontainer').addEventListener('scroll', ()=>{
+const newval = document.querySelector('.searchitemscontainer')
+
+  newval && newval.addEventListener('scroll', ()=>{
   
-  if(document.querySelector('.searchitemscontainer').scrollTop > 100){
+  if(newval.scrollTop > 100){
   setScrollTopValue(true)
   }else{
   setScrollTopValue(false)
