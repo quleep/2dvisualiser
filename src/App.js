@@ -93,6 +93,7 @@ function App() {
     setOrgImg('')
 
     setDisplayDiv(false)
+    document.getElementById('b1').value = ''
     document.querySelector('.modalinsidecontent').style.display = 'flex'
     
     document.querySelector('.datashowcontainer').style.display = 'none'
@@ -101,7 +102,7 @@ function App() {
 
     document.querySelector('.viewallcontainer').classList.toggle('viewmain')
     document.querySelector('.viewallmobile').classList.toggle('viewmobile')
-    window.scrollTo(0,0)
+     document.documentElement.scrollTop = 0
     
    
   }
@@ -476,7 +477,7 @@ const fileToBase64 = (file, cb) => {
 
 const imagefilechange=(e)=>{
  
-   
+  
   let val= document.getElementById('b1').value;
   let indx = val.lastIndexOf(".") + 1;
   let filetype = val.substr(indx, val.length).toLowerCase();
@@ -489,6 +490,7 @@ const imagefilechange=(e)=>{
   fileToBase64(file, (err, result) => {
    
     if (result) {
+     
       setImage(result)
       setOrgImg(result)
       setDisplayDiv(true)
