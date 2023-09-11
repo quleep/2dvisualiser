@@ -197,7 +197,8 @@ function App() {
   ]
   const imgarray = [
     wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
-    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6
+    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
+  
 
   ]
 
@@ -1419,17 +1420,12 @@ const newval = document.querySelector('.searchitemscontainer')
                 ))
               }
         
-     
-         
-             
-
-
              </div>
             <div className='searchitemscontainer' >
 
               {
                 imgarray && imgarray.map((item,i)=>(
-                  <div className='maincontaineritems' id= {`maincontaineritems_${i}`}>
+                  <div key={i} style={i === imgarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
                      <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i,item)}  />
