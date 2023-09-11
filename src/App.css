@@ -818,13 +818,31 @@ body {
   height: 100%;
   object-fit: cover;
 }
+.backtobutton{
+  position: absolute;
+  display: flex;
+  bottom: 0px;
+ width: calc(100% - 77.5%);
+  height: 50px;
+ 
+
+  background-color: white;
+  justify-content: center;
+  left: 0px;
+  z-index: 15px;
+  cursor: pointer;
+
+}
+.backtobutton p{
+  font-family: Loto, sans-serif;
+}
 .searchitemscontainer{
   display: flex;
   height: 700px;
   width: 100%;
   flex-wrap: wrap;
   
-  overflow: scroll;
+  overflow-y: scroll;
   margin-top: 2px;
   
  

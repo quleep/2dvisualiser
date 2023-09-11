@@ -1,7 +1,7 @@
 
 import './App.css';
 import { useEffect, useState } from 'react';
-import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaBars, FaCamera, FaCameraRetro, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
+import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
 import img2 from './images/demoimage2.jpg'
@@ -51,6 +51,7 @@ function App() {
   const [imagefile,setImageFile] = useState('')
   const [processimg, setProcessImg] = useState()
   const [segmentimg, setSegmentImg] = useState(false)
+  const [scrolltopvalue, setScrollTopValue] = useState(false)
 
   const newimg = ''
   const formdata = new FormData()
@@ -893,6 +894,22 @@ const handleremovewallpaper = ()=>{
   setSegmentImg(false)
   setProcessImg(orgimg)
 }
+
+const handlebacktotopclick = (e)=>{
+  e.preventDefault()
+  e.stopPropagation()
+  document.querySelector('.searchitemscontainer').scrollTop = 0;
+}
+
+document.querySelector('.searchitemscontainer').addEventListener('scroll', ()=>{
+  
+  if(document.querySelector('.searchitemscontainer').scrollTop > 100){
+  setScrollTopValue(true)
+  }else{
+  setScrollTopValue(false)
+
+  }
+})
   return (
 
  
@@ -1140,11 +1157,6 @@ const handleremovewallpaper = ()=>{
                 ))
               }
         
-       
-       
-         
-
-
             </div>
           </div>
 
@@ -1411,7 +1423,7 @@ const handleremovewallpaper = ()=>{
 
 
              </div>
-            <div className='searchitemscontainer'  >
+            <div className='searchitemscontainer' >
 
               {
                 imgarray && imgarray.map((item,i)=>(
@@ -1452,10 +1464,10 @@ const handleremovewallpaper = ()=>{
               }
         
         
-       
-
-
             </div>
+            <div className='backtobutton' style={scrolltopvalue ? {display:'flex'} :{display:'none'}}   onClick={handlebacktotopclick} >
+             <p> <FaChevronUp  style={{marginRight:'10px'}}/> Back to top </p> 
+         </div>
           </div>
 
         </div>
