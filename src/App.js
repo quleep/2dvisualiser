@@ -52,6 +52,8 @@ function App() {
   const [processimg, setProcessImg] = useState()
   const [segmentimg, setSegmentImg] = useState(false)
   const [scrolltopvalue, setScrollTopValue] = useState(false)
+  const [scrolltopgrid, setScrollTopGrid] = useState(false)
+
 
   const newimg = ''
   const formdata = new FormData()
@@ -196,6 +198,8 @@ function App() {
     "Item1", "Item2", "Item3","Item4","Item5", "Item6", "Item7","Item8"
   ]
   const imgarray = [
+    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
+    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
     wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
     wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
   
@@ -900,7 +904,10 @@ const handlebacktotopclick = (e)=>{
   e.preventDefault()
   e.stopPropagation()
   document.querySelector('.searchitemscontainer').scrollTop = 0;
+  document.querySelector('.searchitemgrid').scrollTop = 0;
+
 }
+
 
 const newval = document.querySelector('.searchitemscontainer')
 
@@ -908,6 +915,17 @@ const newval = document.querySelector('.searchitemscontainer')
   
   if(newval.scrollTop > 100){
   setScrollTopValue(true)
+  }else{
+  setScrollTopValue(false)
+
+  }
+})
+const gridval = document.querySelector('.searchitemgrid')
+
+gridval && gridval.addEventListener('scroll', ()=>{
+  
+  if(gridval.scrollTop > 100){
+    setScrollTopValue(true)
   }else{
   setScrollTopValue(false)
 
@@ -1397,7 +1415,7 @@ const newval = document.querySelector('.searchitemscontainer')
 
               {
                 imgarray && imgarray.map((item,i)=>(
-                  <div  className='maincontainergrid' id ={`maincontainergrid_${i}`}>
+                  <div  key={i} style={i === imgarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
                    <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item)}/>
@@ -1421,6 +1439,7 @@ const newval = document.querySelector('.searchitemscontainer')
               }
         
              </div>
+      
             <div className='searchitemscontainer' >
 
               {
