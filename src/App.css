@@ -1850,7 +1850,7 @@ margin-top: 2px;
  
   background-color: #dad9d9;
   
-  margin-top: -40px;
+  
 }
 
 .slider {
@@ -1979,6 +1979,15 @@ margin-top: 2px;
   .viewmain{
     display: none;
   }
+}
+
+@media (max-width: 600px) {
+   .filtermobilecontainer{
+    margin-top: -70px;
+   }
+   .mobilemaindisplay{
+    margin-top: -70px;
+   }
 }
 
 .loader {
