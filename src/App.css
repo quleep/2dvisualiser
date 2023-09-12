@@ -1007,6 +1007,7 @@ body {
  
   margin-top: 30px;
   margin-bottom: 30px;
+ 
 }
 .mobilemaindisplay img{
   width: 100%;
@@ -1774,6 +1775,8 @@ margin-top: 2px;
   display: none;
  
  
+ 
+ 
 }
 .filtermobileproductname{
   width: 250px;
@@ -1846,6 +1849,8 @@ margin-top: 2px;
   
  
   background-color: #dad9d9;
+  
+  margin-top: -40px;
 }
 
 .slider {
@@ -1903,6 +1908,8 @@ margin-top: 2px;
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+
+ 
  
  
  
