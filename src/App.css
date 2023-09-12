@@ -1988,6 +1988,9 @@ margin-top: 2px;
    .mobilemaindisplay{
     margin-top: -70px;
    }
+   .changeroomsidebutton{
+    bottom: 220px;
+   }
 }
 
 .loader {
