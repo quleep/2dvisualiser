@@ -17,8 +17,10 @@ import wallnew3 from './images/WA_2608-1.jpg'
 import wallnew4 from './images/AS389772.jpg'
 import wallnew5 from './images/AS389063.jpg'
 import wallnew6 from './images/AS389762.jpg'
-
-
+import squareimg from './images/squareone.jpg'
+import squareimgtwo from './images/squaretwo.jpg'
+import squareimgthree from './images/squarethree.jpg'
+import squareimgfour from './images/squarefour.jpg'
 
 
 import { RxCross2 } from 'react-icons/rx';
@@ -53,8 +55,12 @@ function App() {
   const [segmentimg, setSegmentImg] = useState(false)
   const [scrolltopvalue, setScrollTopValue] = useState(false)
   const [scrolltopgrid, setScrollTopGrid] = useState(false)
+  const [walldata, setWallData] = useState()
+    const getbranddetails= 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getbranddetails'
 
-
+  let testurl = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/WA_2608-1.jpg'
+  let  testurl2 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389762.jpg'
+  let testurl3 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389063.jpg'
   const newimg = ''
   const formdata = new FormData()
   const handlemodalopen =()=>{
@@ -65,6 +71,24 @@ function App() {
    
 
   }
+
+    
+    const [branddetails, setBrandDetails] = useState()
+  
+     useEffect(()=>{
+        const brandbody={
+            brand: 'excel'
+          }
+        
+          axios.post(getbranddetails, brandbody).then(res=>{
+           
+            setWallData(res.data)
+          }).catch(error=>{
+            console.log(error)
+          })
+     },[])
+    
+
   useEffect(()=>{
     setTimeout(() => {
       document.getElementById("modalContainer").style.bottom = "0"
@@ -173,7 +197,7 @@ function App() {
    
 
       if(accActive === index){
-        console.log('close')
+       
    
      setViewAll(false)
     
@@ -198,10 +222,7 @@ function App() {
     "Item1", "Item2", "Item3","Item4","Item5", "Item6", "Item7","Item8"
   ]
   const imgarray = [
-    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
-    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
-    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
-    wallnew1, wallnew2, wallnew3,wallnew4, wallnew5, wallnew6,
+     testurl, testurl2, testurl3
   
 
   ]
@@ -320,10 +341,7 @@ const rightArrowClick = async (e)=>{
     await  getBase64FromUrl(orgimg).then(res=>{
         wallimgmobile = res
       })
-    await  getBase64FromUrl(imgarray[currentIndex]).then(res=>{
-       desginimgmobile = res
-      })
-    
+
   
     
      const body={
@@ -339,7 +357,7 @@ const rightArrowClick = async (e)=>{
          'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
        },
      };
-   axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+   axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
     
      document.querySelector('.loadingcontainermobile').style.display = 'none' 
      setSegmentImg(true)
@@ -366,9 +384,7 @@ const mobileImageClick= async (e, len, val)=>{
   await  getBase64FromUrl(orgimg).then(res=>{
       wallimgmobile = res
     })
-  await  getBase64FromUrl(val).then(res=>{
-     desginimgmobile = res
-    })
+
   
 
   
@@ -385,7 +401,7 @@ const mobileImageClick= async (e, len, val)=>{
        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
      },
    };
- axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+ axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
   
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
    setSegmentImg(true)
@@ -429,7 +445,7 @@ const leftArrowClick = async (e)=>{
        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
      },
    };
- axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+ axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
   
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
    setSegmentImg(true)
@@ -710,7 +726,7 @@ let design64img =''
 const allmaincontainer = document.querySelectorAll('.maincontaineritems')
 const  allgriditems = document.querySelectorAll('.maincontainergrid')
 const handlewallpaperclick = async (len, val)=>{
-  console.log(val)
+ 
 
   allmaincontainer && allmaincontainer.forEach(item=>{
    
@@ -726,15 +742,12 @@ const handlewallpaperclick = async (len, val)=>{
        await  getBase64FromUrl(orgimg).then(res=>{
           wall64img = res
          })
-       await  getBase64FromUrl(val).then(res=>{
-          design64img = res
-         })
-
-
+   
+ 
     
         const body={
           wallimg: wall64img,
-          designimg: design64img,
+          designimg: val,
            detectionmode: 'walls'
         }
     
@@ -745,7 +758,7 @@ const handlewallpaperclick = async (len, val)=>{
             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
           },
         };
-        axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+        axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
        
         document.querySelector('.loadingcontainermain').style.display= 'none'   
         setSegmentImg(true)
@@ -768,10 +781,7 @@ const handlewallpaperclick = async (len, val)=>{
         await  getBase64FromUrl(orgimg).then(res=>{
           wall64img = res
          })
-       await  getBase64FromUrl(val).then(res=>{
-          design64img = res
-         })
-
+  
 
      
        const body={
@@ -787,7 +797,7 @@ const handlewallpaperclick = async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
@@ -818,15 +828,12 @@ const handlegriditemclick =  async (len, val)=>{
       await  getBase64FromUrl(orgimg).then(res=>{
          wall64img = res
         })
-      await  getBase64FromUrl(val).then(res=>{
-         design64img = res
-        })
-
+ 
 
    
        const body={
          wallimg: wall64img,
-         designimg: design64img,
+         designimg: val,
           detectionmode: 'walls'
        }
    
@@ -837,7 +844,7 @@ const handlegriditemclick =  async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
@@ -858,10 +865,7 @@ const handlegriditemclick =  async (len, val)=>{
       await  getBase64FromUrl(orgimg).then(res=>{
          wall64img = res
         })
-      await  getBase64FromUrl(val).then(res=>{
-         design64img = res
-        })
-
+     
 
    
        const body={
@@ -877,7 +881,7 @@ const handlegriditemclick =  async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://3.110.96.201:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
@@ -1118,10 +1122,10 @@ gridval && gridval.addEventListener('scroll', ()=>{
             <div className='searchitemgridmob'>
 
 {
-  imgarray && imgarray.map((item,i)=>(
+  walldata && walldata.map((item,i)=>(
     <div>
-    <div className='searchitemgridinside' onClick={()=>showTooltipmob(item, 'image1', i)}>
-     <img src= {item}/>
+    <div className='searchitemgridinside' onClick={()=>showTooltipmob(item.imageurl[0], 'image1', i)}>
+     <img src= {item.imageurl[0]}/>
    
     </div>
     <div class="tooltip" id={`tooltipmob_${i}`}>
@@ -1147,11 +1151,11 @@ gridval && gridval.addEventListener('scroll', ()=>{
 </div>
             <div className='searchitemscontainermob'>
             {
-                imgarray && imgarray.map((item,i)=>(
+                walldata && walldata.map((item,i)=>(
                   <div>
                   <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item}/>
+                    <img  src= {item.imageurl[0]}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -1339,8 +1343,8 @@ gridval && gridval.addEventListener('scroll', ()=>{
     
     <div class="slider">
       {
-        imgarray && imgarray.map((item,i)=>(
-          <img class="slide " src={item} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item)}/>
+        walldata && walldata.map((item,i)=>(
+          <img class="slide " src={item.imageurl[0]} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.imageurl[0])}/>
         ))
       }
   
@@ -1414,13 +1418,13 @@ gridval && gridval.addEventListener('scroll', ()=>{
              <div className='searchitemgrid'>
 
               {
-                imgarray && imgarray.map((item,i)=>(
-                  <div  key={i} style={i === imgarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
+                walldata && walldata.map((item,i)=>(
+                  <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
-                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item)}/>
-                  <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item, 'image1', i)}>
-                   <img src= {item}/>
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.imageurl[0])}/>
+                  <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
+                   <img src= {item.imageurl[0]}/>
                  
                   </div>
                   <div class="tooltip" id={`tooltip_${i}`}>
@@ -1443,14 +1447,14 @@ gridval && gridval.addEventListener('scroll', ()=>{
             <div className='searchitemscontainer' >
 
               {
-                imgarray && imgarray.map((item,i)=>(
-                  <div key={i} style={i === imgarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
+                walldata && walldata.map((item,i)=>(
+                  <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i,item)}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.imageurl[0])}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item}/>
+                    <img  src= {item.imageurl[0]}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
