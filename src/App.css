@@ -265,6 +265,7 @@ body {
 }
  .checkbox:hover{
   background-color: #e9bebe;
+  cursor: pointer;
  }
 .checkbox p{
   font-size: 20px;
@@ -301,6 +302,34 @@ body {
   height:  60px;
   font-size: 20px;
 }
+#view-all-buttondesign {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: white;
+  color: #181414;
+  border: 1px solid rgb(173, 171, 171);
+  border-radius: 5px;
+  cursor: pointer;
+  width: 180px;
+  height:  60px;
+  font-size: 20px;
+}
+#view-all-buttoncollection {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: white;
+  color: #181414;
+  border: 1px solid rgb(173, 171, 171);
+  border-radius: 5px;
+  cursor: pointer;
+  width: 180px;
+  height:  60px;
+  font-size: 20px;
+}
+
+
 
 .filteritemscroll{
   display: flex;

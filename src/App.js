@@ -47,6 +47,10 @@ function App() {
   const [orgimg, setOrgImg] = useState()
   const [checkarray, setCheckArray ] = useState([])
   const [viewall, setViewAll ] = useState(false)
+  const [viewalldesign, setViewAllDesign ] = useState(false)
+  const [viewallcollection, setViewAllCollection ] = useState(false)
+
+
   const [ratingValue, setRatingValue] = useState(0)
   const [displaydiv, setDisplayDiv] = useState(false)
   const [sidenavopen, setSideNavOpen] = useState(false)
@@ -55,7 +59,14 @@ function App() {
   const [segmentimg, setSegmentImg] = useState(false)
   const [scrolltopvalue, setScrollTopValue] = useState(false)
   const [scrolltopgrid, setScrollTopGrid] = useState(false)
-  const [walldata, setWallData] = useState()
+  const [walldata, setWallData] = useState([])
+  const [filteredarray, setFilteredArray] = useState()
+
+  const colorArray = [
+ 
+
+
+  ]
     const getbranddetails= 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getbranddetails'
 
   let testurl = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/WA_2608-1.jpg'
@@ -79,6 +90,12 @@ function App() {
         const brandbody={
             brand: 'excel'
           }
+               const config = {
+       headers: {
+         'Access-Control-Allow-Origin': '*',
+       
+       },
+     };
         
           axios.post(getbranddetails, brandbody).then(res=>{
            
@@ -192,14 +209,12 @@ function App() {
  
   const handleActive = (e,index) => {
 
-
-
-   
-
       if(accActive === index){
        
    
      setViewAll(false)
+     setViewAllDesign(false)
+     setViewAllCollection(false)
     
       }
       if(accActive !== index){
@@ -219,12 +234,103 @@ function App() {
 
 
   const itemarray = [
-    "Item1", "Item2", "Item3","Item4","Item5", "Item6", "Item7","Item8"
+    "Beige",
+    "Black",
+    "Blue",
+    "Brown",
+     "Cream",
+     "Golden",
+     "Green",
+     "Grey",
+     "Multicoloured",
+     "Orange",
+     "Peach",
+     "Pink",
+     "Purple",
+     "Purplish Blue",
+     "Red",
+     "Silver",
+     "White",
+     "White.Grey",
+     "Yellow"
+  ]
+
+  const designstylearray = [
+    "Young & Contemporary",
+    "3 D Geometric",
+    "Abstract",
+    "Abstract, Young & Contemporary",
+    "Animal",
+    "Botanical",
+    "Botanicals",
+    "Brick",
+    "Classic",
+    "Damask",
+    "Floral",
+    "Geometric",
+    "Indian Heritage",
+    "Kids",
+    "Marble",
+    "Marble Finish",
+    "Nature",
+    "Nature & Botanical",
+    "Plain & Checkered",
+    "Plain & Stripes",
+    "Plain & Textured",
+    "Stone Finish",
+    "Tropical",
+    "Wood Finish"
+  ]
+
+  const collectionArray = [
+    "Allure",
+    "Altis",
+    "Aurora",
+    "Aventus",
+    "Avenue 7",
+    "Avenue 8",
+    "Best Of Living Walls",
+    "Blooming",
+    "Brazil",
+    "Celebration",
+    "Darae 5",
+    "Decortex",
+    "Deshaj",
+    "Divine",
+    "Floral Impression",
+    "Glitz & Glam",
+    "Harmony",
+    "Hera 5",
+    "House Of Turnowsky",
+    "Imperial",
+    "Little Love",
+    "Metropolitan Stories",
+    "Metropolitan Stories II Vol. I",
+    "Metropolitan Stories II Vol. II",
+    "Mix & Match 2",
+    "Modern & Glam",
+    "Modern Bytes",
+    "Modernist",
+    "My Home My Space",
+    "Nature's Ragas",
+    "New Walls",
+    "Opulence",
+    "Paradise",
+    "Primo",
+    "Reflection",
+    "Regal",
+    "Royal Shades",
+    "Superhit",
+    "Tapestry",
+    "Trendy Walls",
+    "Versace Iv",
+    "Versace V",
+    "Wall Art",
+    "Wall Fabric",
+    "Zenith"
   ]
   const imgarray = [
      testurl, testurl2, testurl3
-  
-
   ]
 
  let newitemarray = []
@@ -235,21 +341,88 @@ function App() {
   newitemarray =  itemarray.slice(0,4)
  }
 
+ let newdesignarray = []
+ if(viewalldesign){
+  newdesignarray = [...designstylearray]
+}
+else{
+  newdesignarray =  designstylearray.slice(0,4)
+}
+let newcollectionarray = []
+if(viewallcollection){
+ newcollectionarray = [...collectionArray]
+}
+else{
+  newcollectionarray =  collectionArray.slice(0,4)
+}
+
+
+useEffect(()=>{
+
+   
+    const sendfunction = async ()=>{
+    let newarray = []
+     for(let i =0; i < walldata.length ; i++){
+       
+       if( checkarray.includes(walldata[i].collection) ){
+        console.log('collection')
+         newarray.push(walldata[i])
+        }else if(checkarray.includes(walldata[i].designstyle)){
+        console.log('design')
+
+           newarray.push(walldata[i])
+        }else if(checkarray.includes(walldata[i].colorvalue[0])){
+        console.log('color')
+
+           newarray.push(walldata[i])
+
+        }
+     }
+     return newarray
+    }
   
-const handlecheckclick =( val,len)=>{
+   const tempvalue =  sendfunction() 
+  tempvalue.then(res=>{
+      setFilteredArray(res)
+  })
+
+},[checkarray])
+
+
+console.log(filteredarray)
+const handlecheckclick =  ( val,len)=>{
+   
+     let newfilearray=[]
+
    if(document.getElementById(`checkinput_${len}`).checked){
-     setCheckArray([...checkarray, val])   
+     
+    
+      setCheckArray([...checkarray, val])  
+    
+   
    }else{
-     let newarr=    checkarray.filter(item=>(
+    
+     let newarr= checkarray.filter(item=>(
          item != val
       ))
       setCheckArray(newarr)
-   }
+    }
+
+   
 }
+
 
 const handleviewall =()=>{
     setViewAll(true)
     document.getElementById('view-all-button').style.display = 'none'
+}
+const handleviewalldesign =()=>{
+  setViewAllDesign(true)
+  document.getElementById('view-all-buttondesign').style.display = 'none'
+}
+const handleviewallcollection =()=>{
+  setViewAllCollection(true)
+  document.getElementById('view-all-buttoncollection').style.display = 'none'
 }
 
 const handleclearfilter = ()=>{
@@ -342,8 +515,6 @@ const rightArrowClick = async (e)=>{
         wallimgmobile = res
       })
 
-  
-    
      const body={
        wallimg: wallimgmobile,
        designimg: desginimgmobile,
@@ -725,8 +896,76 @@ let wall64img =''
 let design64img =''
 const allmaincontainer = document.querySelectorAll('.maincontaineritems')
 const  allgriditems = document.querySelectorAll('.maincontainergrid')
-const handlewallpaperclick = async (len, val)=>{
+
+
+const  resizeImage = async (val)=>{
+  let maxWidth 
+  let maxHeight 
+
+  return new Promise((resolve)=>{
+      const img = new Image();
  
+  img.src = val+ '?r=' + Math.floor(Math.random()*100000);
+    img.setAttribute('crossOrigin', 'Anonymous');
+ 
+  img.onload = function () {
+  let resizedDataURL;
+  let newWidth, newHeight;
+
+  maxWidth = img.width*18/100 
+  maxHeight = img.height*18/100
+
+  if (img.width > img.height) {
+    
+    newWidth = maxWidth;
+    newHeight = (maxWidth * img.height) / img.width;
+  } else {
+   
+    newHeight = maxHeight;
+    newWidth = (maxHeight * img.width) / img.height;
+  }
+
+    const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+  
+
+   canvas.width = newWidth;
+  canvas.height = newHeight;
+  
+       ctx.drawImage(img, 0, 0, newWidth, newHeight);
+   
+ 
+    resizedDataURL = canvas.toDataURL('image/jpeg')
+
+   resolve(resizedDataURL)
+}
+
+  })
+
+}
+
+async function urlToBase64(url) {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Error converting URL to base64:', error);
+    return null;
+  }
+}
+const handlewallpaperclick = async (len, val)=>{
+
+  let newres;
+    await  resizeImage(val).then(res=>{
+     newres = res
+    })
+  
 
   allmaincontainer && allmaincontainer.forEach(item=>{
    
@@ -743,11 +982,9 @@ const handlewallpaperclick = async (len, val)=>{
           wall64img = res
          })
    
- 
-    
         const body={
           wallimg: wall64img,
-          designimg: val,
+          designimg: newres,
            detectionmode: 'walls'
         }
     
@@ -758,7 +995,8 @@ const handlewallpaperclick = async (len, val)=>{
             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
           },
         };
-        axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+        axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+         
        
         document.querySelector('.loadingcontainermain').style.display= 'none'   
         setSegmentImg(true)
@@ -935,6 +1173,8 @@ gridval && gridval.addEventListener('scroll', ()=>{
 
   }
 })
+
+
   return (
 
  
@@ -1058,6 +1298,68 @@ gridval && gridval.addEventListener('scroll', ()=>{
                                     :''}
                                 </div> : null
                             }
+                                                 {
+                                accActive === index ? <div className="accordionContent">
+                                    {acc.accordionContent === "Design" ? 
+                                    <div>
+                                      <div class="list-container">
+                                        {
+                                          newdesignarray && newdesignarray.map((item,i)=>(
+                                            <div class="list-item">
+                                            <label class="checkbox">
+                                             <p>{item}</p> 
+                                                  <input type="checkbox"   checked = {
+                                                    checkarray.includes(item) 
+                                                  }
+                                                 
+                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i)} id= {`checkinput_${i}`}/>
+                                                  </label>
+                                              
+                                                 </div>
+                                               
+                                          ))
+                                        }
+        
+</div>
+
+<button id="view-all-buttondesign" onClick={handleviewalldesign}>View All <FaArrowDown /></button>
+                                    </div>
+                                    
+                                    
+                                    :''}
+                                </div> : null
+                            }
+                                                                      {
+                                accActive === index ? <div className="accordionContent">
+                                    {acc.accordionContent === "Collection" ? 
+                                    <div>
+                                      <div class="list-container">
+                                        {
+                                          newcollectionarray && newcollectionarray.map((item,i)=>(
+                                            <div class="list-item">
+                                            <label class="checkbox">
+                                             <p>{item}</p> 
+                                                  <input type="checkbox"   checked = {
+                                                    checkarray.includes(item) 
+                                                  }
+                                                 
+                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i)} id= {`checkinput_${i}`}/>
+                                                  </label>
+                                              
+                                                 </div>
+                                               
+                                          ))
+                                        }
+        
+</div>
+
+<button id="view-all-buttoncollection" onClick={handleviewallcollection}>View All <FaArrowDown /></button>
+                                    </div>
+                                    
+                                    
+                                    :''}
+                                </div> : null
+                            }
                         </div>
                     )
                 })
@@ -1122,6 +1424,8 @@ gridval && gridval.addEventListener('scroll', ()=>{
             <div className='searchitemgridmob'>
 
 {
+
+  
   walldata && walldata.map((item,i)=>(
     <div>
     <div className='searchitemgridinside' onClick={()=>showTooltipmob(item.imageurl[0], 'image1', i)}>
@@ -1140,7 +1444,7 @@ gridval && gridval.addEventListener('scroll', ()=>{
     
   </div>
 
-  ))
+  )) 
 }
 
 
@@ -1417,8 +1721,33 @@ gridval && gridval.addEventListener('scroll', ()=>{
             </div>
              <div className='searchitemgrid'>
 
-              {
-                walldata && walldata.map((item,i)=>(
+              {  
+
+              filteredarray && filteredarray.length > 0 ? 
+                filteredarray && filteredarray.map((item,i)=>(
+                  <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
+                    <label className='labelcontainergrid'>
+
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.imageurl[0])}/>
+                  <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
+                   <img src= {item.imageurl[0]}/>
+                 
+                  </div>
+                  <div class="tooltip" id={`tooltip_${i}`}>
+                    <div className='tooltipinside'>
+                      <h3>Non-woven wallpaper 393465</h3>
+                      <p>Size: 125 * 152 mm</p>
+                      <div className='productpagelinkgrid'>
+                      <p>Go to product page</p>
+                      </div>
+                      </div>
+                  </div>
+                  </label>
+                </div>
+              
+                )) : 
+
+                     walldata && walldata.map((item,i)=>(
                   <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
@@ -1447,7 +1776,43 @@ gridval && gridval.addEventListener('scroll', ()=>{
             <div className='searchitemscontainer' >
 
               {
-                walldata && walldata.map((item,i)=>(
+                filteredarray && filteredarray.length > 0 ? 
+                filteredarray && filteredarray.map((item,i)=>(
+                  <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
+                     <label  className='labelcontainer' >
+
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.imageurl[0])}  />
+                    <div className='itemdetailscontainer'>
+                    <div className='wallpaperimage'>
+                    <img  src= {item.imageurl[0]}/>
+                  </div>
+                  <div className='wallpaperdetails'>
+                  
+  
+                    <div className='wallpaperdetailsinside'>
+                      <p>newallpapers</p>
+                      <p className='categoryname'>newrovement</p>
+                      <p >368956</p>
+                      <div className='dimensions'>
+                      <p className='productid'>size: 36*25</p>
+                      <p>link</p>
+                      </div>
+                      
+  
+  
+  
+                    </div>
+  
+                  </div>
+                  </div>
+
+                  
+            
+               </label>
+                  
+                </div>
+                )) : 
+                   walldata && walldata.map((item,i)=>(
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
@@ -1482,6 +1847,7 @@ gridval && gridval.addEventListener('scroll', ()=>{
                   
                 </div>
                 ))
+
               }
         
         
