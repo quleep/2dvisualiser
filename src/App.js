@@ -5,6 +5,8 @@ import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
 import img2 from './images/demoimage2.jpg'
+import { Helmet } from "react-helmet";
+
 
 import img3 from './images/demoimage3.jpg'
 import img4 from './images/demoimage4.jpg'
@@ -1053,6 +1055,11 @@ const handlewallpaperclick = async (len, val)=>{
 }
 
 const handlegriditemclick =  async (len, val)=>{
+
+    let newres;
+    await  resizeImage(val).then(res=>{
+     newres = res
+    })
  
   allgriditems && allgriditems.forEach(item=>{
    
@@ -1073,7 +1080,7 @@ const handlegriditemclick =  async (len, val)=>{
    
        const body={
          wallimg: wall64img,
-         designimg: val,
+         designimg: newres,
           detectionmode: 'walls'
        }
    
@@ -1084,7 +1091,7 @@ const handlegriditemclick =  async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
@@ -1110,7 +1117,7 @@ const handlegriditemclick =  async (len, val)=>{
    
        const body={
          wallimg: wall64img,
-         designimg: design64img,
+         designimg: newres,
           detectionmode: 'walls'
        }
    
@@ -1121,7 +1128,7 @@ const handlegriditemclick =  async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
@@ -1181,6 +1188,20 @@ gridval && gridval.addEventListener('scroll', ()=>{
 
  
    <div>
+    <Helmet>
+    <title>Visualiser | ArNXT </title>
+            <meta
+              name="description"
+              content="India’s first Augmented reality market place where the company’s stand-out feature is its DIY(Do-It-Yourself) features."
+            />
+            <meta
+              name="keywords"
+              content="
+          
+          Augmented Reality, Augmented Reality in India, Augmented Reality Technology, Augmented reality product, Augmented reality app, Augmented reality apps, Augmented reality product for business, Augmented reality products for business, Augmented reality product for businesses, Augmented reality products for businesses, Augmented reality apps for android, Augmented reality app for android, Augmented reality apps for ios, Augmented reality app for ios, Augmented reality market place, Metaverse, metaverse technologies, ar technology, AR Technology, AR Technology in India, augmented realty app in India, Augmented Reality Technology App, Augmented Reality Technology App in India, augmented reality, metaverse technologies, metaverse technology, experiential commerce platform, Virtual Realty, Virtual Technology, Festive Metaverse Universe
+           "
+            />
+    </Helmet>
  
  <div className='loadingbox'>
       
