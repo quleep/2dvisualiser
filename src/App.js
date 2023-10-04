@@ -973,7 +973,7 @@ const handlewallpaperclick = async (len, val)=>{
     
    })
       if(document.getElementById(`checkboxitem_${len}`).checked){
-        
+         console.log(val)
         document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
          document.querySelector('.loadingcontainermain').style.display= 'block'
   
@@ -1010,6 +1010,8 @@ const handlewallpaperclick = async (len, val)=>{
 
    
        }else{
+
+        console.log(val)
         document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
        
         document.querySelector('.loadingcontainermain').style.display= 'block'
@@ -1024,7 +1026,7 @@ const handlewallpaperclick = async (len, val)=>{
      
        const body={
          wallimg: wall64img,
-         designimg: design64img,
+         designimg: newres,
           detectionmode: 'walls'
        }
    
@@ -1035,7 +1037,7 @@ const handlewallpaperclick = async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
