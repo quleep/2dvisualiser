@@ -668,6 +668,10 @@ body {
   font-family: Loto,sans-serif;
   font-size: 10px;
 }
+.loaderdivmobile p{
+  padding: 0px;
+  margin: 0px;
+}
 
 .loadingtextloader{
   display: flex;
@@ -1409,6 +1413,14 @@ body {
   top: 50%;
 
 }
+.loaderdivmobile{
+  position: absolute;
+  z-index: 9999;
+ 
+  left: 50%;
+  top: -180px;
+
+}
 
 .modaltopcontainer{
   display: flex;
@@ -1797,7 +1809,7 @@ margin-top: 2px;
 
 .slider-container {
   position: relative;
-   max-width: 100%;
+   max-width: 450px;
    margin: 0 auto;
  
   overflow : hidden;
@@ -1806,6 +1818,11 @@ margin-top: 2px;
  
  
  
+}
+.slider img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .filtermobileproductname{
   width: 250px;
@@ -1885,19 +1902,23 @@ margin-top: 2px;
 .slider {
   display: flex;
   transition: transform 0.3s ease-in-out;
-  width: 100%;
-  height: 100%;
+   width: auto;
+
+ max-height: 110px;
+
+
  
 
 
 }
 
 .slide {
-   max-width: 250px;
+ 
+  max-width: 250px;
   max-height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   transition: opacity 0.3s ease-in-out;
-
+ 
 }
 
 .active {
@@ -1967,17 +1988,14 @@ margin-top: 2px;
   width: 60px;
   height: 60px;
   border-radius: 30%;
- bottom: 130px;
+ 
   background-color: rgb(255, 215, 255);
 
-  display: flex;
-  align-items: start;
-  justify-content: flex-start;
+ top: 550px;
  padding-left: 10px;
  padding-top: 10px;
+ 
 
- 
- 
 
 }
 .gridviewactive{
@@ -2055,6 +2073,42 @@ margin-top: 2px;
 .loader::before {
   width:  50px;
   height: 50px;
+  border-color: #FFF #FFF transparent transparent;
+  animation: rotation 2s linear infinite;
+}
+.loadermobile {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #ade8f4 #ade8f4 transparent #ade8f4;
+  box-sizing: border-box;
+  animation: rotation 1.5s linear infinite;
+}
+.loadermobile::after,
+.loadermobile::before {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent transparent #FF3D00 #FF3D00;
+  width:   50px;
+  height: 50px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: rotationBack 0.7s linear infinite;
+  transform-origin: center center;
+}
+.loadermobile::before {
+  width:  30px;
+  height: 30px;
   border-color: #FFF #FFF transparent transparent;
   animation: rotation 2s linear infinite;
 }

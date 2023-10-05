@@ -1,6 +1,6 @@
 
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
@@ -64,6 +64,7 @@ function App() {
   const [walldata, setWallData] = useState([])
   const [filteredarray, setFilteredArray] = useState()
 
+  const imgref = useRef()
   const colorArray = [
  
 
@@ -391,7 +392,7 @@ useEffect(()=>{
 },[checkarray])
 
 
-console.log(filteredarray)
+
 const handlecheckclick =  ( val,len)=>{
    
      let newfilearray=[]
@@ -474,10 +475,11 @@ const nextButton = document.getElementById('nextButton');
 const slider = document.querySelector('.slider');
 let currentIndex = 0;
 
-let wallimgmobile =''
-let desginimgmobile = ''
- 
+
+  let wallimgmobile;
+  let temindex = 0;
  async function showSlide(index) {
+  console.log(index)
  slides &&  slides.forEach((slide, i) => {
 
     if (i === index) {
@@ -486,12 +488,15 @@ let desginimgmobile = ''
       slide.classList.remove('active');
     }
   });
+  
   const slideWidth =  slides[0].clientWidth;
-   slider.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+ 
+   slider.style.transform = `translateX(-${slideWidth * currentIndex }px)`;
 
 
   
 }
+
 async function showSlideMob(index){
   slides &&  slides.forEach((slide, i) => {
 
@@ -504,22 +509,27 @@ async function showSlideMob(index){
   const slideWidth =  slides[0].clientWidth;
 }
 
-  
+
 const rightArrowClick = async (e)=>{
+  
   e.preventDefault()
-  e.stopPropagation()
+  let newres;
   currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-   await showSlide(currentIndex);
+
+    showSlide(currentIndex);
     document.querySelector('.loadingcontainermobile').style.display = 'block'
 
 
     await  getBase64FromUrl(orgimg).then(res=>{
         wallimgmobile = res
       })
+      await  resizeImage(walldata[currentIndex].imageurl[0]).then(res=>{
+        newres = res
+       })
 
      const body={
        wallimg: wallimgmobile,
-       designimg: desginimgmobile,
+       designimg: newres,
         detectionmode: 'walls'
      }
     
@@ -530,11 +540,11 @@ const rightArrowClick = async (e)=>{
          'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
        },
      };
-   axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+   axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
     
      document.querySelector('.loadingcontainermobile').style.display = 'none' 
      setSegmentImg(true)
-     setProcessImg(res.data)
+     imgref.current.src = `data:image/png;base64, ${res.data}`
      }).catch(error=>{
        console.log(error)
        window.alert('please try again...')
@@ -551,6 +561,10 @@ const mobileImageClick= async (e, len, val)=>{
   e.preventDefault()
   e.stopPropagation()
   showSlideMob(len);
+ let newres ;
+  await resizeImage(val).then(res=>{
+    newres = res
+  })
   document.querySelector('.loadingcontainermobile').style.display = 'block'
 
 
@@ -563,7 +577,7 @@ const mobileImageClick= async (e, len, val)=>{
   
    const body={
      wallimg: wallimgmobile,
-     designimg: desginimgmobile,
+     designimg: newres,
       detectionmode: 'walls'
    }
   
@@ -574,11 +588,11 @@ const mobileImageClick= async (e, len, val)=>{
        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
      },
    };
- axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+ axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
   
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
    setSegmentImg(true)
-   setProcessImg(res.data)
+   imgref.current.src = `data:image/png;base64, ${res.data}`
    }).catch(error=>{
      console.log(error)
      window.alert('Please try again...')
@@ -588,26 +602,31 @@ const mobileImageClick= async (e, len, val)=>{
    })
 }
 const leftArrowClick = async (e)=>{
-  e.preventDefault()
-  e.stopPropagation()
+ 
+  let newres;
+  
+ 
   currentIndex = (currentIndex + 1) % slides.length;
-  showSlide(currentIndex);
   console.log(currentIndex)
+  
+  
+ await showSlide(currentIndex);
+
   document.querySelector('.loadingcontainermobile').style.display = 'block'
 
 
   await  getBase64FromUrl(orgimg).then(res=>{
       wallimgmobile = res
     })
-  await  getBase64FromUrl(imgarray[currentIndex]).then(res=>{
-     desginimgmobile = res
+  await  resizeImage(walldata[currentIndex].imageurl[0]).then(res=>{
+     newres = res
     })
   
 
   
    const body={
      wallimg: wallimgmobile,
-     designimg: desginimgmobile,
+     designimg: newres,
       detectionmode: 'walls'
    }
   
@@ -618,11 +637,12 @@ const leftArrowClick = async (e)=>{
        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
      },
    };
- axios.post( 'http://13.233.5.185:5000/api/v1/infer', body, config).then(res=>{
+ axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
   
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
    setSegmentImg(true)
-   setProcessImg(res.data)
+   imgref.current.src = `data:image/png;base64, ${res.data}`
+   
    }).catch(error=>{
      console.log(error)
      window.alert('Please try again...')
@@ -1183,7 +1203,7 @@ gridval && gridval.addEventListener('scroll', ()=>{
   }
 })
 
-
+console.log(currentIndex)
   return (
 
  
@@ -1620,12 +1640,12 @@ gridval && gridval.addEventListener('scroll', ()=>{
     </div>
     <div className='mobilemaindisplay' id= 'mobilemaindisplay'>
       <div className='loadingcontainermobile'>
-      <div className='loaderdiv'>
-      <span class="loader"> </span>
+      <div className='loaderdivmobile'>
+      <span class="loadermobile"> </span>
       <p  className='loadingtext'>Loading..</p>
         </div> 
       </div>
-    <img  src= { segmentimg ? `data:image/png;base64, ${processimg}` : image }/>
+    <img   ref={imgref} src= {image }/>
     </div>
     <div className='imageslider'> 
      <button className='changeproductbutton'  onClick={handlechangeproductmobile}>Change product <FaChevronUp className='upicon'/></button>
@@ -1671,7 +1691,11 @@ gridval && gridval.addEventListener('scroll', ()=>{
     <div class="slider">
       {
         walldata && walldata.map((item,i)=>(
-          <img class="slide " src={item.imageurl[0]} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.imageurl[0])}/>
+         
+           <img class="slide " src={item.imageurl[0]} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.imageurl[0])}/>
+
+          
+         
         ))
       }
   
