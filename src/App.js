@@ -234,7 +234,7 @@ const [currentproduct, setCurrentProduct] = useState()
   }
 
 
-  console.log(temporgimage)
+
 
   const handlesearchclick =()=>{
    
@@ -680,6 +680,8 @@ const mobileImageClick= async (e, len, val)=>{
 }
 
 useEffect(()=>{
+
+  
   showSlide(activeIndex) 
 
    setCurrentProductMobile( filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] : walldata[activeIndex])
@@ -1029,24 +1031,45 @@ function showTooltip(e, image, text, len) {
 }
 
    
-const getSingleImage =(val)=>{
+const getSingleImage = async (val)=>{
  
   const body={
    id : val
   }
+  
   let newurl;
-  axios.post(singledemourl, body).then(res=>{
+ await axios.post(singledemourl, body).then(res=>{
  
-      getBase64FromUrl(res.data[0].imgurl)
+       convertToBase64(res.data[0].imgurl)
   })
+
  
+
+}
+const convertToBase64 = (url) => {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = url;
+
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const base64Img = canvas.toDataURL('image/jpeg'); // Change the format if needed
+    setTempOrgImage(base64Img)
+  };
 }
 
 
+
+
 const getBase64FromUrl = async (url) => {
-      
+
     
-  const data = await fetch(url);
+  const data = await getSingleImage(url);
   const blob = await data.blob();
   return new Promise((resolve) => {
     const reader = new FileReader();
