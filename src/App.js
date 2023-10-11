@@ -72,7 +72,7 @@ const [activeIndex, setActiveIndex] = useState(0);
 const [mobileoption, setMobileOption] = useState()
 const [currentproduct, setCurrentProduct] = useState()
  const [currentproductmobile, setCurrentProductMobile] = useState()
- const [demoimages, setDemoImages] = useState()
+ const [demoimages, setDemoImages] = useState([])
  const [mobsegmentimage, setMobSegmentImage] = useState(false)
  const [moborginalimage, setMobOriginalImage] = useState()
  const params= new URLSearchParams(window.location.search)
@@ -1034,11 +1034,16 @@ function showTooltip(e, image, text, len) {
 
 
 const getBase64FromUrl = async (url) => {
-
- 
- 
+  
+    let newurl ;
    
-  const data = await fetch(orgimg, {
+     demoimages && demoimages.forEach(item=>{
+      if(item.imgurl === url){
+        newurl = item.imgurl
+      }
+     })
+    
+  const data = await fetch(newurl, {
     headers: {
       'Access-Control-Allow-Origin': '*',
        
