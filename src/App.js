@@ -75,6 +75,7 @@ const [currentproduct, setCurrentProduct] = useState()
  const [demoimages, setDemoImages] = useState([])
  const [mobsegmentimage, setMobSegmentImage] = useState(false)
  const [moborginalimage, setMobOriginalImage] = useState()
+ const [tempindex, setTempIndex] = useState()
  const params= new URLSearchParams(window.location.search)
 
  const [temporgimage, setTempOrgImage] = useState()
@@ -212,6 +213,8 @@ const [currentproduct, setCurrentProduct] = useState()
     setSegmentImg(false)
     setProcessImg('')
   }
+
+ 
   const handlechangeroomclick = ()=>{
     
     setImage('')
@@ -1030,22 +1033,40 @@ function showTooltip(e, image, text, len) {
   }, 3000); 
 }
 
-   
+let walldesignurl;  
 const getSingleImage = async (val)=>{
+ 
  
   const body={
    id : val
   }
+
   
-  let newurl;
+  
  await axios.post(singledemourl, body).then(res=>{
  
-       convertToBase64(res.data[0].imgurl)
-  })
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = res.data[0].imgurl;
 
- 
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const  base64Img = canvas.toDataURL('image/jpeg'); 
+      setTempOrgImage(base64Img)
+    
+      
+  };
+  })
+  
 
 }
+
+
 const convertToBase64 = (url) => {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
@@ -1058,7 +1079,7 @@ const convertToBase64 = (url) => {
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
 
-    const base64Img = canvas.toDataURL('image/jpeg'); // Change the format if needed
+    const base64Img = canvas.toDataURL('image/jpeg'); 
     setTempOrgImage(base64Img)
   };
 }
@@ -1164,7 +1185,9 @@ async function urlToBase64(url) {
     return null;
   }
 }
-const handlewallpaperclick = async (len, val)=>{
+const handlewallpaperclick = async (e, len, val)=>{
+  e.preventDefault()
+
 
  setCurrentProduct(walldata && walldata[len].Patternnumber)
 
@@ -1172,6 +1195,8 @@ const handlewallpaperclick = async (len, val)=>{
     await  resizeImage(val).then(res=>{
      newres = res
     })
+
+   
   
 
   allmaincontainer && allmaincontainer.forEach(item=>{
@@ -1281,6 +1306,8 @@ const handlewallpaperclick = async (len, val)=>{
 
        }
 }
+
+ console.log(temporgimage)
 
 const handlegriditemclick =  async (len, val)=>{
     setCurrentProduct(walldata && walldata[len].Patternnumber)
@@ -2095,7 +2122,7 @@ const handleLoadMore =()=>{
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.Imageurl)}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
                     <img  src= {item.Imageurl}/>
@@ -2131,7 +2158,7 @@ const handleLoadMore =()=>{
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.Imageurl)}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
                     <img  src= {item.Imageurl}/>
