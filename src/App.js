@@ -188,7 +188,7 @@ const [currentproduct, setCurrentProduct] = useState()
     }, 2000);
   },[])
 
-  const handleimageclick = (val)=>{
+  const handleimageclick = async (val)=>{
   
     document.querySelector('.loadercontainer').style.display = 'block'
    
@@ -201,6 +201,8 @@ const [currentproduct, setCurrentProduct] = useState()
 
       
     }, 2000);
+
+    await getBase64FromUrl(val)
     setImage(val)
     setOrgImg(val)
     setDisplayDiv(true)
@@ -605,15 +607,13 @@ const rightArrowClick = async (e)=>{
     document.querySelector('.loadingcontainermobile').style.display = 'block'
 
 
-    await  getBase64FromUrl(orgimg).then(res=>{
-        wallimgmobile = res
-      })
+  
       await  resizeImage(walldata[currentIndex].Imageurl).then(res=>{
         newres = res
        })
 
      const body={
-       wallimg: wallimgmobile,
+       wallimg: temporgimage,
        designimg: newres,
         detectionmode: 'walls'
      }
@@ -686,9 +686,6 @@ useEffect(()=>{
       
      
      
-       await  getBase64FromUrl(orgimg).then(res=>{
-           wallimgmobile = res
-         })
        await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] &&  filteredarray[activeIndex].Imageurl : walldata[activeIndex] && 
          walldata[activeIndex].Imageurl).then(res=>{
           newres = res
@@ -697,7 +694,7 @@ useEffect(()=>{
      
          document.querySelector('.loadingcontainermobile').style.display = 'block'
         const body={
-          wallimg: wallimgmobile,
+          wallimg: temporgimage,
           designimg: newres,
            detectionmode: 'walls'
         }
@@ -775,9 +772,7 @@ const leftArrowClick = async (e)=>{
   document.querySelector('.loadingcontainermobile').style.display = 'block'
 
 
-  await  getBase64FromUrl(orgimg).then(res=>{
-      wallimgmobile = res
-    })
+
   await  resizeImage(walldata[currentIndex].Imageurl).then(res=>{
      newres = res
     })
@@ -785,7 +780,7 @@ const leftArrowClick = async (e)=>{
 
   
    const body={
-     wallimg: wallimgmobile,
+     wallimg: temporgimage,
      designimg: newres,
       detectionmode: 'walls'
    }
@@ -967,10 +962,10 @@ const handlegridchangeclickmob = ()=>{
 const handleRemoveClick = async (val)=>{
   if(val === 'removeproduct'){
    
-    await getBase64FromUrl(orgimg).then(res=>{
+   
     
-      imgref.current.src =  res
-    })
+      imgref.current.src =  temporgimage
+    
   }
   if(val === 'changeroom'){
     handlechangeroomclick()
@@ -1034,23 +1029,8 @@ function showTooltip(e, image, text, len) {
 
 
 const getBase64FromUrl = async (url) => {
-  
-    let newurl ;
-   
-     demoimages && demoimages.forEach(item=>{
-      if(item.imgurl === url){
-        newurl = item.imgurl
-      }
-     })
     
-  const data = await fetch(newurl, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-       
-   
-    },
-    
-  });
+  const data = await fetch(url);
   const blob = await data.blob();
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -1058,9 +1038,13 @@ const getBase64FromUrl = async (url) => {
     reader.onloadend = () => {
       const base64data = reader.result;   
       resolve(base64data);
+
+      setTempOrgImage(base64data)
     }
   });
 }
+
+
 
 function showTooltipmob(image, text, len) {
   const tooltip = document.getElementById(`tooltipmob_${len}`);
@@ -1162,12 +1146,10 @@ const handlewallpaperclick = async (len, val)=>{
          document.querySelector('.loadingcontainermain').style.display= 'block'
   
        
-       await  getBase64FromUrl(orgimg).then(res=>{
-          wall64img = res
-         })
+     
    
         const body={
-          wallimg: wall64img,
+          wallimg: temporgimage,
           designimg: newres,
            detectionmode: 'walls'
         }
@@ -1223,14 +1205,11 @@ const handlewallpaperclick = async (len, val)=>{
  
       
      
-        await  getBase64FromUrl(orgimg).then(res=>{
-          wall64img = res
-         })
-  
+     
 
      
        const body={
-         wallimg: wall64img,
+         wallimg: temporgimage,
          designimg: newres,
           detectionmode: 'walls'
        }
@@ -1281,10 +1260,7 @@ const handlegriditemclick =  async (len, val)=>{
       document.querySelector('.loadingcontainermain').style.display= 'block'
   
        
-      await  getBase64FromUrl(orgimg).then(res=>{
-         wall64img = res
-        })
- 
+   
         let count = 1
 
         const countbody = {
@@ -1294,7 +1270,7 @@ const handlegriditemclick =  async (len, val)=>{
         }
    
        const body={
-         wallimg: wall64img,
+         wallimg: temporgimage,
          designimg: newres,
           detectionmode: 'walls'
        }
@@ -1329,14 +1305,12 @@ const handlegriditemclick =  async (len, val)=>{
       document.querySelector('.loadingcontainermain').style.display= 'block'
   
        
-      await  getBase64FromUrl(orgimg).then(res=>{
-         wall64img = res
-        })
+    
      
 
    
        const body={
-         wallimg: wall64img,
+         wallimg: temporgimage,
          designimg: newres,
           detectionmode: 'walls'
        }
