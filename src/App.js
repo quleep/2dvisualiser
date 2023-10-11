@@ -1037,7 +1037,7 @@ const getBase64FromUrl = async (url) => {
        
    
     },
-    mode: 'cors'
+    mode: 'no-cors'
   });
   const blob = await data.blob();
   return new Promise((resolve) => {
