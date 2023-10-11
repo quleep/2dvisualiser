@@ -96,6 +96,7 @@ const [currentproduct, setCurrentProduct] = useState()
   let  testurl2 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389762.jpg'
   let testurl3 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389063.jpg'
   const demoimageurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getdemoimageurl'
+  const singledemourl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getsingledemoimage'
   const newimg = ''
   const formdata = new FormData()
   const handlemodalopen =()=>{
@@ -188,7 +189,7 @@ const [currentproduct, setCurrentProduct] = useState()
     }, 2000);
   },[])
 
-  const handleimageclick = async (val)=>{
+  const handleimageclick = async (id, val)=>{
   
     document.querySelector('.loadercontainer').style.display = 'block'
    
@@ -202,7 +203,9 @@ const [currentproduct, setCurrentProduct] = useState()
       
     }, 2000);
 
-    await getBase64FromUrl(val)
+    await getSingleImage(id)
+
+
     setImage(val)
     setOrgImg(val)
     setDisplayDiv(true)
@@ -231,7 +234,7 @@ const [currentproduct, setCurrentProduct] = useState()
   }
 
 
-  
+  console.log(temporgimage)
 
   const handlesearchclick =()=>{
    
@@ -1026,10 +1029,22 @@ function showTooltip(e, image, text, len) {
 }
 
    
-
+const getSingleImage =(val)=>{
+ 
+  const body={
+   id : val
+  }
+  let newurl;
+  axios.post(singledemourl, body).then(res=>{
+ 
+      getBase64FromUrl(res.data[0].imgurl)
+  })
+ 
+}
 
 
 const getBase64FromUrl = async (url) => {
+      
     
   const data = await fetch(url);
   const blob = await data.blob();
@@ -2264,7 +2279,7 @@ const handleLoadMore =()=>{
 
                 {
                   demoimages && demoimages.map(item=>(
-                    <div  onClick={()=>handleimageclick(item.imgurl)}>
+                    <div  onClick={()=>handleimageclick(item.Id, item.imgurl)}>
                     <img src={item.imgurl} />
                      <p>{item.room}</p>
                   </div>
