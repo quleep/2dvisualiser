@@ -52,6 +52,8 @@ function App() {
   const [viewalldesign, setViewAllDesign ] = useState(false)
   const [viewallcollection, setViewAllCollection ] = useState(false)
 
+  const [pageno, setPageNo] = useState(1)
+
 
   const [ratingValue, setRatingValue] = useState(0)
   const [displaydiv, setDisplayDiv] = useState(false)
@@ -63,18 +65,35 @@ function App() {
   const [scrolltopgrid, setScrollTopGrid] = useState(false)
   const [walldata, setWallData] = useState([])
   const [filteredarray, setFilteredArray] = useState()
-
+ 
+  const [scrollPosition, setScrollPosition] = useState(0);
+const scrollContainerRef = useRef(null);
+const [activeIndex, setActiveIndex] = useState(0);
+const [mobileoption, setMobileOption] = useState()
+const [currentproduct, setCurrentProduct] = useState()
+ const [currentproductmobile, setCurrentProductMobile] = useState()
+ const [demoimages, setDemoImages] = useState()
+ const [mobsegmentimage, setMobSegmentImage] = useState(false)
+ const [moborginalimage, setMobOriginalImage] = useState()
+ const params= new URLSearchParams(window.location.search)
+ const pid= params.get('brand')
+ const user = params.get('user')
   const imgref = useRef()
+
+ 
   const colorArray = [
  
 
 
   ]
     const getbranddetails= 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getbranddetails'
+    const getbrandapi = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getdesignbybrand'
+    const addviewsurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/addviewscount'
 
   let testurl = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/WA_2608-1.jpg'
   let  testurl2 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389762.jpg'
   let testurl3 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389063.jpg'
+  const demoimageurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getdemoimageurl'
   const newimg = ''
   const formdata = new FormData()
   const handlemodalopen =()=>{
@@ -85,28 +104,79 @@ function App() {
    
 
   }
+   
+  let designapi;
+  let token;
+
+  useEffect(()=>{
+     axios.get(demoimageurl).then(res=>{
+      setDemoImages(res.data)
+     })
+  },[])
+  console.log(demoimages)
+
+     const getapidata = async()=>{
+
+       let designapi;
+       let token;
+       let newvalue;
+      const body = {
+        brand: pid
+      }
+     await axios.post(getbrandapi, body).then(res=>{
+          designapi = res.data[0].designapi
+          token = res.data[0].token
+         newvalue = {
+          designapi : designapi,
+          token : token
+        }
+         
+      
+        
+      })
+      return newvalue
+      
+     }
+    
+   
 
     
     const [branddetails, setBrandDetails] = useState()
-  
-     useEffect(()=>{
-        const brandbody={
-            brand: 'excel'
-          }
-               const config = {
-       headers: {
-         'Access-Control-Allow-Origin': '*',
-       
-       },
-     };
+
+    useEffect(()=>{
+
+      const fetchData = async () => {
+
+         const getvalue = await getapidata()
+
         
-          axios.post(getbranddetails, brandbody).then(res=>{
-           
-            setWallData(res.data)
-          }).catch(error=>{
-            console.log(error)
-          })
-     },[])
+        
+
+        let designapi;
+        let token;
+        const config = {
+          headers: {
+          'Access-Control-Allow-Origin': '*',
+          
+          },
+          };
+        try {
+          const response = await axios.get(`${getvalue && getvalue.designapi}?token=${getvalue && getvalue.token}&page=${pageno}`, config);
+          const newData = response.data.data; 
+  
+
+          setWallData((prevItems) => [...prevItems, ...newData]);
+          
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+      fetchData();
+},[pageno])
+  
+   
+
+  
     
 
   useEffect(()=>{
@@ -117,6 +187,7 @@ function App() {
   },[])
 
   const handleimageclick = (val)=>{
+  
     document.querySelector('.loadercontainer').style.display = 'block'
    
 
@@ -367,14 +438,14 @@ useEffect(()=>{
     let newarray = []
      for(let i =0; i < walldata.length ; i++){
        
-       if( checkarray.includes(walldata[i].collection) ){
+       if( checkarray.includes(walldata[i].Collection) ){
         console.log('collection')
          newarray.push(walldata[i])
-        }else if(checkarray.includes(walldata[i].designstyle)){
+        }else if(checkarray.includes(walldata[i].Designstyle)){
         console.log('design')
 
            newarray.push(walldata[i])
-        }else if(checkarray.includes(walldata[i].colorvalue[0])){
+        }else if(checkarray.includes(walldata[i].Color)){
         console.log('color')
 
            newarray.push(walldata[i])
@@ -469,17 +540,17 @@ document.addEventListener('click', (event) => {
 });
 
 
-const slides = document.querySelectorAll('.slide');
+const slides = document.querySelectorAll('.mobilesliderimage');
 const prevButton = document.getElementById('prevButton');
 const nextButton = document.getElementById('nextButton');
-const slider = document.querySelector('.slider');
+const slider = document.querySelector('.mobilesliderimage');
 let currentIndex = 0;
 
 
   let wallimgmobile;
   let temindex = 0;
  async function showSlide(index) {
-  console.log(index)
+ 
  slides &&  slides.forEach((slide, i) => {
 
     if (i === index) {
@@ -489,15 +560,12 @@ let currentIndex = 0;
     }
   });
   
-  const slideWidth =  slides[0].clientWidth;
- 
-   slider.style.transform = `translateX(-${slideWidth * currentIndex }px)`;
-
-
   
+ 
 }
 
-async function showSlideMob(index){
+async function showSlideMob( index){
+ 
   slides &&  slides.forEach((slide, i) => {
 
     if (i === index) {
@@ -506,7 +574,19 @@ async function showSlideMob(index){
       slide.classList.remove('active');
     }
   });
-  const slideWidth =  slides[0].clientWidth;
+
+  
+   currentIndex = index
+}
+ 
+
+function updateSlider() {
+  slides.forEach((slide, index) => {
+      const translateX =   slides[0].clientWidth*currentIndex
+      console.log(translateX)
+     
+      slide.style.transform = `translateX(-${translateX}px)`;
+  });
 }
 
 
@@ -514,8 +594,11 @@ const rightArrowClick = async (e)=>{
   
   e.preventDefault()
   let newres;
-  currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-
+  if (currentIndex > 0) {
+    currentIndex--;
+    updateSlider();
+}
+ 
     showSlide(currentIndex);
     document.querySelector('.loadingcontainermobile').style.display = 'block'
 
@@ -523,7 +606,7 @@ const rightArrowClick = async (e)=>{
     await  getBase64FromUrl(orgimg).then(res=>{
         wallimgmobile = res
       })
-      await  resizeImage(walldata[currentIndex].imageurl[0]).then(res=>{
+      await  resizeImage(walldata[currentIndex].Imageurl).then(res=>{
         newres = res
        })
 
@@ -540,7 +623,7 @@ const rightArrowClick = async (e)=>{
          'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
        },
      };
-   axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+   axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
     
      document.querySelector('.loadingcontainermobile').style.display = 'none' 
      setSegmentImg(true)
@@ -556,58 +639,133 @@ const rightArrowClick = async (e)=>{
 
 
 }
+useEffect(() => {
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      const newScrollPosition = scrollContainerRef.current.scrollLeft;
+      setScrollPosition(newScrollPosition);
+    }
+  };
+
+  if (scrollContainerRef.current) {
+    scrollContainerRef.current.addEventListener('scroll', handleScroll);
+  }
+
+  return () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.removeEventListener('scroll', handleScroll);
+    }
+  };
+}, []);
+
+
 
 const mobileImageClick= async (e, len, val)=>{
   e.preventDefault()
   e.stopPropagation()
-  showSlideMob(len);
- let newres ;
-  await resizeImage(val).then(res=>{
-    newres = res
-  })
-  document.querySelector('.loadingcontainermobile').style.display = 'block'
+ 
+ 
 
-
-  await  getBase64FromUrl(orgimg).then(res=>{
-      wallimgmobile = res
-    })
-
+ 
+   setActiveIndex(len)
   
-
-  
-   const body={
-     wallimg: wallimgmobile,
-     designimg: newres,
-      detectionmode: 'walls'
-   }
-  
-   const config = {
-     headers: {
-       'Access-Control-Allow-Origin': '*',
-       'Content-Type': 'application/json',
-       'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
-     },
-   };
- axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
-  
-   document.querySelector('.loadingcontainermobile').style.display = 'none' 
-   setSegmentImg(true)
-   imgref.current.src = `data:image/png;base64, ${res.data}`
-   }).catch(error=>{
-     console.log(error)
-     window.alert('Please try again...')
-     
-   document.querySelector('.loadingcontainermobile').style.display = 'none' 
-  
-   })
+ 
+ 
 }
+
+useEffect(()=>{
+  showSlide(activeIndex) 
+
+   setCurrentProductMobile( filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] : walldata[activeIndex])
+  
+     const getSegmentImage = async()=>{
+      let newres;
+     
+      
+     
+     
+       await  getBase64FromUrl(orgimg).then(res=>{
+           wallimgmobile = res
+         })
+       await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] &&  filteredarray[activeIndex].Imageurl : walldata[activeIndex] && 
+         walldata[activeIndex].Imageurl).then(res=>{
+          newres = res
+         })
+       
+     
+         document.querySelector('.loadingcontainermobile').style.display = 'block'
+        const body={
+          wallimg: wallimgmobile,
+          designimg: newres,
+           detectionmode: 'walls'
+        }
+        let count = 1
+
+        const countbody = {
+          brand: pid,
+          viewscount : count,
+          user : user
+        }
+       
+        const config = {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+          },
+        };
+      axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+
+       
+        document.querySelector('.loadingcontainermobile').style.display = 'none' 
+        setSegmentImg(true)
+        imgref.current.src = `data:image/png;base64, ${res.data}`
+        
+        }).then(()=>{
+          axios.post(addviewsurl, countbody).then(res=>{
+
+          })
+        })
+        
+        .catch(error=>{
+          console.log(error)
+          window.alert('Please try again...')
+          
+        document.querySelector('.loadingcontainermobile').style.display = 'none' 
+       
+        })
+     }
+      getSegmentImage()
+    
+},[activeIndex])
+
+
+ 
+
+const handleScroll = (scrollValue) => {
+    
+
+  if (scrollContainerRef.current) {
+    const newScrollPosition = scrollPosition + scrollValue;
+    scrollContainerRef.current.scrollLeft = newScrollPosition;
+    setScrollPosition(newScrollPosition);
+  }
+
+  if(scrollValue === 100 ){
+     setActiveIndex(activeIndex+1)
+      
+  }
+  if(scrollValue === -100 && activeIndex > 0){
+    setActiveIndex(activeIndex-1)
+
+  }
+};
 const leftArrowClick = async (e)=>{
  
   let newres;
   
- 
-  currentIndex = (currentIndex + 1) % slides.length;
-  console.log(currentIndex)
+
+
   
   
  await showSlide(currentIndex);
@@ -618,7 +776,7 @@ const leftArrowClick = async (e)=>{
   await  getBase64FromUrl(orgimg).then(res=>{
       wallimgmobile = res
     })
-  await  resizeImage(walldata[currentIndex].imageurl[0]).then(res=>{
+  await  resizeImage(walldata[currentIndex].Imageurl).then(res=>{
      newres = res
     })
   
@@ -637,7 +795,7 @@ const leftArrowClick = async (e)=>{
        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
      },
    };
- axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+ axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
   
    document.querySelector('.loadingcontainermobile').style.display = 'none' 
    setSegmentImg(true)
@@ -665,14 +823,14 @@ const handlechangeproductmobile = ()=>{
  document.querySelector('.imageslider').style.display = 'none'
  document.querySelector('.slider-container').style.display = 'block'
  document.querySelector('.filtermobilecontainer').style.display = 'flex'
- document.querySelector('.changeroomsidebutton').style.display = 'none'
+
 
 }
 const handleclosefiltermobile = ()=>{
   document.querySelector('.imageslider').style.display = 'flex'
   document.querySelector('.slider-container').style.display = 'none'
   document.querySelector('.filtermobilecontainer').style.display = 'none'
- document.querySelector('.changeroomsidebutton').style.display = 'flex'
+
 
 }
 
@@ -801,40 +959,22 @@ const handlegridchangeclickmob = ()=>{
 
 }
 
-const handledropdownchange =(e)=>{
-   
-  if(e.target.value === 'removeproduct'){
-    setImage('')
-    setDisplayDiv(false)
-    document.querySelector('.modalinsidecontent').style.display = 'flex'
-    
-    document.querySelector('.datashowcontainer').style.display = 'none'
-   
-   
 
-    document.querySelector('.viewallcontainer').classList.toggle('viewmain')
-    document.querySelector('.viewallmobile').classList.toggle('viewmobile')
+
+
+const handleRemoveClick = async (val)=>{
+  if(val === 'removeproduct'){
+   
+    await getBase64FromUrl(orgimg).then(res=>{
+    
+      imgref.current.src =  res
+    })
   }
+  if(val === 'changeroom'){
+    handlechangeroomclick()
+  }
+
 }
-document.getElementById("dropdown") && document.getElementById("dropdown").addEventListener("change", function(event) {
-  event.preventDefault(); 
-  if(event.target.value === 'removeproduct'){
-    this.selectedIndex = 0
-    setImage('')
-    setDisplayDiv(false)
-    document.querySelector('.modalinsidecontent').style.display = 'flex'
-    
-    document.querySelector('.datashowcontainer').style.display = 'none'
-   
-   
-
-    document.querySelector('.viewallcontainer').classList.toggle('viewmain')
-    document.querySelector('.viewallmobile').classList.toggle('viewmobile')
-  }else{
-    this.selectedIndex = 0
-  }
-  
-});
 
 const scrollimage = document.getElementById("imagecontainermain");
 let scale = 1;
@@ -890,7 +1030,14 @@ function showTooltip(e, image, text, len) {
      
 
 const getBase64FromUrl = async (url) => {
-  const data = await fetch(url);
+  const config = {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+   
+    },
+  }
+   
+  const data = await fetch(url, config);
   const blob = await data.blob();
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -983,6 +1130,8 @@ async function urlToBase64(url) {
 }
 const handlewallpaperclick = async (len, val)=>{
 
+ setCurrentProduct(walldata && walldata[len].Patternnumber)
+
   let newres;
     await  resizeImage(val).then(res=>{
      newres = res
@@ -995,7 +1144,7 @@ const handlewallpaperclick = async (len, val)=>{
     
    })
       if(document.getElementById(`checkboxitem_${len}`).checked){
-         console.log(val)
+         
         document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
          document.querySelector('.loadingcontainermain').style.display= 'block'
   
@@ -1009,6 +1158,14 @@ const handlewallpaperclick = async (len, val)=>{
           designimg: newres,
            detectionmode: 'walls'
         }
+
+        let count = 1
+
+        const countbody = {
+          brand: pid,
+          viewscount : count,
+          user : user
+        }
     
         const config = {
           headers: {
@@ -1017,13 +1174,19 @@ const handlewallpaperclick = async (len, val)=>{
             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
           },
         };
-        axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+      await  axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
          
-       
+     
         document.querySelector('.loadingcontainermain').style.display= 'none'   
         setSegmentImg(true)
         setProcessImg(res.data)
-        }).catch(error=>{
+        }).then(res=>{
+          axios.post(addviewsurl, countbody).then(res=>{
+            
+          })
+        }).
+        
+        catch(error=>{
           console.log(error)
           window.alert('Please try again...')
           document.querySelector('.loadingcontainermain').style.display= 'none'
@@ -1032,8 +1195,15 @@ const handlewallpaperclick = async (len, val)=>{
 
    
        }else{
+        let count = 1
 
-        console.log(val)
+        const countbody = {
+          brand: pid,
+          viewscount : count,
+          user : user
+        }
+
+       
         document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
        
         document.querySelector('.loadingcontainermain').style.display= 'block'
@@ -1059,12 +1229,18 @@ const handlewallpaperclick = async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
        setProcessImg(res.data)
-       }).catch(error=>{
+       }).then(res=>{
+        axios.post(addviewsurl, countbody).then(res=>{
+            
+        })
+       })
+       
+       .catch(error=>{
         window.alert('Please try again...')
          console.log(error)
          document.querySelector('.loadingcontainermain').style.display= 'none'
@@ -1075,7 +1251,7 @@ const handlewallpaperclick = async (len, val)=>{
 }
 
 const handlegriditemclick =  async (len, val)=>{
-
+    setCurrentProduct(walldata && walldata[len].Patternnumber)
     let newres;
     await  resizeImage(val).then(res=>{
      newres = res
@@ -1096,7 +1272,13 @@ const handlegriditemclick =  async (len, val)=>{
          wall64img = res
         })
  
+        let count = 1
 
+        const countbody = {
+          brand: pid,
+          viewscount : count,
+          user : user
+        }
    
        const body={
          wallimg: wall64img,
@@ -1111,12 +1293,17 @@ const handlegriditemclick =  async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
        setProcessImg(res.data)
-       }).catch(error=>{
+       }).then(res=>{
+         axios.post(addviewsurl, countbody).then(res=>{
+
+         })
+       })
+       .catch(error=>{
          console.log(error)
          window.alert('Please try again...')
          document.querySelector('.loadingcontainermain').style.display= 'none'
@@ -1148,7 +1335,7 @@ const handlegriditemclick =  async (len, val)=>{
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-       axios.post( 'http://13.127.25.111:5000/api/v1/infer', body, config).then(res=>{
+       axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermain').style.display= 'none'   
        setSegmentImg(true)
@@ -1203,7 +1390,13 @@ gridval && gridval.addEventListener('scroll', ()=>{
   }
 })
 
-console.log(currentIndex)
+
+
+const handleLoadMore =()=>{
+  setPageNo(pageno+1)
+}
+
+
   return (
 
  
@@ -1471,8 +1664,8 @@ console.log(currentIndex)
   
   walldata && walldata.map((item,i)=>(
     <div>
-    <div className='searchitemgridinside' onClick={()=>showTooltipmob(item.imageurl[0], 'image1', i)}>
-     <img src= {item.imageurl[0]}/>
+    <div className='searchitemgridinside' onClick={()=>showTooltipmob(item.Imageurl, 'image1', i)}>
+     <img src= {item.Imageurl}/>
    
     </div>
     <div class="tooltip" id={`tooltipmob_${i}`}>
@@ -1502,7 +1695,7 @@ console.log(currentIndex)
                   <div>
                   <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.imageurl[0]}/>
+                    <img  src= {item.Imageurl}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -1546,18 +1739,14 @@ console.log(currentIndex)
      </div>
      <div className='topbuttoncontainer'>
       <button className='productdetailsbutton' >VIEW DETAILS</button>
-       <select id= 'dropdown'  > 
-          <option style={{display:'none'}}  >PRODUCT DETAILS</option>
-         <option value={'compare'}> 
-          Compare </option>
-        <option value={'removeproduct'} >Remove product</option>
-        <option value={'rotatesurface'}>Rotate surface</option>
+       <select id= 'dropdown'  onChange={(e)=> handleRemoveClick(e.target.value)}  > 
+          <option style={{display:'none'}} value= '' selected >PRODUCT DETAILS</option>
+        
+        <option value='removeproduct' >Remove Product</option>
+        <option value='changeroom' >Change Room</option>
 
        </select>
-       
-  
-
-     </div>
+      </div>
 
      <div className='hamburgerbutton'>
      <div class="container"  >
@@ -1574,13 +1763,13 @@ console.log(currentIndex)
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
               <p>You are viewing:</p>
-              <h3>Current product 125486</h3>
+              <h3>Current product: {currentproduct && currentproduct}</h3>
               </div>
             
             </div>
             <div className='brandproductbutton'>
               <div className='productpagebutton'>
-                <button>Go to productpage <FaRegShareSquare className='producticon'/></button>
+                <button > <a href='https://excelwallpapers.com' >Go to website <FaRegShareSquare className='producticon'/></a> </button>
 
               </div>
 
@@ -1645,26 +1834,36 @@ console.log(currentIndex)
       <p  className='loadingtext'>Loading..</p>
         </div> 
       </div>
-    <img   ref={imgref} src= {image }/>
+    <img   ref={ imgref} src= {image }/>
     </div>
     <div className='imageslider'> 
      <button className='changeproductbutton'  onClick={handlechangeproductmobile}>Change product <FaChevronUp className='upicon'/></button>
    
 
     </div>
-    <div className='changeroomsidebutton' onClick={handlechangeroomclick}>
+    {
+      /*
+       <div className='changeroomsidebutton' onClick={handlechangeroomclick}>
         <FaCameraRetro/>
 
       </div>
+      */
+    }
+   
     <div className='filtermobilecontainer'>
     <div className='filtermobileproductname'>
-        <p>Photo wallpaper D1145</p>
+        <p>{currentproductmobile && currentproductmobile.Productname} { currentproductmobile && currentproductmobile.Patternnumber }  </p>
     </div>
     <div className='filtercontainermobile'>
      <div>
-      <div className='mobilecontainersearchfilter'  onClick={handlesearchmobileclick}>
+      {
+        /*
+          <div className='mobilecontainersearchfilter'  onClick={handlesearchmobileclick}>
       <FaSearch/>
       </div>
+        */
+      }
+    
       
      </div>
      <div>
@@ -1687,8 +1886,37 @@ console.log(currentIndex)
     </div>
 </div>
     <div class="slider-container">
-    
-    <div class="slider">
+
+       <div className='mobileslider' ref={scrollContainerRef}>
+      
+        {
+          
+       filteredarray && filteredarray.length > 0 ? 
+       filteredarray && filteredarray.map((item,i)=>(
+        <div  >
+        <img className='mobilesliderimage'  src={item.Imageurl} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
+       </div>
+     
+       ))  :
+
+
+          walldata && walldata.map((item,i)=>(
+            <div  >
+            <img className='mobilesliderimage'  src={item.Imageurl} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
+           </div>
+          ))
+        }
+       
+      
+        
+      
+
+
+       </div>
+
+      {
+        /*
+           <div class="slider">
       {
         walldata && walldata.map((item,i)=>(
          
@@ -1700,8 +1928,13 @@ console.log(currentIndex)
       }
   
     </div>
-    <button class="prev" id="prevButton" onClick={rightArrowClick}>&#10094;</button>
-    <button class="next" id="nextButton"  onClick={leftArrowClick}>&#10095;</button>
+        
+        */
+      }
+    
+ 
+    <button class="prev" id="prevButton" onClick={()=>handleScroll(-100)}>&#10094;</button>
+    <button class="next" id="nextButton"  onClick={()=>handleScroll(100)}>&#10095;</button>
   </div>
 
       </div>
@@ -1717,13 +1950,13 @@ console.log(currentIndex)
            <FaTimes className='searchicons'/>
           </div>
           <div className='navitems'>
-            <p> <FaPlus className='navicons'/> COMPARE</p>
+           
           </div >
           <div className='navitems' onClick={handleremovewallpaper}>
             <p> <FaTrash className='navicons'/> REMOVE PRODUCT</p>
           </div>
           <div className='navitems'>
-            <p> <FaRedo  className='navicons'/> ROTATE SURACE</p>
+          
           </div>
           <div className='navitems'  onClick={handlechangeroomclick}>
             <p> <FaCamera className='navicons'/> CHANGE ROOM</p>
@@ -1775,17 +2008,17 @@ console.log(currentIndex)
                   <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
-                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.imageurl[0])}/>
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl)}/>
                   <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
-                   <img src= {item.imageurl[0]}/>
+                   <img src= {item.Imageurl}/>
                  
                   </div>
                   <div class="tooltip" id={`tooltip_${i}`}>
                     <div className='tooltipinside'>
-                      <h3>Non-woven wallpaper 393465</h3>
-                      <p>Size: 125 * 152 mm</p>
+                      <h3>{item.Productname} {item.Patternnumber}</h3>
+                      <p>Size: {item.length} * {item.wide} mtrs</p>
                       <div className='productpagelinkgrid'>
-                      <p>Go to product page</p>
+                      <p>Roll size: {item.Rollsize} sqft</p>
                       </div>
                       </div>
                   </div>
@@ -1798,21 +2031,28 @@ console.log(currentIndex)
                   <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
-                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.imageurl[0])}/>
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl)}/>
                   <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
-                   <img src= {item.imageurl[0]}/>
+                   <img src= {item.Imageurl}/>
                  
                   </div>
                   <div class="tooltip" id={`tooltip_${i}`}>
-                    <div className='tooltipinside'>
-                      <h3>Non-woven wallpaper 393465</h3>
-                      <p>Size: 125 * 152 mm</p>
+                  <div className='tooltipinside'>
+                      <h3>{item.Productname} {item.Patternnumber}</h3>
+                      <p>Size: {item.length} * {item.wide} mtrs</p>
                       <div className='productpagelinkgrid'>
-                      <p>Go to product page</p>
+                      <p>Roll size: {item.Rollsize} sqft</p>
                       </div>
                       </div>
                   </div>
                   </label>
+                  {
+                  i === walldata.length-1  ?
+                  <div  className='loadmoredivgrid'>
+                     <button  onClick={handleLoadMore} >Load more</button>
+                    </div>
+                : ''
+                } 
                 </div>
               
                 ))
@@ -1828,22 +2068,23 @@ console.log(currentIndex)
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.imageurl[0])}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.Imageurl)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.imageurl[0]}/>
+                    <img  src= {item.Imageurl}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
   
                     <div className='wallpaperdetailsinside'>
-                      <p>newallpapers</p>
-                      <p className='categoryname'>newrovement</p>
-                      <p >368956</p>
+                    <p>{item.Collection}</p>
+                      <p className='categoryname'>{item.Productname}</p>
+                      <p >{item.Patternnumber}</p>
                       <div className='dimensions'>
-                      <p className='productid'>size: 36*25</p>
-                      <p>link</p>
+                      <p className='productid'>size: {item.length}*{item.wide} mtrs </p>
+                      <p>Roll size: {item.Rollsize} sqft</p>
                       </div>
+                      
                       
   
   
@@ -1863,21 +2104,21 @@ console.log(currentIndex)
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.imageurl[0])}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={()=>handlewallpaperclick(i, item.Imageurl)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.imageurl[0]}/>
+                    <img  src= {item.Imageurl}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
   
                     <div className='wallpaperdetailsinside'>
-                      <p>newallpapers</p>
-                      <p className='categoryname'>newrovement</p>
-                      <p >368956</p>
+                      <p>{item.Collection}</p>
+                      <p className='categoryname'>{item.Productname}</p>
+                      <p >{item.Patternnumber}</p>
                       <div className='dimensions'>
-                      <p className='productid'>size: 36*25</p>
-                      <p>link</p>
+                      <p className='productid'>size: {item.length}*{item.wide} mtrs </p>
+                      <p>Roll size: {item.Rollsize} sqft</p>
                       </div>
                       
   
@@ -1891,7 +2132,14 @@ console.log(currentIndex)
                   
             
                </label>
-                  
+
+                {
+                  i === walldata.length-1  ?
+                  <div  className='loadmorediv'>
+                     <button  onClick={handleLoadMore} >Load more</button>
+                    </div>
+                : ''
+                } 
                 </div>
                 ))
 
@@ -1925,13 +2173,13 @@ console.log(currentIndex)
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
               <p>You are viewing:</p>
-              <h3>Current product 125486</h3>
+              <h3>Current product: {currentproduct && currentproduct}</h3>
               </div>
             
             </div>
             <div className='brandproductbutton'>
               <div className='productpagebutton'>
-                <button>Go to productpage <FaRegShareSquare className='producticon'/></button>
+                <button><a href='https://excelwallpapers.com' >Go to website</a> <FaRegShareSquare className='producticon'/></button>
 
               </div>
 
@@ -1994,7 +2242,7 @@ console.log(currentIndex)
             <FaTimes/>
             </span>
        
-        <h1> See Roven wallpapers in your room</h1>
+        <h1> See Excel wallpapers in your room</h1>
           </div>
           <div className='uploaddivcontainer'>
           <div className='uploadbuttoncontainer'>
@@ -2024,22 +2272,16 @@ console.log(currentIndex)
           <div className='tryimagecontainer'> 
           <h2>Don't have a picture? Try our demo rooms instead </h2> 
             <div className='imagecontainer'>
-                <div  onClick={()=>handleimageclick(img1)}>
-                  <img src={img1} />
-                   <p>Waiting Area</p>
-                </div>
-                <div onClick={()=>handleimageclick(img2)}>
-                <img src={img2} />
-                <p>Living Room</p>
-                </div>
-                <div onClick={()=>handleimageclick(img3)}>
-                <img src={img3} />
-                <p>Bedroom</p>
-                </div>
-                <div onClick={()=>handleimageclick(img4)}>
-                <img src={img4} />
-                <p>Kitchen</p>
-                </div>
+
+                {
+                  demoimages && demoimages.map(item=>(
+                    <div  onClick={()=>handleimageclick(item.imgurl)}>
+                    <img src={item.imgurl} />
+                     <p>{item.room}</p>
+                  </div>
+                  ))
+                }
+                
 
             </div>
           </div>

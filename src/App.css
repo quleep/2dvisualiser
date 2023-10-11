@@ -47,7 +47,7 @@ body {
   
   overflow-y: scroll;
   background-color: rgb(231, 230, 230);
- 
+
 
  
  
@@ -1200,6 +1200,7 @@ body {
   margin: 5px;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
  }
  .iconone img{
   width: 100%;
@@ -1217,12 +1218,54 @@ body {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  cursor: pointer;
+
  }
  .icontwo img{
   width: 100%;
   height: 100%;
   object-fit: contain;
  }
+ .loadmorediv{
+  display: flex;
+  width: 100%;
+  height: 30px;
+ 
+  align-items: center;
+  justify-content: center;
+ }
+ .loadmorediv button{
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 5px;
+  font-family: Loto, sans-serif;
+  cursor: pointer;
+  
+ }
+ .productpagebutton a{
+  text-decoration: none;
+  color: white;
+  
+ }
+ .loadmoredivgrid{
+  display: flex;
+  width: 100%;
+  height: 20px;
+  margin-top: 5px;
+ 
+  align-items: center;
+  justify-content: center;
+  
+ }
+ .loadmoredivgrid button{
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 5px;
+  font-family: Loto, sans-serif;
+  cursor: pointer;
+  
+ }
+
  .iconthree{
   height: 40px;
   display: flex;
@@ -1233,6 +1276,8 @@ body {
   margin: 5px;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+
  }
  .iconthree img{
   width: 100%;
@@ -1265,6 +1310,8 @@ body {
    display: flex;
    align-items: center;
    width: 100%;
+   flex-wrap: wrap;
+   flex-direction: row;
 
  }
  .productpagebutton button{
@@ -1276,14 +1323,17 @@ body {
   border: none;
   font-size: 15px;
   font-family: Loto,sans-serif;
+   
  }
  .producticon{
   
  margin-left: 10px;
+ 
  }
  .brandproductbutton{
   flex: 1;
   margin: 5px;
+  
  
  }
 .branddetailscontainer{
@@ -1313,8 +1363,8 @@ body {
   margin: 5px;
 }
 .poweredbyimg{
-  width:  120px;
-  height: 40px;
+  width:  140px;
+  height: 50px;
   display: flex;
   flex-wrap: wrap;
  
@@ -1434,9 +1484,11 @@ body {
   width: fit-content;
   height: auto;
   flex-wrap: wrap;
-  margin: 10px;
+
   align-items: center;
   justify-content: center;
+
+  padding: 10px;
   
 }
 .uploaddivgif img{
@@ -1444,6 +1496,8 @@ body {
   max-height: 100vh;
   object-fit: contain;
   border-radius: 10px;
+
+
   
   
 }
@@ -1517,6 +1571,7 @@ margin-top: 2px;
   margin-left: 40px;
   flex-direction: column;
   margin-bottom: 30px;
+ 
  }
  .tryimagecontainer h2{
   font-family: Loto, sans-serif;
@@ -1814,11 +1869,32 @@ margin-top: 2px;
  
   overflow : hidden;
   display: none;
+  
+ }
+ .mobileslider{
+  display: flex;
+   width: 100%;
+  height: 120px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  overflow-x: scroll;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding-bottom: 5px;
+
+ }
+ .mobileslider>*{
+  flex: 1 1 200px;
  
+   width: 100px;
+   height: 100px;
+   margin: 5px;
+ }
+  .mobilesliderimage{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
  
- 
- 
-}
 .slider img{
   width: 100%;
   height: 100%;
@@ -1928,6 +2004,10 @@ margin-top: 2px;
  
  
 }
+#active{
+  opacity: 1;
+  border: 2px solid rgb(236, 28, 21);
+}
 
 .prev, .next {
   position: absolute;
@@ -2029,6 +2109,8 @@ margin-top: 2px;
 }
 
 @media (max-width: 600px) {
+
+ 
    .filtermobilecontainer{
     margin-top: -70px;
    }
@@ -2038,6 +2120,18 @@ margin-top: 2px;
    .changeroomsidebutton{
     bottom: 220px;
    }
+   .headingcontainer h1{
+    font-size: 20px;
+   }
+   .tryimagecontainer{
+    margin-left: 0px;
+   
+   }
+   .uploaddivcontainer{
+    padding: 0px;
+    margin-left: 0px;
+   }
+  
 }
 
 .loader {
@@ -2151,7 +2245,11 @@ margin-top: 2px;
 .App-link {
   color: #61dafb;
 }
-
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent; /* make scrollbar transparent */
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
