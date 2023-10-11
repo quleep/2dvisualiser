@@ -76,6 +76,8 @@ const [currentproduct, setCurrentProduct] = useState()
  const [mobsegmentimage, setMobSegmentImage] = useState(false)
  const [moborginalimage, setMobOriginalImage] = useState()
  const params= new URLSearchParams(window.location.search)
+
+ const [temporgimage, setTempOrgImage] = useState()
  const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
@@ -113,7 +115,7 @@ const [currentproduct, setCurrentProduct] = useState()
       setDemoImages(res.data)
      })
   },[])
-  console.log(demoimages)
+  
 
      const getapidata = async()=>{
 
@@ -1027,12 +1029,16 @@ function showTooltip(e, image, text, len) {
   }, 3000); 
 }
 
-     
+   
+
+
 
 const getBase64FromUrl = async (url) => {
+
+ 
  
    
-  const data = await fetch(url, {
+  const data = await fetch(orgimg, {
     headers: {
       'Access-Control-Allow-Origin': '*',
        
