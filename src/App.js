@@ -1031,13 +1031,17 @@ function showTooltip(e, image, text, len) {
 
 const getBase64FromUrl = async (url) => {
   const config = {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-   
-    },
+ 
   }
    
-  const data = await fetch(url, config);
+  const data = await fetch(url, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+       
+   
+    },
+    mode: 'cors'
+  });
   const blob = await data.blob();
   return new Promise((resolve) => {
     const reader = new FileReader();
