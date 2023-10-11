@@ -1175,6 +1175,7 @@ const handlewallpaperclick = async (len, val)=>{
         document.querySelector('.loadingcontainermain').style.display= 'none'   
         setSegmentImg(true)
         setProcessImg(res.data)
+        setTempOrgImage('')
         }).then(res=>{
           axios.post(addviewsurl, countbody).then(res=>{
             
