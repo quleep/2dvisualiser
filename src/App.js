@@ -1030,14 +1030,15 @@ function showTooltip(e, image, text, len) {
      
 
 const getBase64FromUrl = async (url) => {
-
+ 
+   
   const data = await fetch(url, {
     headers: {
-      'Origin' : "*"
+      'Access-Control-Allow-Origin': '*',
        
    
     },
-    mode: 'no-cors'
+    
   });
   const blob = await data.blob();
   return new Promise((resolve) => {
