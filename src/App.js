@@ -916,7 +916,7 @@ const imagefilechange=(e)=>{
   fileToBase64(file, (err, result) => {
    
     if (result) {
-     
+     setTempOrgImage(result)
       setImage(result)
       setOrgImg(result)
       setDisplayDiv(true)
