@@ -77,9 +77,11 @@ const [currentproduct, setCurrentProduct] = useState()
  const [moborginalimage, setMobOriginalImage] = useState()
  const [tempindex, setTempIndex] = useState()
  const params= new URLSearchParams(window.location.search)
+ const [base64array, setBase64Array] = useState([])
+ const [finalbasearray, setFinalBaseArray] = useState()
 
  const [temporgimage, setTempOrgImage] = useState()
- const pid= 'excel'
+ const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
 
@@ -115,9 +117,44 @@ const [currentproduct, setCurrentProduct] = useState()
   useEffect(()=>{
      axios.get(demoimageurl).then(res=>{
       setDemoImages(res.data)
+    let newurl=   res.data[0].imgurl
+ for(let i =0; i<res.data.length; i++){
+    getS3ImageAsBase64(res.data[i].imgurl, function(base64Data) {
+
+      if(!base64array.includes(res.data[i])){
+   setBase64Array((prevItems) => [...prevItems, {
+      base64url: base64Data,
+      roomname: res.data[i].room
+    }])
+      }
+ 
+  
+});
+ }
+      
+      
+       
      })
   },[])
-  
+
+
+
+
+ function filterDuplicateObjects(arr) {
+  const uniqueSet = new Set();
+
+  return arr.filter((obj) => {
+    const key = JSON.stringify(obj); 
+    const isUnique = !uniqueSet.has(key);
+
+    if (isUnique) {
+      uniqueSet.add(key);
+    }
+
+    return isUnique;
+  });
+}
+
 
      const getapidata = async()=>{
 
@@ -190,7 +227,7 @@ const [currentproduct, setCurrentProduct] = useState()
     }, 2000);
   },[])
 
-  const handleimageclick = async (id, val)=>{
+  const handleimageclick = async (room, val)=>{
   
     document.querySelector('.loadercontainer').style.display = 'block'
    
@@ -203,35 +240,16 @@ const [currentproduct, setCurrentProduct] = useState()
 
       
     }, 2000);
-
-      const body={
-   id : id
-  }
+    
+    const newarray = await filterDuplicateObjects(base64array)
    
-  
-  
- await axios.post(singledemourl, body).then(res=>{
- 
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.src = res.data[0].imgurl;
-
-  img.onload = () => {
-    
-    const canvas = document.createElement('canvas');
-    canvas.width = img.width;
-    canvas.height = img.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0);
-
-    const  base64Img = canvas.toDataURL('image/jpeg'); 
-      setTempOrgImage(base64Img)
-    
-      
-  };
-  })
-
-    
+     
+    newarray.forEach(item=>{
+      if(item.roomname === room){
+         setTempOrgImage(item.base64url)
+        
+      }
+    })
 
 
     setImage(val)
@@ -240,6 +258,8 @@ const [currentproduct, setCurrentProduct] = useState()
     setSegmentImg(false)
     setProcessImg('')
   }
+
+
 
  
   const handlechangeroomclick = ()=>{
@@ -477,14 +497,14 @@ useEffect(()=>{
      for(let i =0; i < walldata.length ; i++){
        
        if( checkarray.includes(walldata[i].Collection) ){
-        console.log('collection')
+       
          newarray.push(walldata[i])
         }else if(checkarray.includes(walldata[i].Designstyle)){
-        console.log('design')
+       
 
            newarray.push(walldata[i])
         }else if(checkarray.includes(walldata[i].Color)){
-        console.log('color')
+      
 
            newarray.push(walldata[i])
 
@@ -621,7 +641,7 @@ async function showSlideMob( index){
 function updateSlider() {
   slides.forEach((slide, index) => {
       const translateX =   slides[0].clientWidth*currentIndex
-      console.log(translateX)
+      
      
       slide.style.transform = `translateX(-${translateX}px)`;
   });
@@ -1061,20 +1081,37 @@ function showTooltip(e, image, text, len) {
 }
 
 let walldesignurl;  
-const getSingleImage = async (val)=>{
- 
- 
-  const body={
-   id : val
-  }
+
+function getS3ImageAsBase64(s3Url, callback) {
+  var img = new Image();
+  img.crossOrigin = 'Anonymous'; 
+   img.src = s3Url;
+
+  img.onload = function() {
+    var canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext('2d');
+     ctx.drawImage(img, 0, 0);
+
+    
+    let base64Data = canvas.toDataURL('image/jpeg');
 
   
-  
- await axios.post(singledemourl, body).then(res=>{
+    
+
+   
+    callback(base64Data);
+  };
+
+ 
+}
+const getSingleImage = async (url)=>{
+
  
   const img = new Image();
   img.crossOrigin = 'Anonymous';
-  img.src = res.data[0].imgurl;
+  img.src = url;
 
   img.onload = () => {
     
@@ -1089,7 +1126,7 @@ const getSingleImage = async (val)=>{
     
       
   };
-  })
+
   
 
 }
@@ -1214,7 +1251,7 @@ async function urlToBase64(url) {
   }
 }
 const handlewallpaperclick = async (e, len, val)=>{
-  e.preventDefault()
+ 
 
 
  setCurrentProduct(walldata && walldata[len].Patternnumber)
@@ -1238,7 +1275,7 @@ const handlewallpaperclick = async (e, len, val)=>{
          document.querySelector('.loadingcontainermain').style.display= 'block'
   
        
-     
+      
    
         const body={
           wallimg: temporgimage,
@@ -1335,7 +1372,7 @@ const handlewallpaperclick = async (e, len, val)=>{
        }
 }
 
- console.log(temporgimage)
+ 
 
 const handlegriditemclick =  async (len, val)=>{
     setCurrentProduct(walldata && walldata[len].Patternnumber)
@@ -2357,7 +2394,7 @@ const handleLoadMore =()=>{
 
                 {
                   demoimages && demoimages.map(item=>(
-                    <div  onClick={()=>handleimageclick(item.Id, item.imgurl)}>
+                    <div  onClick={()=>handleimageclick(item.room, item.imgurl)}>
                     <img src={item.imgurl} />
                      <p>{item.room}</p>
                   </div>
