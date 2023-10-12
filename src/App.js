@@ -79,7 +79,7 @@ const [currentproduct, setCurrentProduct] = useState()
  const params= new URLSearchParams(window.location.search)
 
  const [temporgimage, setTempOrgImage] = useState()
- const pid= params.get('brand')
+ const pid= 'excel'
  const user = params.get('user')
   const imgref = useRef()
 
