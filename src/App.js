@@ -204,7 +204,34 @@ const [currentproduct, setCurrentProduct] = useState()
       
     }, 2000);
 
-    await getSingleImage(id)
+      const body={
+   id : id
+  }
+
+  
+  
+ await axios.post(singledemourl, body).then(res=>{
+ 
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.src = res.data[0].imgurl;
+
+  img.onload = () => {
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const  base64Img = canvas.toDataURL('image/jpeg'); 
+      setTempOrgImage(base64Img)
+    
+      
+  };
+  })
+
+    
 
 
     setImage(val)
@@ -1050,6 +1077,7 @@ const getSingleImage = async (val)=>{
   img.src = res.data[0].imgurl;
 
   img.onload = () => {
+    
     const canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
@@ -1090,7 +1118,7 @@ const convertToBase64 = (url) => {
 const getBase64FromUrl = async (url) => {
 
     
-  const data = await getSingleImage(url);
+  const data = await (url);
   const blob = await data.blob();
   return new Promise((resolve) => {
     const reader = new FileReader();
