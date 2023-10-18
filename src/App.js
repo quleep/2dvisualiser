@@ -37,6 +37,15 @@ import ReactPlayer from 'react-player';
 import vid  from './images/VID-20230830-WA0292 (1).gif'
 import axios from 'axios';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  withRouter,
+} from "react-router-dom";
+import Errorpage from './Errorpage';
+
 
 
 
@@ -51,6 +60,7 @@ function App() {
   const [viewall, setViewAll ] = useState(false)
   const [viewalldesign, setViewAllDesign ] = useState(false)
   const [viewallcollection, setViewAllCollection ] = useState(false)
+  const [viewallpattern, setViewAllPattern] = useState(false)
 
   const [pageno, setPageNo] = useState(1)
 
@@ -79,11 +89,19 @@ const [currentproduct, setCurrentProduct] = useState()
  const params= new URLSearchParams(window.location.search)
  const [base64array, setBase64Array] = useState([])
  const [finalbasearray, setFinalBaseArray] = useState()
+ const[brandtitle, setBrandTitle] = useState()
+ const [brandimage, setBrandImage] = useState()
+ const [mousemove, setMouseMove] = useState(false)
 
  const [temporgimage, setTempOrgImage] = useState()
+ const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+ const [currentproductname, setCurrentProductName] = useState()
+ const [patternidarray, setPatternIdArray] = useState([])
  const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
+
+
 
  
   const colorArray = [
@@ -167,9 +185,13 @@ const [currentproduct, setCurrentProduct] = useState()
      await axios.post(getbrandapi, body).then(res=>{
           designapi = res.data[0].designapi
           token = res.data[0].token
+          setBrandTitle(res.data[0].brandid)
+          setBrandImage(res.data[0].brandlogo)
          newvalue = {
           designapi : designapi,
-          token : token
+          token : token,
+          brandname: res.data[0].brandid,
+          brandlogo : res.data[0].brandlogo
         }
          
       
@@ -204,8 +226,11 @@ const [currentproduct, setCurrentProduct] = useState()
         try {
           const response = await axios.get(`${getvalue && getvalue.designapi}?token=${getvalue && getvalue.token}&page=${pageno}`, config);
           const newData = response.data.data; 
-  
-
+           let newtemparray =[]
+          
+           for (let i=0; i<newData.length; i++){
+              setPatternIdArray((previtems)=>[...previtems, newData[i].Patternnumber])
+           }
           setWallData((prevItems) => [...prevItems, ...newData]);
           
         } catch (error) {
@@ -213,11 +238,12 @@ const [currentproduct, setCurrentProduct] = useState()
         }
       };
       fetchData();
+     
 },[pageno])
   
    
 
-  
+
     
 
   useEffect(()=>{
@@ -334,6 +360,10 @@ const [currentproduct, setCurrentProduct] = useState()
       title: "Collection",
       accordionContent: "Collection"
   },
+  {
+    title: "Pattern-ID",
+    accordionContent: "Patternid"
+},
 
   ]
 
@@ -347,6 +377,7 @@ const [currentproduct, setCurrentProduct] = useState()
      setViewAll(false)
      setViewAllDesign(false)
      setViewAllCollection(false)
+     setViewAllPattern(false)
     
       }
       if(accActive !== index){
@@ -461,6 +492,13 @@ const [currentproduct, setCurrentProduct] = useState()
     "Wall Fabric",
     "Zenith"
   ]
+
+
+
+
+
+
+ 
   const imgarray = [
      testurl, testurl2, testurl3
   ]
@@ -487,6 +525,12 @@ if(viewallcollection){
 else{
   newcollectionarray =  collectionArray.slice(0,4)
 }
+let newpatternarray = []
+if(viewallpattern){
+  newpatternarray = [...patternidarray]
+}else{
+  newpatternarray = patternidarray.slice(0,4)
+}
 
 
 useEffect(()=>{
@@ -497,7 +541,7 @@ useEffect(()=>{
      for(let i =0; i < walldata.length ; i++){
        
        if( checkarray.includes(walldata[i].Collection) ){
-       
+         
          newarray.push(walldata[i])
         }else if(checkarray.includes(walldata[i].Designstyle)){
        
@@ -508,6 +552,8 @@ useEffect(()=>{
 
            newarray.push(walldata[i])
 
+        }else if(checkarray.includes(walldata[i].Patternnumber)){
+             newarray.push(walldata[i])
         }
      }
      return newarray
@@ -556,7 +602,11 @@ const handleviewallcollection =()=>{
   setViewAllCollection(true)
   document.getElementById('view-all-buttoncollection').style.display = 'none'
 }
+const handleviewallpattern = ()=>{
+  setViewAllPattern(true)
+  document.getElementById('view-all-buttonpattern').style.display = 'none'
 
+}
 const handleclearfilter = ()=>{
   setCheckArray ([])
 }
@@ -734,9 +784,16 @@ useEffect(()=>{
   
   showSlide(activeIndex) 
 
+  if (activeIndex){
+    const activewallpapername=  walldata && walldata[activeIndex].Productname.toLowerCase().trim().replace(/\s+/g, '-')
+    setCurrentProductName(activewallpapername)
+    
+  }
+ 
    setCurrentProductMobile( filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] : walldata[activeIndex])
   
      const getSegmentImage = async()=>{
+      
       let newres;
      
       
@@ -1030,9 +1087,31 @@ const handleRemoveClick = async (val)=>{
 }
 
 const scrollimage = document.getElementById("imagecontainermain");
+
+scrollimage && scrollimage.addEventListener('mouseleave', (event)=>{
+  setMouseMove(false)
+})
+
+const handleMouseMove = (e) => {
+  setMouseMove(true)
+
+    const image = e.target;
+    const x = e.nativeEvent.offsetX / image.offsetWidth;
+    const y = e.nativeEvent.offsetY / image.offsetHeight;
+
+    setCursorPosition({ x, y });
+  
+};
+
+const imageStyle = {
+  transform: `scale(2)`,
+  transformOrigin: `${cursorPosition.x * 100}% ${cursorPosition.y * 100}%`,
+};
 let scale = 1;
 
-scrollimage  && scrollimage.addEventListener("wheel", (event) => {
+{
+  /*
+  scrollimage  && scrollimage.addEventListener("wheel", (event) => {
     event.preventDefault();
     const delta = Math.max(-1, Math.min(1, (event.deltaY || -event.detail)));
     scale -= delta * 0.1; 
@@ -1045,6 +1124,11 @@ scrollimage  && scrollimage.addEventListener("wheel", (event) => {
      }
    
 });
+
+  */
+}
+
+
 const scrollimagemobile = document.getElementById("mobilemaindisplay");
 let scalemobile = 1;
 
@@ -1253,7 +1337,8 @@ async function urlToBase64(url) {
 const handlewallpaperclick = async (e, len, val)=>{
  
 
-
+   let urlproductname = walldata && walldata[len].Productname
+   setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
  setCurrentProduct(walldata && walldata[len].Patternnumber)
 
   let newres;
@@ -1376,6 +1461,8 @@ const handlewallpaperclick = async (e, len, val)=>{
 
 const handlegriditemclick =  async (len, val)=>{
     setCurrentProduct(walldata && walldata[len].Patternnumber)
+    let urlproductname = walldata && walldata[len].Productname
+    setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
     let newres;
     await  resizeImage(val).then(res=>{
      newres = res
@@ -1516,10 +1603,15 @@ const handleLoadMore =()=>{
 }
 
 
+
+
   return (
 
  
    <div>
+    <Router>
+    <Route path="/error" exact component={Errorpage} />
+    </Router>
     <Helmet>
     <title>Visualiser | ArNXT </title>
             <meta
@@ -1553,7 +1645,7 @@ const handleLoadMore =()=>{
         </div>
         </div>
     <div className='poweredbottomdiv'>
-      <p>Powered by  ARnxt</p>
+      <p>Powered by ArNXT</p>
     </div>
     
    
@@ -1623,7 +1715,7 @@ const handleLoadMore =()=>{
                                 </span>
                             </div>
                             {
-                                accActive === index ? <div className="accordionContent">
+                                accActive === index ? <div className="">
                                     {acc.accordionContent === "Color" ? 
                                     <div>
                                       <div class="list-container">
@@ -1654,7 +1746,7 @@ const handleLoadMore =()=>{
                                 </div> : null
                             }
                                                  {
-                                accActive === index ? <div className="accordionContent">
+                                accActive === index ? <div className="">
                                     {acc.accordionContent === "Design" ? 
                                     <div>
                                       <div class="list-container">
@@ -1685,7 +1777,7 @@ const handleLoadMore =()=>{
                                 </div> : null
                             }
                                                                       {
-                                accActive === index ? <div className="accordionContent">
+                                accActive === index ? <div className="">
                                     {acc.accordionContent === "Collection" ? 
                                     <div>
                                       <div class="list-container">
@@ -1709,6 +1801,37 @@ const handleLoadMore =()=>{
 </div>
 
 <button id="view-all-buttoncollection" onClick={handleviewallcollection}>View All <FaArrowDown /></button>
+                                    </div>
+                                    
+                                    
+                                    :''}
+                                </div> : null
+                            }
+                                                                                       {
+                                accActive === index ? <div className="">
+                                    {acc.accordionContent === "Patternid" ? 
+                                    <div>
+                                      <div class="list-container">
+                                        {
+                                          newpatternarray && newpatternarray.map((item,i)=>(
+                                            <div class="list-item">
+                                            <label class="checkbox">
+                                             <p>{item}</p> 
+                                                  <input type="checkbox"   checked = {
+                                                    checkarray.includes(item) 
+                                                  }
+                                                 
+                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i)} id= {`checkinput_${i}`}/>
+                                                  </label>
+                                              
+                                                 </div>
+                                               
+                                          ))
+                                        }
+        
+</div>
+
+<button id="view-all-buttonpattern" onClick={handleviewallpattern}>View All <FaArrowDown /></button>
                                     </div>
                                     
                                     
@@ -1877,7 +2000,7 @@ const handleLoadMore =()=>{
           <div className='branddetailscontainer'> 
             <div className='brandinside'>
             <div className='brandimagediv'>
-              <img src= {logo}/>
+              <img src= {brandimage && brandimage}/>
             </div>
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
@@ -1888,7 +2011,7 @@ const handleLoadMore =()=>{
             </div>
             <div className='brandproductbutton'>
               <div className='productpagebutton'>
-                <button > <a href='https://excelwallpapers.com' >Go to website <FaRegShareSquare className='producticon'/></a> </button>
+                <button > <a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`} target="_blank" >Go to website <FaRegShareSquare className='producticon'/></a> </button>
 
               </div>
 
@@ -2124,7 +2247,7 @@ const handleLoadMore =()=>{
 
               filteredarray && filteredarray.length > 0 ? 
                 filteredarray && filteredarray.map((item,i)=>(
-                  <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
+                  <div  key={i} style={i === filteredarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
                    <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl)}/>
@@ -2184,7 +2307,7 @@ const handleLoadMore =()=>{
               {
                 filteredarray && filteredarray.length > 0 ? 
                 filteredarray && filteredarray.map((item,i)=>(
-                  <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
+                  <div key={i} style={i === filteredarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
                      <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl)}  />
@@ -2272,7 +2395,10 @@ const handleLoadMore =()=>{
           </div>
 
         </div>
-        <div className='imagecontainermain' id='imagecontainermain'>
+        <div className='imagecontainermain' id='imagecontainermain' 
+            onMouseMove={handleMouseMove}
+            style=  {mousemove ? {transform:'scale(2)', cursor:  'crosshair', transformOrigin: `${cursorPosition.x * 100}% ${cursorPosition.y * 100}%`} : {}}
+        >
         <div className='loadingcontainermain'>
     <div className='loaderdiv'>
       <span class="loader"> </span>
@@ -2287,7 +2413,7 @@ const handleLoadMore =()=>{
           <div className='branddetailscontainer'> 
             <div className='brandinside'>
             <div className='brandimagediv'>
-              <img src= {logo}/>
+              <img src= {brandimage && brandimage}/>
             </div>
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
@@ -2298,7 +2424,7 @@ const handleLoadMore =()=>{
             </div>
             <div className='brandproductbutton'>
               <div className='productpagebutton'>
-                <button><a href='https://excelwallpapers.com' >Go to website</a> <FaRegShareSquare className='producticon'/></button>
+                <button><a href={`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">Go to website</a> <FaRegShareSquare className='producticon'/></button>
 
               </div>
 
@@ -2361,7 +2487,7 @@ const handleLoadMore =()=>{
             <FaTimes/>
             </span>
        
-        <h1> See Excel wallpapers in your room</h1>
+        <h1> See {brandtitle && brandtitle} wallpapers in your room</h1>
           </div>
           <div className='uploaddivcontainer'>
           <div className='uploadbuttoncontainer'>

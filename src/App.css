@@ -234,9 +234,7 @@ body {
 
 }
 .accordionContent{
-  padding:10px;
  
-  margin-bottom: 1rem;
  
 }
 .list-container {
@@ -303,6 +301,19 @@ body {
   font-size: 20px;
 }
 #view-all-buttondesign {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: white;
+  color: #181414;
+  border: 1px solid rgb(173, 171, 171);
+  border-radius: 5px;
+  cursor: pointer;
+  width: 180px;
+  height:  60px;
+  font-size: 20px;
+}
+#view-all-buttonpattern {
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
