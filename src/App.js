@@ -779,10 +779,17 @@ const mobileImageClick= async (e, len, val)=>{
  
 }
 
+
+
 useEffect(()=>{
 
-  
-  showSlide(activeIndex) 
+    
+  showSlide(activeIndex)
+
+  if(activeIndex === walldata.length - 1){
+   handleLoadMore() 
+  }
+   
 
   if (activeIndex){
     const activewallpapername=  walldata && walldata[activeIndex].Productname.toLowerCase().trim().replace(/\s+/g, '-')
@@ -826,6 +833,7 @@ useEffect(()=>{
             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
           },
         };
+        
       axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
 
        
@@ -1287,8 +1295,8 @@ const  resizeImage = async (val)=>{
   let resizedDataURL;
   let newWidth, newHeight;
 
-  maxWidth = img.width*18/100 
-  maxHeight = img.height*18/100
+  maxWidth = img.width
+  maxHeight = img.height
 
   if (img.width > img.height) {
     
