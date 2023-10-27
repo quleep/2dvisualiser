@@ -217,14 +217,13 @@ const [currentproduct, setCurrentProduct] = useState()
     
     const [branddetails, setBrandDetails] = useState()
 
+   
+
     useEffect(()=>{
 
       const fetchData = async () => {
 
          const getvalue = await getapidata()
-
-        
-        
 
         let designapi;
         let token;
@@ -237,6 +236,11 @@ const [currentproduct, setCurrentProduct] = useState()
         try {
           const response = await axios.get(`${getvalue && getvalue.designapi}?token=${getvalue && getvalue.token}&page=${pageno}`, config);
           const newData = response.data.data; 
+            if(newData && newData.length === 0){
+             document.querySelector('.loadmorediv').style.display = 'none'
+              document.querySelector('.loadmoredivgrid').style.display = 'none'
+
+            }
            let newtemparray =[]
           
            for (let i=0; i<newData.length; i++){
@@ -1484,12 +1488,12 @@ const handlewallpaperclick = async (e, len, val, designstyle)=>{
 
  
 
-const handlegriditemclick =  async (len, val)=>{
+const handlegriditemclick =  async (len, val, designstyle)=>{
     setCurrentProduct(walldata && walldata[len].Patternnumber)
     let urlproductname = walldata && walldata[len].Productname
     setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
     let newres;
-    await  resizeImage(val).then(res=>{
+    await  resizeImage(val, designstyle).then(res=>{
      newres = res
     })
  
@@ -2275,7 +2279,7 @@ const handleLoadMore =()=>{
                   <div  key={i} style={i === filteredarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
-                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl)}/>
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl,item.Designstyle)}/>
                   <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
                    <img src= {item.Imageurl}/>
                  
@@ -2298,7 +2302,7 @@ const handleLoadMore =()=>{
                   <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
 
-                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl)}/>
+                   <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl,item.Designstyle)}/>
                   <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
                    <img src= {item.Imageurl}/>
                  
@@ -2335,7 +2339,7 @@ const handleLoadMore =()=>{
                   <div key={i} style={i === filteredarray.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl)}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl,item.Designstyle)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
                     <img  src= {item.Imageurl}/>
