@@ -97,6 +97,7 @@ const [currentproduct, setCurrentProduct] = useState()
  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
  const [currentproductname, setCurrentProductName] = useState()
  const [patternidarray, setPatternIdArray] = useState([])
+ const [designpattern, setDesignPattern] = useState()
  const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
@@ -118,6 +119,7 @@ const [currentproduct, setCurrentProduct] = useState()
   let testurl3 = 'https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/AS389063.jpg'
   const demoimageurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getdemoimageurl'
   const singledemourl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getsingledemoimage'
+  const designpatterurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getdesignpatterntable'
   const newimg = ''
   const formdata = new FormData()
   const handlemodalopen =()=>{
@@ -131,6 +133,15 @@ const [currentproduct, setCurrentProduct] = useState()
    
   let designapi;
   let token;
+
+  useEffect(()=>{
+
+    axios.get(designpatterurl).then(res=>{
+      setDesignPattern(res.data[0].designvalue)
+    })
+
+  },[])
+ 
 
   useEffect(()=>{
      axios.get(demoimageurl).then(res=>{
@@ -1281,7 +1292,9 @@ const allmaincontainer = document.querySelectorAll('.maincontaineritems')
 const  allgriditems = document.querySelectorAll('.maincontainergrid')
 
 
-const  resizeImage = async (val)=>{
+const  resizeImage = async (val, designstyle)=>{
+
+ 
   let maxWidth 
   let maxHeight 
 
@@ -1295,9 +1308,17 @@ const  resizeImage = async (val)=>{
   let resizedDataURL;
   let newWidth, newHeight;
 
+  if(designpattern && designpattern.includes(designstyle)){
   maxWidth = img.width*18/100;
 
   maxHeight = img.height*18/100;
+  }
+else{
+    maxWidth = img.width;
+
+  maxHeight = img.height;
+}
+
 
   if (img.width > img.height) {
     
@@ -1343,7 +1364,7 @@ async function urlToBase64(url) {
     return null;
   }
 }
-const handlewallpaperclick = async (e, len, val)=>{
+const handlewallpaperclick = async (e, len, val, designstyle)=>{
  
 
    let urlproductname = walldata && walldata[len].Productname
@@ -1351,7 +1372,7 @@ const handlewallpaperclick = async (e, len, val)=>{
  setCurrentProduct(walldata && walldata[len].Patternnumber)
 
   let newres;
-    await  resizeImage(val).then(res=>{
+    await  resizeImage(val, designstyle).then(res=>{
      newres = res
     })
 
@@ -2350,7 +2371,7 @@ const handleLoadMore =()=>{
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl)}  />
+                     <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl,item.Designstyle)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
                     <img  src= {item.Imageurl}/>
