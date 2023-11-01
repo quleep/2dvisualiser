@@ -98,9 +98,12 @@ const [currentproduct, setCurrentProduct] = useState()
  const [currentproductname, setCurrentProductName] = useState()
  const [patternidarray, setPatternIdArray] = useState([])
  const [designpattern, setDesignPattern] = useState()
+ const [wallimagewidth, setWallImageWidth] = useState();
+ const [wallimageheight, setWallImageHeight] = useState();
  const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
+  const imgurlnew = ''
 
 
 
@@ -269,6 +272,21 @@ const [currentproduct, setCurrentProduct] = useState()
   },[])
 
   const handleimageclick = async (room, val)=>{
+
+    
+
+    const img = new Image();
+ 
+    img.src = val+ '?r=' + Math.floor(Math.random()*100000);
+      img.setAttribute('crossOrigin', 'Anonymous');
+
+      img.onload = function () {
+       
+        
+      setWallImageWidth(img.width)
+      setWallImageHeight(img.height)
+      }
+       
   
     document.querySelector('.loadercontainer').style.display = 'block'
    
@@ -985,6 +1003,7 @@ const imagefilechange=(e)=>{
  
   
   let val= document.getElementById('b1').value;
+ 
   let indx = val.lastIndexOf(".") + 1;
   let filetype = val.substr(indx, val.length).toLowerCase();
   
@@ -992,10 +1011,31 @@ const imagefilechange=(e)=>{
   {
 
  let files = Array.from(e.target.files) 
+
+
+
+
  files.forEach(file => {
   fileToBase64(file, (err, result) => {
    
     if (result) {
+
+     
+
+    
+    
+      const img = new Image();
+      img.src = result;
+     
+      img.onload = function () {
+        const width = img.width;
+        const height = img.height;
+     
+        setWallImageWidth(width)
+        setWallImageHeight(height)
+      };
+   
+
      setTempOrgImage(result)
       setImage(result)
       setOrgImg(result)
@@ -1312,22 +1352,52 @@ const  resizeImage = async (val, designstyle)=>{
   let resizedDataURL;
   let newWidth, newHeight;
 
-  if(designpattern && designpattern.includes(designstyle)){
-  maxWidth = img.width*18/100;
+  if(img.width > 900 && img.width < 1200){
+    maxWidth = wallimagewidth/2
 
-  maxHeight = img.height*18/100;
+    maxHeight = wallimageheight/2
+  }else if(img.width <= 900 ) {
+    maxWidth = wallimagewidth/3
+
+    maxHeight = wallimageheight/3
   }
-else{
-    maxWidth = img.width;
 
-  maxHeight = img.height;
-}
+ else if(img.width < 1650 && img.width > 1200){
+    maxWidth = wallimagewidth/1.5
+
+    maxHeight = wallimageheight/1.5
+  }
+   else if(img.width > 1650 && img.width < 3000){
+    maxWidth = wallimagewidth/4
+
+    maxHeight = wallimageheight/4
+   }
+   else if( img.width > 3000 && img.width < 5000){
+    maxWidth = wallimagewidth/6
+
+    maxHeight = wallimageheight/6
+   }else if(img.width > 5000  && img.width < 7000) {
+    maxWidth = wallimagewidth/3
+
+    maxHeight = wallimageheight/3
+   }
+   else if( img.width > 7000) {
+    maxWidth = wallimagewidth/1.5
+
+    maxHeight = wallimageheight/1.5
+   }
+   else{
+    maxWidth = img.width
+
+    maxHeight = img.height
+   }
+
 
 
   if (img.width > img.height) {
     
     newWidth = maxWidth;
-    newHeight = (maxWidth * img.height) / img.width;
+    newHeight = maxHeight;
   } else {
    
     newHeight = maxHeight;
