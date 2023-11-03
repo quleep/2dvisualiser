@@ -100,6 +100,10 @@ const [currentproduct, setCurrentProduct] = useState()
  const [designpattern, setDesignPattern] = useState()
  const [wallimagewidth, setWallImageWidth] = useState();
  const [wallimageheight, setWallImageHeight] = useState();
+ const [detection, setDetection] = useState()
+ const [demoapibrand, setDemoApiBrand] = useState()
+
+ const [loading, setLoading] = useState(false)
  const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
@@ -197,15 +201,19 @@ const [currentproduct, setCurrentProduct] = useState()
         brand: pid
       }
      await axios.post(getbrandapi, body).then(res=>{
+     
           designapi = res.data[0].designapi
           token = res.data[0].token
           setBrandTitle(res.data[0].brandid)
           setBrandImage(res.data[0].brandlogo)
+          setDetection(res.data[0].type)
+         
          newvalue = {
           designapi : designapi,
           token : token,
           brandname: res.data[0].brandid,
-          brandlogo : res.data[0].brandlogo
+          brandlogo : res.data[0].brandlogo,
+          branddemoname : res.data[0].brand
         }
          
       
@@ -237,12 +245,16 @@ const [currentproduct, setCurrentProduct] = useState()
           },
           };
         try {
-          const response = await axios.get(`${getvalue && getvalue.designapi}?token=${getvalue && getvalue.token}&page=${pageno}`, config);
+          const response = await axios.get(`${getvalue && getvalue.designapi}?token=${getvalue && getvalue.token}&page=${pageno}&brand=${getvalue && getvalue.branddemoname}`);
+         
           const newData = response.data.data; 
+               if(newData && newData.length > 0){
+                setLoading(false)
+               }
+        
             if(newData && newData.length === 0){
-             document.querySelector('.loadmorediv').style.display = 'none'
-              document.querySelector('.loadmoredivgrid').style.display = 'none'
-
+            
+             setLoading(false)
             }
            let newtemparray =[]
           
@@ -752,7 +764,7 @@ const rightArrowClick = async (e)=>{
      const body={
        wallimg: temporgimage,
        designimg: newres,
-        detectionmode: 'walls'
+        detectionmode: detection
      }
     
      const config = {
@@ -849,7 +861,7 @@ useEffect(()=>{
         const body={
           wallimg: temporgimage,
           designimg: newres,
-           detectionmode: 'walls'
+           detectionmode: detection
         }
         let count = 1
 
@@ -936,7 +948,7 @@ const leftArrowClick = async (e)=>{
    const body={
      wallimg: temporgimage,
      designimg: newres,
-      detectionmode: 'walls'
+      detectionmode: detection
    }
   
    const config = {
@@ -1347,44 +1359,57 @@ const  resizeImage = async (val, designstyle)=>{
  
   img.src = val+ '?r=' + Math.floor(Math.random()*100000);
     img.setAttribute('crossOrigin', 'Anonymous');
+
+
+
  
   img.onload = function () {
-  let resizedDataURL;
+
+   if(detection === 'walls'){
+     let resizedDataURL;
   let newWidth, newHeight;
 
-  if(img.width > 900 && img.width < 1200){
-    maxWidth = wallimagewidth/2
+  if(img.width > 900 && img.width < 1100){
+    maxWidth = wallimagewidth/4.5
 
-    maxHeight = wallimageheight/2
-  }else if(img.width <= 900 ) {
+    maxHeight = wallimageheight/4.5
+  }
+ 
+  else if(img.width <= 900 ) {
     maxWidth = wallimagewidth/3
 
     maxHeight = wallimageheight/3
   }
 
- else if(img.width < 1650 && img.width > 1200){
-    maxWidth = wallimagewidth/1.5
+ else if(img.width === 1502 && img.width > 1200){
+    maxWidth = wallimagewidth/2.5
 
-    maxHeight = wallimageheight/1.5
+    maxHeight = wallimageheight/2.5
   }
+  
+ else if(img.width === 1503 && img.width > 1200){
+  maxWidth = wallimagewidth/4
+
+  maxHeight = wallimageheight/4
+}
    else if(img.width > 1650 && img.width < 3000){
     maxWidth = wallimagewidth/4
 
     maxHeight = wallimageheight/4
    }
    else if( img.width > 3000 && img.width < 5000){
-    maxWidth = wallimagewidth/6
+    maxWidth = wallimagewidth/4
 
-    maxHeight = wallimageheight/6
+    maxHeight = wallimageheight/4
    }else if(img.width > 5000  && img.width < 7000) {
     maxWidth = wallimagewidth/3
 
     maxHeight = wallimageheight/3
    }
    else if( img.width > 7000) {
-    maxWidth = wallimagewidth/1.5
+    maxWidth = wallimagewidth/1.3
 
-    maxHeight = wallimageheight/1.5
+    maxHeight = wallimageheight/1.3
    }
    else{
     maxWidth = img.width
@@ -1417,6 +1442,39 @@ const  resizeImage = async (val, designstyle)=>{
     resizedDataURL = canvas.toDataURL('image/jpeg')
 
    resolve(resizedDataURL)
+
+   } else{
+     let resizedDataURL;
+  let newWidth, newHeight;
+
+
+
+
+  if (img.width > img.height) {
+    
+    newWidth = maxWidth;
+    newHeight = maxHeight;
+  } else {
+   
+    newHeight = maxHeight;
+    newWidth = (maxHeight * img.width) / img.height;
+  }
+
+    const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+  
+
+   canvas.width = newWidth;
+  canvas.height = newHeight;
+  
+       ctx.drawImage(img, 0, 0, newWidth, newHeight);
+   
+ 
+    resizedDataURL = canvas.toDataURL('image/jpeg')
+
+   resolve(resizedDataURL)
+   }
+ 
 }
 
   })
@@ -1446,6 +1504,8 @@ const handlewallpaperclick = async (e, len, val, designstyle)=>{
  setCurrentProduct(walldata && walldata[len].Patternnumber)
 
   let newres;
+
+
     await  resizeImage(val, designstyle).then(res=>{
      newres = res
     })
@@ -1469,7 +1529,7 @@ const handlewallpaperclick = async (e, len, val, designstyle)=>{
         const body={
           wallimg: temporgimage,
           designimg: newres,
-           detectionmode: 'walls'
+           detectionmode: detection
         }
 
         let count = 1
@@ -1525,7 +1585,7 @@ const handlewallpaperclick = async (e, len, val, designstyle)=>{
        const body={
          wallimg: temporgimage,
          designimg: newres,
-          detectionmode: 'walls'
+          detectionmode: detection
        }
    
        const config = {
@@ -1590,7 +1650,7 @@ const handlegriditemclick =  async (len, val, designstyle)=>{
        const body={
          wallimg: temporgimage,
          designimg: newres,
-          detectionmode: 'walls'
+          detectionmode: detection
        }
    
        const config = {
@@ -1630,7 +1690,7 @@ const handlegriditemclick =  async (len, val, designstyle)=>{
        const body={
          wallimg: temporgimage,
          designimg: newres,
-          detectionmode: 'walls'
+          detectionmode: detection
        }
    
        const config = {
@@ -1700,6 +1760,32 @@ gridval && gridval.addEventListener('scroll', ()=>{
 const handleLoadMore =()=>{
   setPageNo(pageno+1)
 }
+
+const container = document.querySelector('.searchitemscontainer')
+const gridcontainer = document.querySelector('.searchitemgrid')
+container && container.addEventListener('scroll', () => {
+   
+
+  if (
+    container.scrollTop + container.clientHeight >= container.scrollHeight
+  ) {
+     
+     setLoading(true)
+     handleLoadMore()
+  }
+});
+
+gridcontainer && gridcontainer.addEventListener('scroll', () => {
+   
+
+  if (
+    gridcontainer.scrollTop + gridcontainer.clientHeight >= gridcontainer.scrollHeight
+  ) {
+     
+     setLoading(true)
+     handleLoadMore()
+  }
+});
 
 
 
@@ -2389,8 +2475,8 @@ const handleLoadMore =()=>{
                   </label>
                   {
                   i === walldata.length-1  ?
-                  <div  className='loadmoredivgrid'>
-                     <button  onClick={handleLoadMore} >Load more</button>
+                  <div  className= {loading ? 'loadmorediv' : 'loadmorenone'} >
+                     <div class="loading-circle"></div>
                     </div>
                 : ''
                 } 
@@ -2476,8 +2562,8 @@ const handleLoadMore =()=>{
 
                 {
                   i === walldata.length-1  ?
-                  <div  className='loadmorediv'>
-                     <button  onClick={handleLoadMore} >Load more</button>
+                  <div  className= {loading ? 'loadmorediv' : 'loadmorenone'} >
+                     <div class="loading-circle"></div>
                     </div>
                 : ''
                 } 

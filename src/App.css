@@ -530,7 +530,7 @@ body {
 
    display: flex;
     max-width: 700px;
-    max-height:  1000px;
+    max-height:  100%;
   margin: 0 auto;
   flex-direction: column;
    border-radius: 4px;
@@ -890,6 +890,7 @@ body {
   
   overflow-y: scroll;
   margin-top: 2px;
+ 
   
   
  
@@ -1052,6 +1053,7 @@ body {
   margin-top: 30px;
   margin-bottom: 30px;
  
+ 
 }
 .mobilemaindisplay img{
   width: 100%;
@@ -1112,6 +1114,7 @@ body {
   height: 100vh;
   z-index: 10;
   background-color: white;
+  
   
 }
 .displaynav{
@@ -1244,6 +1247,10 @@ body {
  
   align-items: center;
   justify-content: center;
+  
+ }
+ .loadmorenone{
+  display: none;
  }
  .loadmorediv button{
   border: 1px solid black;
@@ -1253,6 +1260,24 @@ body {
   cursor: pointer;
   
  }
+ .loading-circle {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #3498db;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
  .productpagebutton a{
   text-decoration: none;
   color: white;
@@ -2067,6 +2092,9 @@ margin-top: 2px;
  
 }
 .mobilemaindiv{
+ 
+  height: 100%;
+  overflow: scroll;
   
 }
 .searchdivmobile{
