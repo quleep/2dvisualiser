@@ -283,6 +283,74 @@ const [currentproduct, setCurrentProduct] = useState()
     }, 2000);
   },[])
 
+    const handleUrlToBase64=(val)=>{
+      let maxWidth 
+  let maxHeight 
+  let newWidth;
+  let newHeight;
+  let resizedDataURL;
+
+  return new Promise((resolve)=>{
+      const img = new Image();
+ 
+  img.src = val+ '?r=' + Math.floor(Math.random()*100000);
+    img.setAttribute('crossOrigin', 'Anonymous');
+
+
+
+ 
+  img.onload = function () {
+
+
+
+    const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      setWallImageWidth(img.width)
+      setWallImageHeight(img.height)
+  
+
+   canvas.width = img.width
+  canvas.height = img.height;
+  
+       ctx.drawImage(img, 0, 0);
+   
+ 
+    resizedDataURL = canvas.toDataURL('image/jpeg')
+
+   resolve(resizedDataURL)
+
+   }
+
+  })
+
+    }
+
+    const tempRoomClick = async (val)=>{
+
+    await handleUrlToBase64(val).then(res=>{
+    setTempOrgImage(res)
+       
+    document.querySelector('.loadercontainer').style.display = 'block'
+   
+
+    setTimeout(() => {
+    document.querySelector('.modalinsidecontent').style.display = 'none'
+    document.querySelector('.datashowcontainer').style.display = 'flex'
+    document.querySelector('.loadercontainer').style.display = 'none'
+    
+
+      
+    }, 2000);
+    setImage(val)
+    setOrgImg(val)
+    setDisplayDiv(true)
+    setSegmentImg(false)
+    setProcessImg('')
+
+    })
+
+    }
   const handleimageclick = async (room, val)=>{
 
     
@@ -1447,27 +1515,23 @@ const  resizeImage = async (val, designstyle)=>{
      let resizedDataURL;
   let newWidth, newHeight;
 
+    if(img.width > 550){
+    maxWidth = wallimagewidth/4
 
-
-
-  if (img.width > img.height) {
-    
-    newWidth = maxWidth;
-    newHeight = maxHeight;
-  } else {
-   
-    newHeight = maxHeight;
-    newWidth = (maxHeight * img.width) / img.height;
+    maxHeight = wallimageheight/4
+  }else{
+  maxWidth = img.width;
+   maxHeight = img.height;
   }
 
     const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
   
 
-   canvas.width = newWidth;
-  canvas.height = newHeight;
+   canvas.width = maxWidth;
+  canvas.height = maxHeight;
   
-       ctx.drawImage(img, 0, 0, newWidth, newHeight);
+       ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
    
  
     resizedDataURL = canvas.toDataURL('image/jpeg')
@@ -2498,7 +2562,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
                      <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl,item.Designstyle)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.Imageurl}/>
+                    <img  src= {item.Imageurl2}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -2534,7 +2598,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
                      <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl,item.Designstyle)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.Imageurl}/>
+                    <img  src= {item.Imageurl2}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -2705,7 +2769,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
 
                 {
                   demoimages && demoimages.map(item=>(
-                    <div  onClick={()=>handleimageclick(item.room, item.imgurl)}>
+                    <div  onClick={()=>tempRoomClick( item.imgurl)}>
                     <img src={item.imgurl} />
                      <p>{item.room}</p>
                   </div>
