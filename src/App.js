@@ -29,7 +29,7 @@ import { RxCross2 } from 'react-icons/rx';
 import logo from './images/excellogo.png'
 import facebook from './images/facebookicon.jpg'
 import whatsapp from './images/whatsappicon.jpg'
-import arnxtlogo from './images/arnxtreg.png'
+import arnxtlogo from './images/arnxtreg .png'
 
 
 import { Rating } from 'react-simple-star-rating'
@@ -102,8 +102,10 @@ const [currentproduct, setCurrentProduct] = useState()
  const [wallimageheight, setWallImageHeight] = useState();
  const [detection, setDetection] = useState()
  const [demoapibrand, setDemoApiBrand] = useState()
+ const [loadvalue, setLoadValue] = useState(false)
 
  const [loading, setLoading] = useState(false)
+ const [tempwalldata, setTempWallData] = useState()
  const pid= params.get('brand')
  const user = params.get('user')
   const imgref = useRef()
@@ -427,6 +429,7 @@ const [currentproduct, setCurrentProduct] = useState()
 
   const handlesearchclick =()=>{
    
+   
    document.querySelector('.inputsearch').classList.toggle('show')
    document.querySelector('.searchbar').style.display= 'none'
    
@@ -434,11 +437,18 @@ const [currentproduct, setCurrentProduct] = useState()
     
   }
   const handlesearchclose= ()=>{
+
+ 
+   setWallData(tempwalldata)
+    
+   
     document.querySelector('.inputsearch').classList.toggle('show')
     document.querySelector('.searchbar').style.display= 'block'
+    
   }
   const handlesearchclickmain =()=>{
    
+  
     document.querySelector('.inputsearchmain').style.display = 'flex'
     document.querySelector('.searchbarmain').style.display = 'none'
    
@@ -446,9 +456,14 @@ const [currentproduct, setCurrentProduct] = useState()
   }
 
   const handlesearchclosemain= ()=>{
+    
     document.querySelector('.inputsearchmain').style.display = 'none'
     document.querySelector('.searchbarmain').style.display = 'block'
+      
+   setWallData(tempwalldata)
+      
   }
+
   const handlefilterclick =()=>{
    
     document.querySelector('.modalscan').style.display= 'block'
@@ -890,6 +905,20 @@ const mobileImageClick= async (e, len, val)=>{
   
  
  
+}
+
+const handleSearchPattern=(val)=>{
+    
+           setTempWallData(walldata)
+         let newarray = walldata && walldata.filter(item=>(
+     item.Patternnumber === val 
+   ))
+ if(newarray.length > 0){
+  setWallData(newarray)
+  
+  
+ }
+
 }
 
 
@@ -1825,18 +1854,27 @@ const handleLoadMore =()=>{
   setPageNo(pageno+1)
 }
 
+
+const handlewalldatacount= ()=>{
+  let newdata = walldata && walldata.length
+  return newdata
+}
+
 const container = document.querySelector('.searchitemscontainer')
 const gridcontainer = document.querySelector('.searchitemgrid')
-container && container.addEventListener('scroll', () => {
-   
+container && container.addEventListener('scroll', async () => {
+
+
 
   if (
-    container.scrollTop + container.clientHeight >= container.scrollHeight
+    container.scrollTop + container.clientHeight >= container.scrollHeight 
   ) {
      
-     setLoading(true)
+ 
+    setLoading(true)
      handleLoadMore()
   }
+   
 });
 
 gridcontainer && gridcontainer.addEventListener('scroll', () => {
@@ -1845,9 +1883,14 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
   if (
     gridcontainer.scrollTop + gridcontainer.clientHeight >= gridcontainer.scrollHeight
   ) {
-     
-     setLoading(true)
+    
+    
+  setLoading(true)
      handleLoadMore()
+    
+     
+     
+  
   }
 });
 
@@ -2145,7 +2188,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
             </div>
             <div className='inputsearchmain'>
               <BsSearch className='newicons'  />
-              <input placeholder='search...' />
+              <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)}/>
               <BsX className='newicons' onClick={handlesearchclosemain}   />
             </div>
             <div className='searchitemgridmob'>
@@ -2156,7 +2199,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
   walldata && walldata.map((item,i)=>(
     <div>
     <div className='searchitemgridinside' onClick={()=>showTooltipmob(item.Imageurl, 'image1', i)}>
-     <img src= {item.Imageurl}/>
+     <img src= {item.Imageurl2}/>
    
     </div>
     <div class="tooltip" id={`tooltipmob_${i}`}>
@@ -2186,7 +2229,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
                   <div>
                   <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.Imageurl}/>
+                    <img  src= {item.Imageurl2}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -2385,7 +2428,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
        filteredarray && filteredarray.length > 0 ? 
        filteredarray && filteredarray.map((item,i)=>(
         <div  >
-        <img className='mobilesliderimage'  src={item.Imageurl} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
+        <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
        </div>
      
        ))  :
@@ -2393,7 +2436,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
 
           walldata && walldata.map((item,i)=>(
             <div  >
-            <img className='mobilesliderimage'  src={item.Imageurl} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
+            <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
            </div>
           ))
         }
@@ -2487,7 +2530,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
             </div>
             <div className='inputsearch'>
               <BsSearch className='newicons'/>
-              <input placeholder='search...' />
+              <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)} />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
              <div className='searchitemgrid'>
@@ -2501,7 +2544,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
 
                    <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl,item.Designstyle)}/>
                   <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
-                   <img src= {item.Imageurl}/>
+                   <img src= {item.Imageurl2}/>
                  
                   </div>
                   <div class="tooltip" id={`tooltip_${i}`}>
@@ -2524,7 +2567,7 @@ gridcontainer && gridcontainer.addEventListener('scroll', () => {
 
                    <input type='checkbox' style={{display: 'none'}} id = {`checkboxgrid_${i}` } onClick= {()=> handlegriditemclick(i, item.Imageurl,item.Designstyle)}/>
                   <div className='searchitemgridinside' onClick={(e)=>showTooltip(e, item.productname, 'image1', i)}>
-                   <img src= {item.Imageurl}/>
+                   <img src= {item.Imageurl2}/>
                  
                   </div>
                   <div class="tooltip" id={`tooltip_${i}`}>
