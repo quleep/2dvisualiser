@@ -1349,6 +1349,11 @@ const getSegmentImage = async()=>{
           setWallImageWidth(width)
           setWallImageHeight(height)
         };
+
+        if(activeIndex === 0){
+          showSlide(0)
+          handleFirstSlideImage(result)
+        }
      
   
        setTempOrgImage(result)
