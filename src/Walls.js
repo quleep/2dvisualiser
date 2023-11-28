@@ -343,12 +343,15 @@ const Walls = () => {
       }
   
       const tempRoomClick = async (val)=>{
+
+        let newres;
   
       await handleUrlToBase64(val).then(res=>{
+        newres = res
       setTempOrgImage(res)
          
       document.querySelector('.loadercontainer').style.display = 'block'
-     
+       
   
       setTimeout(() => {
       document.querySelector('.modalinsidecontent').style.display = 'none'
@@ -365,6 +368,11 @@ const Walls = () => {
       setProcessImg('')
   
       })
+
+      if(activeIndex === 0){
+        showSlide(0)
+        handleFirstSlideImage(newres)
+      }
   
       }
     const handleimageclick = async (room, val)=>{
@@ -453,11 +461,17 @@ const Walls = () => {
     const handlesearchclose= ()=>{
   
    
-     setWallData(tempwalldata)
-      
+    
+      if(tempwalldata?.length > 0){
+          setWallData(tempwalldata)
+        document.querySelector('.inputsearch').classList.toggle('show')
+        document.querySelector('.searchbar').style.display= 'block'
+      }else{
+        document.querySelector('.inputsearch').classList.toggle('show')
+        document.querySelector('.searchbar').style.display= 'block' 
+      }
      
-      document.querySelector('.inputsearch').classList.toggle('show')
-      document.querySelector('.searchbar').style.display= 'block'
+     
       
     }
     const handlesearchclickmain =()=>{
@@ -477,12 +491,17 @@ const Walls = () => {
      setWallData(tempwalldata)
         
     }
-  
+
     const handleseearchclosemobile = ()=>{
-      document.querySelector('.mobilesearchcontainer').style.display= 'none'
-      document.querySelector('.mobilesearchinside').style.display= 'none'
-  
-      setWallData(tempwalldata)
+
+        if(tempwalldata?.length> 0){
+          setWallData(tempwalldata)
+          document.querySelector('.mobilesearchcontainer').style.display= 'none'
+          document.querySelector('.mobilesearchinside').style.display= 'none'
+        }else{
+          document.querySelector('.mobilesearchcontainer').style.display= 'none'
+          document.querySelector('.mobilesearchinside').style.display= 'none'
+        } 
     }
   
     const handlefilterclick =()=>{
@@ -894,6 +913,8 @@ const Walls = () => {
   
   
   }
+
+  
   useEffect(() => {
     const handleScroll = () => {
       if (scrollContainerRef.current) {
@@ -913,20 +934,21 @@ const Walls = () => {
     };
   }, []);
   
-  
+ 
   
   const mobileImageClick= async (e, len, val)=>{
     e.preventDefault()
     e.stopPropagation()
    
    
-  
+   
    
      setActiveIndex(len)
     
    
    
   }
+ 
   
   const handleSearchPattern=(val)=>{
       
@@ -935,19 +957,183 @@ const Walls = () => {
            let newarray = walldata && walldata.filter(item=>(
        item.Patternnumber === val 
      ))
+
+    
    if(newarray.length > 0){
     setWallData(newarray)
     
     
    }
+ 
   
+  }
+
+
+
+  const handleSearchPatternMobile = (val)=>{
+    setTempWallData(walldata)
+    let newarray = walldata && walldata.filter(item=>(
+item.Patternnumber === val 
+))
+
+
+if(newarray.length > 0){
+setWallData(newarray)
+
+showSlide(0)
+handleFirstImageSearch(temporgimage, newarray)
+
+
+}
+
+  }
+
+  const handleFirstImageSearch = (wallimage, wallarray) =>{
+   
+
+
+    let patterno;
+    const activewallpapername=  wallarray && wallarray[0]?.Productname.toLowerCase().trim().replace(/\s+/g, '-')
+    patterno = wallarray && wallarray[0]?.Patternno
+setCurrentProductName(activewallpapername)
+
+const getSegmentImage = async()=>{
+        
+  let newres;
+ 
+   await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[0] &&  filteredarray[0].Imageurl : wallarray[0] && 
+    wallarray[0].Imageurl).then(res=>{
+      newres = res
+     })
+
+     
+   
+     document.querySelector('.loadingcontainermobile').style.display = 'block'
+    const body={
+      wallimg: wallimage,
+      designimg: newres,
+       detectionmode: detection
+    }
+
+  
+    let count = 1
+
+    const countbody = {
+      brand: pid,
+      viewscount : count,
+      user : user,
+      patterno: patterno
+    }
+   
+    const config = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+      },
+    };
+    
+ await axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+
+   
+    document.querySelector('.loadingcontainermobile').style.display = 'none' 
+    setSegmentImg(true)
+    imgref.current.src = `data:image/png;base64, ${res.data}`
+    
+    }).then(()=>{
+      axios.post(addviewsurl, countbody).then(res=>{
+
+      })
+    })
+    
+    .catch(error=>{
+      console.log(error)
+      window.alert('Please try again...')
+      
+    document.querySelector('.loadingcontainermobile').style.display = 'none' 
+   
+    })
+ }
+  getSegmentImage()
+
+  }
+
+
+  const handleFirstSlideImage = (wallimage)=>{
+
+    let patterno;
+    const activewallpapername=  walldata && walldata[0]?.Productname.toLowerCase().trim().replace(/\s+/g, '-')
+    patterno = walldata && walldata[0]?.Patternno
+setCurrentProductName(activewallpapername)
+
+const getSegmentImage = async()=>{
+        
+  let newres;
+ 
+   await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[0] &&  filteredarray[0].Imageurl : walldata[0] && 
+     walldata[0].Imageurl).then(res=>{
+      newres = res
+     })
+
+     
+   
+     document.querySelector('.loadingcontainermobile').style.display = 'block'
+    const body={
+      wallimg: wallimage,
+      designimg: newres,
+       detectionmode: detection
+    }
+
+  
+    let count = 1
+
+    const countbody = {
+      brand: pid,
+      viewscount : count,
+      user : user,
+      patterno: patterno
+    }
+   
+    const config = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+      },
+    };
+    
+ await axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+
+   
+    document.querySelector('.loadingcontainermobile').style.display = 'none' 
+    setSegmentImg(true)
+    imgref.current.src = `data:image/png;base64, ${res.data}`
+    
+    }).then(()=>{
+      axios.post(addviewsurl, countbody).then(res=>{
+
+      })
+    })
+    
+    .catch(error=>{
+      console.log(error)
+      window.alert('Please try again...')
+      
+    document.querySelector('.loadingcontainermobile').style.display = 'none' 
+   
+    })
+ }
+  getSegmentImage()
+
+
   }
   
   
-  
   useEffect(()=>{
+
   
-      
+  
+       
     showSlide(activeIndex)
   
     if(activeIndex === walldata.length - 1){
@@ -968,15 +1154,11 @@ const Walls = () => {
         
         let newres;
        
-        
-       
-       
          await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] &&  filteredarray[activeIndex].Imageurl : walldata[activeIndex] && 
            walldata[activeIndex].Imageurl).then(res=>{
             newres = res
            })
          
-       
            document.querySelector('.loadingcontainermobile').style.display = 'block'
           const body={
             wallimg: temporgimage,
@@ -1949,7 +2131,24 @@ const Walls = () => {
     
     }
   });
+
+  const slidercontainermobile = document.querySelector('.mobileslider')
   
+  slidercontainermobile && slidercontainermobile.addEventListener('scroll', async () => {
+  
+  
+  
+    if (
+      slidercontainermobile.scrollLeft + slidercontainermobile.clientHeight >= (slidercontainermobile.scrollWidth-300)
+    ) {
+       
+     handleLoadMore()
+     
+    }
+     
+  });
+  
+ 
 
   return (
     <div>
@@ -2173,7 +2372,7 @@ const Walls = () => {
         
 </div>
 
-<button id="view-all-buttonpattern" onClick={handleviewallpattern}>View All <FaArrowDown /></button>
+    <button id="view-all-buttonpattern" onClick={handleviewallpattern}>View All <FaArrowDown /></button>
                                     </div>
                                     
                                     
@@ -2424,7 +2623,7 @@ const Walls = () => {
     <div className='mobilesearchcontainer'>
     <div className='mobilesearchinside'>
             
-              <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)}/>
+              <input placeholder='search...'  onChange={(e)=>handleSearchPatternMobile(e.target.value)}/>
               <BsX className='newicons' onClick={handleseearchclosemobile}   />
             </div>
 
@@ -2471,7 +2670,7 @@ const Walls = () => {
       </div>
      </div>
      <div>
-      <div className='mobilefiltercontainerclose' onClick={handleclosefiltermobile}>
+      <div className='mobilefiltercontainerclose' style={{display:'none'}} onClick={handleclosefiltermobile}>
       <FaChevronDown/>
       </div>
      
