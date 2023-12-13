@@ -357,8 +357,8 @@ const Walls = () => {
       setTempOrgImage(res)
          
       document.querySelector('.loadercontainer').style.display = 'block'
+        
        
-  
       setTimeout(() => {
       document.querySelector('.modalinsidecontent').style.display = 'none'
       document.querySelector('.datashowcontainer').style.display = 'flex'
@@ -375,13 +375,11 @@ const Walls = () => {
   
       })
 
+    
+      
   
      
 
-      if(activeIndex === 0){
-      
-         showSlide(0)
-      }
   
       }
     const handleimageclick = async (room, val)=>{
@@ -504,18 +502,16 @@ const Walls = () => {
 
     const handleseearchclosemobile = ()=>{
 
-        if(tempwalldata?.length> 0){
+         if(tempwalldata.length>0){
           setWallData(tempwalldata)
           document.querySelector('.mobilesearchcontainer').style.display= 'none'
-          document.querySelector('.mobilesearchinside').style.display= 'none'
+         } 
+          
+         
+        
     
 
-        }else{
-          document.querySelector('.mobilesearchcontainer').style.display= 'none'
-          document.querySelector('.mobilesearchinside').style.display= 'none'
-    
-
-        } 
+        
     }
   
     const handlefilterclick =()=>{
@@ -837,10 +833,7 @@ const Walls = () => {
     let wallimgmobile;
     let temindex = 0;
    async function showSlide(index) {
-    if(index === 0){
-       const newval = await resizeImage(walldata && walldata[0]?.Imageurl)
-       console.log(newval)
-    }
+
    
    slides &&  slides.forEach((slide, i) => {
   
@@ -955,10 +948,76 @@ const Walls = () => {
     e.preventDefault()
     e.stopPropagation()
    
+     showSlide(len)
+   setActiveIndex(len)
+     
+    let patterno;
+   
+      const activewallpapername = walldata && walldata[len].Productname.toLowerCase().trim().replace(/\s+/g, '-');
+      patterno = walldata && walldata[len].Patternnumber;
+      setCurrentProductName(activewallpapername);
+      document.querySelector('.loadingcontainermobile').style.display = 'block';
+    
+  
+    setCurrentProductMobile(filteredarray && filteredarray.length > 0 ? filteredarray[len] : walldata[len]);
+  
+    const getSegmentImage = async () => {
+      let newres;
+  
+     // Check if activeIndex is greater than or equal to 0
+        await resizeImage(
+          filteredarray && filteredarray.length > 0
+            ? filteredarray[len] && filteredarray[len].Imageurl
+            : walldata[len] && walldata[len].Imageurl
+        ).then((res) => {
+          newres = res;
+        });
+
+      
+  
+        const patternvalue = walldata[len].Patternnumber;
+  
+        const body = {
+          wallimg: temporgimage,
+          designimg: newres,
+          detectionmode: detection,
+        };
+  
+        let count = 1;
+  
+        const countbody = {
+          brand: pid,
+          viewscount: count,
+          user: user,
+          patternno: patternvalue,
+        };
+  
+        const config = {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json',
+            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
+          },
+        };
+  
+        axios.post('https://wallserver.arnxt.com/api/v1/infer', body, config).then((res) => {
+          document.querySelector('.loadingcontainermobile').style.display = 'none';
+          setSegmentImg(true);
+          imgref.current.src = `data:image/png;base64, ${res.data}`;
+        }).then(() => {
+          axios.post(addviewsurl, countbody).then((res) => {});
+        }).catch((error) => {
+          console.log(error);
+          window.alert('Please try again...');
+          document.querySelector('.loadingcontainermobile').style.display = 'none';
+        });
+      
+    };
+  
+    getSegmentImage();
    
    
    
-     setActiveIndex(len)
     
    
    
@@ -1165,85 +1224,17 @@ const getSegmentImage = async()=>{
 
  
     
-    showSlide(activeIndex)
-  
-    if(activeIndex === walldata.length - 1){
-     handleLoadMore() 
-    }
-     
-    let patterno;
-    if (activeIndex > 0){
-      const activewallpapername=  walldata && walldata[activeIndex].Productname.toLowerCase().trim().replace(/\s+/g, '-')
-     
-          patterno = walldata && walldata[activeIndex].Patternnumber
-        
-      setCurrentProductName(activewallpapername)
-      document.querySelector('.loadingcontainermobile').style.display = 'block'
-    }
-   
-     setCurrentProductMobile( filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] : walldata[activeIndex])
  
-       const getSegmentImage = async()=>{
-        
-        let newres;
-       
-         await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] &&  filteredarray[activeIndex].Imageurl : walldata[activeIndex] && 
-           walldata[activeIndex].Imageurl).then(res=>{
-            newres = res
-           })
-         
 
-           const patternvalue = walldata[activeIndex].Patternnumber
-          
-         
-          const body={
-            wallimg: temporgimage,
-            designimg: newres,
-             detectionmode: detection
-          }
-          let count = 1
+    if (activeIndex === walldata.length - 1) {
+      handleLoadMore();
+    }
   
-          const countbody = {
-            brand: pid,
-            viewscount : count,
-            user : user,
-            patternno: patternvalue
-          }
-
-          
-         
-          const config = {
-            headers: {
-              'Access-Control-Allow-Origin': '*',
-              'Content-Type': 'application/json',
-              'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
-            },
-          };
-          
-        axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
-  
-         
-          document.querySelector('.loadingcontainermobile').style.display = 'none' 
-          setSegmentImg(true)
-          imgref.current.src = `data:image/png;base64, ${res.data}`
-          
-          }).then(()=>{
-            axios.post(addviewsurl, countbody).then(res=>{
-  
-            })
-          })
-          
-          .catch(error=>{
-            console.log(error)
-            window.alert('Please try again...')
-            
-          document.querySelector('.loadingcontainermobile').style.display = 'none' 
-         
-          })
-       }
-        getSegmentImage()
+   
       
   },[activeIndex])
+
+
   
   
    
@@ -1388,10 +1379,7 @@ const getSegmentImage = async()=>{
           setWallImageHeight(height)
         };
 
-        if(activeIndex === 0){
-          showSlide(0)
-          handleFirstSlideImage(result)
-        }
+      
      
   
        setTempOrgImage(result)
@@ -3009,11 +2997,6 @@ const getSegmentImage = async()=>{
           ))
         }
        
-      
-        
-      
-
-
        </div>
 
       {
