@@ -6,6 +6,7 @@ import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
 import img2 from './images/demoimage2.jpg'
 import { Helmet } from "react-helmet";
+import Resizer from 'react-image-file-resizer';
 
 
 import img3 from './images/demoimage3.jpg'
@@ -107,6 +108,8 @@ const Walls = () => {
   
    const [loading, setLoading] = useState(false)
    const [tempwalldata, setTempWallData] = useState()
+   const [searchapi, setSearchApi] = useState()
+   const [tokenvalue, setTokenvalue] = useState()
    const pid= params.get('brand')
    const user = params.get('user')
     const imgref = useRef()
@@ -223,6 +226,8 @@ const Walls = () => {
             setBrandCategory(res.data[0].category)
             setBrandImage(res.data[0].brandlogo)
             setDetection(res.data[0].type)
+            setSearchApi(res.data[0].searchapi)
+            setTokenvalue(res.data[0].token)
            
            newvalue = {
             designapi : designapi,
@@ -244,7 +249,7 @@ const Walls = () => {
       
       const [branddetails, setBrandDetails] = useState()
   
-     
+     const [firstimageurl, setFirstImageUrl] = useState()
   
       useEffect(()=>{
   
@@ -266,6 +271,7 @@ const Walls = () => {
             const newData = response.data.data; 
                  if(newData && newData.length > 0){
                   setLoading(false)
+                 
                  }
           
               if(newData && newData.length === 0){
@@ -369,9 +375,12 @@ const Walls = () => {
   
       })
 
+  
+     
+
       if(activeIndex === 0){
-        showSlide(0)
-        handleFirstSlideImage(newres)
+      
+         showSlide(0)
       }
   
       }
@@ -487,6 +496,7 @@ const Walls = () => {
       
       document.querySelector('.inputsearchmain').style.display = 'none'
       document.querySelector('.searchbarmain').style.display = 'block'
+   
         
      setWallData(tempwalldata)
         
@@ -498,9 +508,13 @@ const Walls = () => {
           setWallData(tempwalldata)
           document.querySelector('.mobilesearchcontainer').style.display= 'none'
           document.querySelector('.mobilesearchinside').style.display= 'none'
+    
+
         }else{
           document.querySelector('.mobilesearchcontainer').style.display= 'none'
           document.querySelector('.mobilesearchinside').style.display= 'none'
+    
+
         } 
     }
   
@@ -528,10 +542,7 @@ const Walls = () => {
         title: "Collection",
         accordionContent: "Collection"
     },
-    {
-      title: "Pattern-ID",
-      accordionContent: "Patternid"
-  },
+
   
     ]
   
@@ -826,6 +837,10 @@ const Walls = () => {
     let wallimgmobile;
     let temindex = 0;
    async function showSlide(index) {
+    if(index === 0){
+       const newval = await resizeImage(walldata && walldata[0]?.Imageurl)
+       console.log(newval)
+    }
    
    slides &&  slides.forEach((slide, i) => {
   
@@ -949,42 +964,56 @@ const Walls = () => {
    
   }
  
+
+  const [searchdata, setSearchData] = useState()
+  const [searchsuccess, setSearchSuccess] = useState(false)
   
-  const handleSearchPattern=(val)=>{
+  const handleSearchPattern= async (val)=>{
+
       
   
              setTempWallData(walldata)
-           let newarray = walldata && walldata.filter(item=>(
-       item.Patternnumber === val 
-     ))
 
-    
-   if(newarray.length > 0){
-    setWallData(newarray)
-    
-    
-   }
- 
-  
+             const config = {
+              headers: {
+              'Access-Control-Allow-Origin': '*',
+              
+              },
+              };
+
+              try{
+                await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
+                     
+                      setWallData(res.data.data)
+                    
+                })
+              }catch(error){
+                 console.log(error)
+              }
+     
   }
 
+ 
 
-
-  const handleSearchPatternMobile = (val)=>{
+  const handleSearchPatternMobile = async (val)=>{
     setTempWallData(walldata)
-    let newarray = walldata && walldata.filter(item=>(
-item.Patternnumber === val 
-))
 
+    const config = {
+     headers: {
+     'Access-Control-Allow-Origin': '*',
+     
+     },
+     };
 
-if(newarray.length > 0){
-setWallData(newarray)
-
-showSlide(0)
-handleFirstImageSearch(temporgimage, newarray)
-
-
-}
+     try{
+       await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
+            
+             setWallData(res.data.data)
+           
+       })
+     }catch(error){
+        console.log(error)
+     }
 
   }
 
@@ -1015,6 +1044,8 @@ const getSegmentImage = async()=>{
        detectionmode: detection
     }
 
+   
+
   
     let count = 1
 
@@ -1059,7 +1090,7 @@ const getSegmentImage = async()=>{
   }
 
 
-  const handleFirstSlideImage = (wallimage)=>{
+  const handleFirstSlideImage =  async (wallimage)=>{
 
     let patterno;
     const activewallpapername=  walldata && walldata[0]?.Productname.toLowerCase().trim().replace(/\s+/g, '-')
@@ -1069,13 +1100,14 @@ setCurrentProductName(activewallpapername)
 const getSegmentImage = async()=>{
         
   let newres;
- 
-   await  resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[0] &&  filteredarray[0].Imageurl : walldata[0] && 
-     walldata[0].Imageurl).then(res=>{
-      newres = res
-     })
 
-     
+
+ 
+  newres = await resizeImage(  filteredarray && filteredarray.length > 0 ? filteredarray[0] &&  filteredarray[0].Imageurl : walldata[0] && 
+     walldata[0].Imageurl)
+
+    
+    
    
      document.querySelector('.loadingcontainermobile').style.display = 'block'
     const body={
@@ -1091,7 +1123,7 @@ const getSegmentImage = async()=>{
       brand: pid,
       viewscount : count,
       user : user,
-      patterno: patterno
+      patternno: patterno
     }
    
     const config = {
@@ -1123,7 +1155,7 @@ const getSegmentImage = async()=>{
    
     })
  }
-  getSegmentImage()
+    await getSegmentImage()
 
 
   }
@@ -1131,9 +1163,8 @@ const getSegmentImage = async()=>{
   
   useEffect(()=>{
 
-  
-  
-       
+ 
+    
     showSlide(activeIndex)
   
     if(activeIndex === walldata.length - 1){
@@ -1141,15 +1172,17 @@ const getSegmentImage = async()=>{
     }
      
     let patterno;
-    if (activeIndex){
+    if (activeIndex > 0){
       const activewallpapername=  walldata && walldata[activeIndex].Productname.toLowerCase().trim().replace(/\s+/g, '-')
-          patterno = walldata && walldata[activeIndex].Patternno
+     
+          patterno = walldata && walldata[activeIndex].Patternnumber
+        
       setCurrentProductName(activewallpapername)
-      
+      document.querySelector('.loadingcontainermobile').style.display = 'block'
     }
    
      setCurrentProductMobile( filteredarray && filteredarray.length > 0 ? filteredarray[activeIndex] : walldata[activeIndex])
-    
+ 
        const getSegmentImage = async()=>{
         
         let newres;
@@ -1159,7 +1192,10 @@ const getSegmentImage = async()=>{
             newres = res
            })
          
-           document.querySelector('.loadingcontainermobile').style.display = 'block'
+
+           const patternvalue = walldata[activeIndex].Patternnumber
+          
+         
           const body={
             wallimg: temporgimage,
             designimg: newres,
@@ -1171,8 +1207,10 @@ const getSegmentImage = async()=>{
             brand: pid,
             viewscount : count,
             user : user,
-            patterno: patterno
+            patternno: patternvalue
           }
+
+          
          
           const config = {
             headers: {
@@ -1657,10 +1695,272 @@ const getSegmentImage = async()=>{
   const  allgriditems = document.querySelectorAll('.maincontainergrid')
   
 
+  const resizePattern = async (val, designstyle)=>{
+    let maxWidth 
+    let maxHeight 
   
+    return new Promise((resolve)=>{
+        const img = new Image();
+   
+    img.src = val+ '?r=' + Math.floor(Math.random()*100000);
+      img.setAttribute('crossOrigin', 'Anonymous');
+  
+  
+  
+   
+    img.onload = function () {
+  
+     if(detection === 'walls'){
+       let resizedDataURL;
+    let newWidth, newHeight;
+  
+   
+  
+    if( brandpatterndata[0].conditionsymbol1 === '>' &&    img.width > brandpatterndata[0].condition1 &&  brandpatterndata[0].conditionsymbol2 === '<' &&  img.width  < brandpatterndata[0].condition2 ){
+      maxWidth = wallimagewidth/brandpatterndata[0].divisonfactor
+      maxHeight = wallimageheight/brandpatterndata[0].divisonfactor
+     
+    }
+    
+   
+    else if(brandpatterndata[1].conditionsymbol1 === '<=' &&  img.width <=  brandpatterndata[1].condition1  ) {
+      maxWidth = wallimagewidth/brandpatterndata[1].divisonfactor
+  
+      maxHeight = wallimageheight/brandpatterndata[1].divisonfactor
+    
+    }
+  
+   else if(brandpatterndata[2].conditionsymbol1 === '===' &&  brandpatterndata[2].condition1 === img.width &&  brandpatterndata[2].conditionsymbol2 === '>' &&   img.width > brandpatterndata[2].condition2){
+      maxWidth = wallimagewidth/brandpatterndata[2].divisonfactor
+  
+      maxHeight = wallimageheight/brandpatterndata[2].divisonfactor
+     
+    }
+    
+   else if(brandpatterndata[3].conditionsymbol1 === '===' &&  brandpatterndata[3].condition1 === img.width &&  brandpatterndata[3].conditionsymbol2 === '>' &&   img.width > brandpatterndata[3].condition2){
+    maxWidth = wallimagewidth/brandpatterndata[3].divisonfactor
+  
+    maxHeight = wallimageheight/brandpatterndata[3].divisonfactor
+   
+  }
+     else if(brandpatterndata[4].conditionsymbol1 === '>' &&  img.width > brandpatterndata[4].condition1 &&  brandpatterndata[4].conditionsymbol2 === '<' &&   img.width < brandpatterndata[4].condition2){
+      maxWidth = wallimagewidth/brandpatterndata[4].divisonfactor
+  
+      maxHeight = wallimageheight/brandpatterndata[4].divisonfactor
+     
+     }
+     else if(brandpatterndata[5].conditionsymbol1 === '>' &&  img.width > brandpatterndata[5].condition1 &&  brandpatterndata[5].conditionsymbol2 === '<' &&   img.width < brandpatterndata[5].condition2){
+      maxWidth = wallimagewidth/brandpatterndata[5].divisonfactor
+  
+      maxHeight = wallimageheight/brandpatterndata[5].divisonfactor
+  
+     }else if(brandpatterndata[6].conditionsymbol1 === '>' &&  img.width > brandpatterndata[6].condition1 &&  brandpatterndata[6].conditionsymbol2 === '<' &&   img.width < brandpatterndata[6].condition2) {
+      maxWidth = wallimagewidth/brandpatterndata[6].divisonfactor
+  
+      maxHeight = wallimageheight/brandpatterndata[6].divisonfactor
+      
+     }
+     else if(brandpatterndata[7].conditionsymbol1 === '>' &&  img.width > brandpatterndata[7].condition1 ) {
+      maxWidth = wallimagewidth/brandpatterndata[7].divisonfactor
+  
+      maxHeight = wallimageheight/brandpatterndata[7].divisonfactor
+    
+     }
+     else{
+      maxWidth = img.width
+  
+      maxHeight = img.height
+     }
+        fetch(val)
+          .then((response) => response.blob())
+          .then((blob) => {
+            // Resize the image
+            Resizer.imageFileResizer(
+              blob,
+              maxWidth,
+              maxHeight,
+              'JPEG',
+              100,
+              0,
+              (uri) => {
+                resolve(uri);
+              },
+              'base64'
+            );
+          })
+          .catch((error) => {
+            console.error('Error fetching image:', error);
+            // If there's an error, resolve with the original image
+            resolve({ uri: val, maxWidth, maxHeight });
+          });
+
+  
+     } 
+   
+  }
+  
+    })
+     
+
+  }
+
+   const calculateWidthHeight = (img, condition)=>{
+    const { conditionsymbol1, conditionsymbol2, condition1, condition2, divisonfactor } = condition;
+
+    switch (conditionsymbol1) {
+      case '>':
+        if (img.width > condition1) {
+          if (conditionsymbol2 === '<' && img.width < condition2) {
+            return {
+              maxWidth: wallimagewidth / divisonfactor,
+              maxHeight: wallimageheight / divisonfactor,
+            };
+          }
+        }
+        break;
+  
+      case '<=':
+        if (img.width <= condition1) {
+          return {
+            maxWidth: wallimagewidth / divisonfactor,
+            maxHeight: wallimageheight / divisonfactor,
+          };
+        }
+        break;
+
+        case '===':
+          if (img.width === condition1) {
+            if (conditionsymbol2 === '>' && img.width > condition2) {
+              return {
+                maxWidth: wallimagewidth / divisonfactor,
+                maxHeight: wallimageheight / divisonfactor,
+              };
+            }
+          }
+          break;
+          case '===':
+            if (img.width === condition1) {
+              if (conditionsymbol2 === '>' && img.width > condition2) {
+                return {
+                  maxWidth: wallimagewidth / divisonfactor,
+                  maxHeight: wallimageheight / divisonfactor,
+                };
+              }
+            }
+            break;
+            case '>':
+              if (img.width > condition1) {
+                if (conditionsymbol2 === '<' && img.width < condition2) {
+                  return {
+                    maxWidth: wallimagewidth / divisonfactor,
+                    maxHeight: wallimageheight / divisonfactor,
+                  };
+                }
+              }
+              break;
+              case '>':
+                if (img.width > condition1) {
+                  if (conditionsymbol2 === '<' && img.width < condition2) {
+                    return {
+                      maxWidth: wallimagewidth / divisonfactor,
+                      maxHeight: wallimageheight / divisonfactor,
+                    };
+                  }
+                }
+                break;
+                case '>':
+                  if (img.width > condition1) {
+                    if (conditionsymbol2 === '<' && img.width < condition2) {
+                      return {
+                        maxWidth: wallimagewidth / divisonfactor,
+                        maxHeight: wallimageheight / divisonfactor,
+                      };
+                    }
+                  }
+                  break;
+                  case '>':
+                    if (img.width > condition1) {
+                    
+                        return {
+                          maxWidth: wallimagewidth / divisonfactor,
+                          maxHeight: wallimageheight / divisonfactor,
+                        };
+                      
+                    }
+                    break;
+  
+    
+  
+      default:
+        break;
+    }
+  
+    // Default dimensions if no condition is satisfied
+    return {
+      maxWidth: img.width,
+      maxHeight: img.height,
+    };
+
+
+   }
+
+
+   const newReSizeImage = async (val, designstyle) =>{
+
+
+    let maxWidth 
+    let maxHeight 
+  
+    return new Promise((resolve)=>{
+        const img = new Image();
+   
+    img.src = val+ '?r=' + Math.floor(Math.random()*100000);
+      img.setAttribute('crossOrigin', 'Anonymous');
+  
+  
+  
+   
+    img.onload = function () {
+  
+     if(detection === 'walls'){
+       let resizedDataURL;
+    let newWidth, newHeight;
+  
+    for (let i = 0; i < brandpatterndata.length; i++) {
+      const { maxWidth, maxHeight } = calculateWidthHeight(img, brandpatterndata[i]);
+     
+      if (maxWidth !== undefined && maxHeight !== undefined) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+    
+  
+     canvas.width = maxWidth;
+    canvas.height = maxHeight;
+    
+     ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
+      
+   
+      resizedDataURL = canvas.toDataURL('image/jpeg')
+  
+     resolve(resizedDataURL)
+      }
+    }
+  
+         
+     
+  
+     } 
+   
+  }
+  
+    })
+
+   }
   
   const  resizeImage = async (val, designstyle)=>{
-  
+
+
+    
    
     let maxWidth 
     let maxHeight 
@@ -1761,36 +2061,12 @@ const getSegmentImage = async()=>{
      
    
       resizedDataURL = canvas.toDataURL('image/jpeg')
-  
-     resolve(resizedDataURL)
-  
-     } else{
-       let resizedDataURL;
-    let newWidth, newHeight;
-  
-      if(img.width > 550){
-      maxWidth = wallimagewidth/4
-  
-      maxHeight = wallimageheight/4
-    }else{
-    maxWidth = img.width;
-     maxHeight = img.height;
-    }
-  
-      const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-    
-  
-     canvas.width = maxWidth;
-    canvas.height = maxHeight;
-    
-         ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
+
      
-   
-      resizedDataURL = canvas.toDataURL('image/jpeg')
   
      resolve(resizedDataURL)
-     }
+  
+     } 
    
   }
   
@@ -1814,22 +2090,7 @@ const getSegmentImage = async()=>{
     }
   }
   const handlewallpaperclick = async (e, len, val, designstyle, patternno)=>{
-   
-  
-     let urlproductname = walldata && walldata[len].Productname
-     setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
-   setCurrentProduct(walldata && walldata[len].Patternnumber)
-  
-    let newres;
-  
-  
-      await  resizeImage(val, designstyle).then(res=>{
-       newres = res
-      })
-  
-     
-    
-  
+
     allmaincontainer && allmaincontainer.forEach(item=>{
      
         item.classList.remove('activesearchitem')
@@ -1837,12 +2098,26 @@ const getSegmentImage = async()=>{
      })
         if(document.getElementById(`checkboxitem_${len}`).checked){
            
-          document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
-           document.querySelector('.loadingcontainermain').style.display= 'block'
-    
-         
         
-     
+       document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
+           document.querySelector('.loadingcontainermain').style.display= 'block'
+
+               let urlproductname = walldata && walldata[len].Productname
+     setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
+   setCurrentProduct(walldata && walldata[len].Patternnumber)
+  
+    let newres;
+  
+      
+      await  resizeImage(val, designstyle).then(res=>{
+       
+       newres = res
+      })
+      
+
+      console.log(newres)
+  
+       
           const body={
             wallimg: temporgimage,
             designimg: newres,
@@ -1887,6 +2162,23 @@ const getSegmentImage = async()=>{
   
      
          }else{
+
+                 document.getElementById(`maincontaineritems_${len}`).classList.add('activesearchitem')
+           document.querySelector('.loadingcontainermain').style.display= 'block'
+
+               let urlproductname = walldata && walldata[len].Productname
+     setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
+   setCurrentProduct(walldata && walldata[len].Patternnumber)
+
+             let newres;
+  
+  
+      await  resizeImage(val, designstyle).then(res=>{
+       newres = res
+      })
+
+      console.log(newres)
+  
           let count = 1
   
           const countbody = {
@@ -1940,14 +2232,7 @@ const getSegmentImage = async()=>{
   const handlegriditemclick =  async (len, val, designstyle, patternno)=>{
    
 
-      setCurrentProduct(walldata && walldata[len].Patternnumber)
-      let urlproductname = walldata && walldata[len].Productname
-      setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
-      let newres;
-      await  resizeImage(val, designstyle).then(res=>{
-       newres = res
-      })
-   
+ 
     allgriditems && allgriditems.forEach(item=>{
      
       item.classList.remove('activegriditem')
@@ -1957,6 +2242,14 @@ const getSegmentImage = async()=>{
         
         document.getElementById(`maincontainergrid_${len}`).classList.add('activegriditem')
         document.querySelector('.loadingcontainermain').style.display= 'block'
+             setCurrentProduct(walldata && walldata[len].Patternnumber)
+      let urlproductname = walldata && walldata[len].Productname
+      setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
+      let newres;
+      await  resizeImage(val, designstyle).then(res=>{
+       newres = res
+      })
+   
     
          
      
@@ -2004,6 +2297,14 @@ const getSegmentImage = async()=>{
        }else{
         document.getElementById(`maincontainergrid_${len}`).classList.add('activegriditem')
         document.querySelector('.loadingcontainermain').style.display= 'block'
+             setCurrentProduct(walldata && walldata[len].Patternnumber)
+      let urlproductname = walldata && walldata[len].Productname
+      setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
+      let newres;
+      await  resizeImage(val, designstyle).then(res=>{
+       newres = res
+      })
+   
     
          
       
@@ -2353,7 +2654,10 @@ const getSegmentImage = async()=>{
                                     :''}
                                 </div> : null
                             }
-                                                                                       {
+                              
+                              {
+
+                                /*
                                 accActive === index ? <div className="">
                                     {acc.accordionContent === "Patternid" ? 
                                     <div>
@@ -2383,7 +2687,7 @@ const getSegmentImage = async()=>{
                                     
                                     :''}
                                 </div> : null
-                            }
+                                      */ }
                         </div>
                     )
                 })
@@ -2442,7 +2746,7 @@ const getSegmentImage = async()=>{
             </div>
             <div className='inputsearchmain'>
               <BsSearch className='newicons'  />
-              <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)}/>
+              <input placeholder='search...' id= 'inputfieldsearch'   onChange={(e)=>handleSearchPattern(e.target.value)}/>
               <BsX className='newicons' onClick={handlesearchclosemain}   />
             </div>
             <div className='searchitemgridmob'>
@@ -2628,7 +2932,7 @@ const getSegmentImage = async()=>{
     <div className='mobilesearchcontainer'>
     <div className='mobilesearchinside'>
             
-              <input placeholder='search...'  onChange={(e)=>handleSearchPatternMobile(e.target.value)}/>
+              <input placeholder='search...' id= 'inputsearchmobile'  onChange={(e)=>handleSearchPatternMobile(e.target.value)}/>
               <BsX className='newicons' onClick={handleseearchclosemobile}   />
             </div>
 
