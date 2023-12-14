@@ -209,7 +209,7 @@ const Walls = () => {
     });
   }
   
-  
+     const [collectiondata, setCollectionData] = useState()
        const getapidata = async()=>{
   
          let designapi;
@@ -219,6 +219,8 @@ const Walls = () => {
           brand: pid
         }
        await axios.post(getbrandapi, body).then(res=>{
+
+
        
             designapi = res.data[0].designapi
             token = res.data[0].token
@@ -270,6 +272,8 @@ const Walls = () => {
            
             const newData = response.data.data; 
                  if(newData && newData.length > 0){
+
+                  
                   setLoading(false)
                  
                  }
@@ -293,9 +297,9 @@ const Walls = () => {
        
   },[pageno])
     
-     
-  
-  
+     walldata && walldata.map(item=>{
+      console.log(item.Collection)
+     })
       
   
     useEffect(()=>{
@@ -678,7 +682,7 @@ const Walls = () => {
        testurl, testurl2, testurl3
     ]
   
-   let newitemarray = []
+   let newitemarray = [].sort()
    if(viewall){
       newitemarray = [...itemarray]
    }
@@ -686,21 +690,21 @@ const Walls = () => {
     newitemarray =  itemarray.slice(0,4)
    }
   
-   let newdesignarray = []
+   let newdesignarray = [].sort()
    if(viewalldesign){
     newdesignarray = [...designstylearray]
   }
   else{
     newdesignarray =  designstylearray.slice(0,4)
   }
-  let newcollectionarray = []
+  let newcollectionarray = [].sort()
   if(viewallcollection){
    newcollectionarray = [...collectionArray]
   }
   else{
     newcollectionarray =  collectionArray.slice(0,4)
   }
-  let newpatternarray = []
+  let newpatternarray = [].sort()
   if(viewallpattern){
     newpatternarray = [...patternidarray]
   }else{
