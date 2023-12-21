@@ -9,6 +9,8 @@ import { Helmet } from "react-helmet";
 import Resizer from 'react-image-file-resizer';
 
 
+
+
 import img3 from './images/demoimage3.jpg'
 import img4 from './images/demoimage4.jpg'
 import wall1 from './images/wallpaper1.jpg'
@@ -63,6 +65,7 @@ const Walls = () => {
     const [viewallpattern, setViewAllPattern] = useState(false)
   
     const [pageno, setPageNo] = useState(1)
+    const [inputsearchvalue, setInputSearchValue] = useState('')
   
   
     const [ratingValue, setRatingValue] = useState(0)
@@ -297,10 +300,7 @@ const Walls = () => {
        
   },[pageno])
     
-     walldata && walldata.map(item=>{
-      console.log(item.Collection)
-     })
-      
+ 
   
     useEffect(()=>{
       setTimeout(() => {
@@ -471,13 +471,16 @@ const Walls = () => {
     }
     const handlesearchclose= ()=>{
   
-   
+    
+    
     
       if(tempwalldata?.length > 0){
           setWallData(tempwalldata)
+        
         document.querySelector('.inputsearch').classList.toggle('show')
         document.querySelector('.searchbar').style.display= 'block'
       }else{
+        setInputSearchValue('')
         document.querySelector('.inputsearch').classList.toggle('show')
         document.querySelector('.searchbar').style.display= 'block' 
       }
@@ -495,7 +498,8 @@ const Walls = () => {
     }
   
     const handlesearchclosemain= ()=>{
-      
+    
+        
       document.querySelector('.inputsearchmain').style.display = 'none'
       document.querySelector('.searchbarmain').style.display = 'block'
    
@@ -503,13 +507,16 @@ const Walls = () => {
      setWallData(tempwalldata)
         
     }
+   
 
     const handleseearchclosemobile = ()=>{
 
-         if(tempwalldata.length>0){
+         if(tempwalldata?.length >0){
           setWallData(tempwalldata)
           document.querySelector('.mobilesearchcontainer').style.display= 'none'
-         } 
+         } else{
+          document.querySelector('.mobilesearchcontainer').style.display= 'none'
+         }
           
          
         
@@ -1030,29 +1037,38 @@ const Walls = () => {
 
   const [searchdata, setSearchData] = useState()
   const [searchsuccess, setSearchSuccess] = useState(false)
+
+
   
   const handleSearchPattern= async (val)=>{
 
-      
-  
-             setTempWallData(walldata)
+            setInputSearchValue(val)
+         
+             if(val.length >= 4){
+              setTempWallData(walldata)
 
-             const config = {
-              headers: {
-              'Access-Control-Allow-Origin': '*',
-              
-              },
-              };
-
-              try{
-                await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
-                     
+              const config = {
+               headers: {
+               'Access-Control-Allow-Origin': '*',
+               
+               },
+               };
+ 
+               try{
+                 await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
+                     if(res.data.data.length > 0){
                       setWallData(res.data.data)
-                    
-                })
-              }catch(error){
-                 console.log(error)
-              }
+                     }
+                      
+                     
+                     
+                 })
+               }catch(error){
+                  console.log(error)
+               }
+             }
+  
+           
      
   }
 
@@ -1896,56 +1912,38 @@ const getSegmentImage = async()=>{
 
    }
 
+   const dataURLtoBlob = (dataURL) => {
+    try {
+      const base64String = dataURL.split(',')[1];
+      if (!base64String) {
+        throw new Error('Invalid data URL: missing base64-encoded data');
+      }
+  
+      const byteString = atob(base64String);
+      const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+  
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+  
+      return new Blob([ab], { type: mimeString });
+    } catch (error) {
+      console.error('Error converting data URL to Blob:', error);
+      return null; // Return null or handle the error accordingly
+    }
+};
+
 
    const newReSizeImage = async (val, designstyle) =>{
 
+ 
 
-    let maxWidth 
-    let maxHeight 
-  
-    return new Promise((resolve)=>{
-        const img = new Image();
-   
-    img.src = val+ '?r=' + Math.floor(Math.random()*100000);
-      img.setAttribute('crossOrigin', 'Anonymous');
+ 
+
   
   
-  
-   
-    img.onload = function () {
-  
-     if(detection === 'walls'){
-       let resizedDataURL;
-    let newWidth, newHeight;
-  
-    for (let i = 0; i < brandpatterndata.length; i++) {
-      const { maxWidth, maxHeight } = calculateWidthHeight(img, brandpatterndata[i]);
-     
-      if (maxWidth !== undefined && maxHeight !== undefined) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-    
-  
-     canvas.width = maxWidth;
-    canvas.height = maxHeight;
-    
-     ctx.drawImage(img, 0, 0, maxWidth, maxHeight);
-      
-   
-      resizedDataURL = canvas.toDataURL('image/jpeg')
-  
-     resolve(resizedDataURL)
-      }
-    }
-  
-         
-     
-  
-     } 
-   
-  }
-  
-    })
 
    }
   
@@ -2106,10 +2104,6 @@ const getSegmentImage = async()=>{
        newres = res
       })
       
-
-      console.log(newres)
-  
-       
           const body={
             wallimg: temporgimage,
             designimg: newres,
@@ -2738,7 +2732,7 @@ const getSegmentImage = async()=>{
             </div>
             <div className='inputsearchmain'>
               <BsSearch className='newicons'  />
-              <input placeholder='search...' id= 'inputfieldsearch'   onChange={(e)=>handleSearchPattern(e.target.value)}/>
+              <input placeholder='search...' id= 'inputfieldsearch' value={inputsearchvalue}  onChange={(e)=>handleSearchPattern(e.target.value)}/>
               <BsX className='newicons' onClick={handlesearchclosemain}   />
             </div>
             <div className='searchitemgridmob'>
@@ -2822,7 +2816,7 @@ const getSegmentImage = async()=>{
   </div>
      </div>
      <div className='topbuttoncontainer'>
-      <button className='productdetailsbutton' >VIEW DETAILS</button>
+      <button className='productdetailsbutton' ><a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">Go to website</a> </button>
        <select id= 'dropdown'  onChange={(e)=> handleRemoveClick(e.target.value)}  > 
           <option style={{display:'none'}} value= '' selected >PRODUCT DETAILS</option>
         
@@ -2883,10 +2877,7 @@ const getSegmentImage = async()=>{
               </div>
             </div>
             <div>
-              <div className='starvaluediv'>
-                <p>Rate your experience</p>
-              <Rating onClick={handleRating} initialValue={ratingValue} />
-              </div>
+         
         
             </div>
             <div>
@@ -3160,7 +3151,7 @@ const getSegmentImage = async()=>{
                      <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl,item.Designstyle, item.Patternnumber)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.Imageurl}/>
+                    <img  src= {item.Imageurl2}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -3189,14 +3180,14 @@ const getSegmentImage = async()=>{
                   
                 </div>
                 )) : 
-                   walldata && walldata.map((item,i)=>(
+                   walldata?.map((item,i)=>(
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
                      <input  type='checkbox' style={{display:'none'}} id={`checkboxitem_${i}`} onClick={(e)=>handlewallpaperclick(e,i, item.Imageurl,item.Designstyle, item.Patternnumber)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {item.Imageurl}/>
+                    <img  src= {item.Imageurl2}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
@@ -3301,10 +3292,7 @@ const getSegmentImage = async()=>{
               </div>
             </div>
             <div>
-              <div className='starvaluediv'>
-                <p>Rate your experience</p>
-              <Rating onClick={handleRating} initialValue={ratingValue} />
-              </div>
+            
         
             </div>
             <div>
@@ -3335,6 +3323,11 @@ const getSegmentImage = async()=>{
             </span>
        
         <h1> See {brandtitle && brandtitle} {brandcategory && brandcategory} in your room</h1>
+           <div className='headinglogocontainer'>
+            <img src={brandimage && brandimage}/>
+
+           </div>
+             
           </div>
           <div className='uploaddivcontainer'>
           <div className='uploadbuttoncontainer'>
