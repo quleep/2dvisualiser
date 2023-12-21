@@ -2818,7 +2818,7 @@ const getSegmentImage = async()=>{
      <div className='topbuttoncontainer'>
       <button className='productdetailsbutton' ><a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">Go to website</a> </button>
        <select id= 'dropdown'  onChange={(e)=> handleRemoveClick(e.target.value)}  > 
-          <option style={{display:'none'}} value= '' selected >PRODUCT DETAILS</option>
+          <option style={{display:'none'}} value= '' selected >Change setttings</option>
         
         <option value='removeproduct' >Remove Product</option>
         <option value='changeroom' >Change Room</option>
@@ -3318,15 +3318,29 @@ const getSegmentImage = async()=>{
         <div  className='modalinsidecontent'>
           <div className='modaltopcontainer'>
           <div  className='headingcontainer'>
-            <span style={{cursor:'pointer'}} onClick={handlemodalclose}>
-            <FaTimes/>
-            </span>
-       
-        <h1> See {brandtitle && brandtitle} {brandcategory && brandcategory} in your room</h1>
-           <div className='headinglogocontainer'>
+            <div className='headingcontainerinsideone'>
+              <div>
+              <FaTimes  onClick={handlemodalclose} style={{cursor:'pointer'}}/>
+              </div>
+              <div>
+              <h1> See {brandtitle && brandtitle} {brandcategory && brandcategory} in your room</h1>
+              </div>
+
+            </div>
+            <div className='headingcontainerinsidetwo'>
+            <div className='headinglogocontainer'>
             <img src={brandimage && brandimage}/>
 
            </div>
+            </div>
+             
+            <span style={{cursor:'pointer'}} onClick={handlemodalclose}>
+           
+           
+            </span>
+       
+       
+      
              
           </div>
           <div className='uploaddivcontainer'>

@@ -1459,16 +1459,30 @@ body {
 .navicons{
   margin-top: 5px;
 }
+.headingcontainerinsideone{
+  flex: 1;
+  
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+}
+.headingcontainerinsidetwo{
+  display: flex;
+ 
+  justify-content: center;
+  align-items: center;
+}
 
 .headingcontainer{
   display: flex;
   
-  padding-left: 10px;
-   justify-content:flex-start;
+    padding: 20px;
+   justify-content: space-between;
 
-   width: 100%;
+   width: 95%;
    flex-wrap: wrap;
-   height: auto;
+   height: fit-content;
+   
  
   
  
@@ -1495,6 +1509,8 @@ body {
   display: flex;
   max-width: 150px;
   max-height: 100px;
+  
+
  
  
 }
@@ -2259,6 +2275,10 @@ margin-top: 2px;
 }
 
 @media (max-width: 600px) {
+   .headinglogocontainer{
+    width: 120px;
+    height: 80px;
+   }
 
    .headingcontainer h1{
     padding-left: 0px;
@@ -2277,7 +2297,7 @@ margin-top: 2px;
     bottom: 220px;
    }
    .headingcontainer h1{
-    font-size: 25px;
+    font-size: 20px;
    }
    .tryimagecontainer{
     margin-left: 0px;
