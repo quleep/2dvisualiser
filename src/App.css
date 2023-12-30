@@ -1662,15 +1662,18 @@ body {
   flex-direction: column;
   border: 1px solid red;
 }
+
 .mobilesearchcontainer{
  
-  position: relative;
-  top: -60%;
-  width:  400px;
-  
+    position: relative;
  
+  width:  400px;
+ 
+  top: -60%;
+ height: 40px;
   display: none;
   padding-left: 5px;
+  
  
  
 }
@@ -2113,12 +2116,13 @@ margin-top: 2px;
   object-fit: contain;
 }
 .filtermobileproductname{
-  width: 250px;
+  width: 350px;
   height: auto;
  
   display: flex;
   align-items: center;
   justify-content: center;
+  
 
  
  

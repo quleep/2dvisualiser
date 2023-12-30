@@ -2933,7 +2933,9 @@ const getSegmentImage = async()=>{
    
 
 
-   
+  
+
+ 
     <div className='filtermobilecontainer'>
     <div className='mobilesearchcontainer'>
     <div className='mobilesearchinside'>
@@ -2943,6 +2945,7 @@ const getSegmentImage = async()=>{
             </div>
 
        </div>
+
   
     <div className='filtermobileproductname'>
         <p>{currentproductmobile && currentproductmobile.Productname} { currentproductmobile && currentproductmobile.Patternnumber }  </p>
@@ -2977,6 +2980,7 @@ const getSegmentImage = async()=>{
      </div>
 
     </div>
+
 </div>
     <div class="slider-container">
 
