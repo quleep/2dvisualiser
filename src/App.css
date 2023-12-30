@@ -46,7 +46,8 @@ body {
   flex-direction: row;
   
   overflow-y: scroll;
-  background-color: rgb(231, 230, 230);
+  background-color: white;
+  
  
 
 
@@ -88,7 +89,7 @@ body {
   flex-wrap: wrap;
 }
  .filterdatainside h2{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
  }
 .searchtabcontainer{
   display: flex;
@@ -129,7 +130,7 @@ body {
   height: 50px;
 }
 .searchicondiv p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
 }
 .searchicondivmain{
   display: flex;
@@ -139,7 +140,7 @@ body {
   height: 50px;
 }
 .searchicondivmain p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
 }
 .filtertextdiv{
   display: flex;
@@ -151,7 +152,7 @@ body {
   
 }
 .filtertextdiv p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 20px;
   margin-left: 5px;
   margin-right: 5px;
@@ -165,7 +166,7 @@ body {
 .filterheadingdiv{
   display: flex;
   height: fit-content;
-  border-bottom: 1px solid gray;
+  border-bottom: 0.2px solid rgb(196, 193, 193);
   flex-wrap: wrap;
   width: auto;
   flex-direction: row;
@@ -201,22 +202,23 @@ body {
   grid-gap: 10px;
   justify-content: space-between;
   cursor: pointer;
-  border-bottom: 1px solid gray;
+  border-bottom: 0.2px solid rgb(196, 193, 193);
   margin: 10px;
  
 }
 .accordionHeading > h3{
   
   font-size: 30px;
-  font-family: Loto,sans-serif;
+  font-family: 'Lato', sans-serif;
+
   color: #5f5f5f;
 }
 .addIcon{
   transform-origin: center;
   transition: 0.2s ease-in-out;
   height: fit-content;
-  margin-top: 20px;
-  color: #5f5f5f;
+  margin-top: 30px;
+  color: #7c7b7b;
 }
 
 
@@ -257,33 +259,46 @@ body {
    height: fit-content;
   flex-wrap: wrap;
   justify-content: space-between;
-  border: 1px solid rgb(185, 189, 185);
+ 
   margin: 10px;
   align-items: center;
   border-radius: 10px;
+  padding-left: 10px;
 }
  .checkbox:hover{
-  background-color: #e9bebe;
+
   cursor: pointer;
  }
 .checkbox p{
-  font-size: 20px;
-  font-family: Loto,sans-serif;
+  font-size: 25px;
+ 
   margin-left: 10px;
-  color: #5f5e5e;
+  color: black;
+  font-family: 'Lato', sans-serif;
+
 }
 .checkbox input{
    width: 25px;
    height: 25px;
    margin-right: 10px;
+   color: white;
+   cursor: pointer;
+
 
 }
 .checkbox input[type="checkbox"]{
-  accent-color: rgb(197, 119, 119);
+  accent-color: rgb(214, 88, 88);
+ 
 }
 
 .checkbox-input {
   margin-right: 5px;
+  border-radius: 5px;
+}
+.viewallicon{
+ padding-top: 5px;
+ padding-left: 5px;
+  
 }
 
 
@@ -294,12 +309,15 @@ body {
   padding: 10px 20px;
   background-color: white;
   color: #181414;
-  border: 1px solid rgb(173, 171, 171);
+  border: none;
+ 
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
   height:  60px;
   font-size: 20px;
+  font-family: 'Lato', sans-serif;
+
 }
 #view-all-buttondesign {
   display: block;
@@ -307,7 +325,10 @@ body {
   padding: 10px 20px;
   background-color: white;
   color: #181414;
-  border: 1px solid rgb(173, 171, 171);
+  border: none;
+  font-family: 'Lato', sans-serif;
+
+
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
@@ -320,12 +341,14 @@ body {
   padding: 10px 20px;
   background-color: white;
   color: #181414;
-  border: 1px solid rgb(173, 171, 171);
+   border: none;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
   height:  60px;
   font-size: 20px;
+  font-family: 'Lato', sans-serif;
+
 }
 #view-all-buttoncollection {
   display: block;
@@ -333,12 +356,14 @@ body {
   padding: 10px 20px;
   background-color: white;
   color: #181414;
-  border: 1px solid rgb(173, 171, 171);
+  border: none;
   border-radius: 5px;
   cursor: pointer;
   width: 180px;
   height:  60px;
   font-size: 20px;
+  font-family: 'Lato', sans-serif;
+
 }
 
 
@@ -346,49 +371,61 @@ body {
 .filteritemscroll{
   display: flex;
   width: auto;
-  height: 700px;
- border-bottom: 1px solid gray;
+  height: 600px;
+ border-bottom: 1px solid rgb(196, 194, 194);
  margin: 10px;
  overflow-y: scroll;
  flex-direction: column;
  
 }
 .filterheading h1{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato', sans-serif;
+
   font-size:  50px;
-  color: #616161;
+  color: #535353;
+  margin-left: 20px;
 }
 
 .tags {
-  background-color: #ececf8;
+  background-color: #eeeefa;
    justify-content: space-between;
-   padding: 10px 10px;
+   padding: 15px;
   border-radius: 50px;
   display: flex;
-  grid-gap: 5px;
-  align-items: center;
+ 
+ 
+
+ 
+  grid-gap: 10px;
+
   margin-right: 10px;
   margin-bottom: 10px;
-  height: 40px;
-  width:  100px;
+
+   max-height: 50px;
+   width: max-content;
+   align-items: center;
  
-  font-size: 20px;
+  font-size: 25px;
   color: #181414;
+  font-family: 'Lato', sans-serif;
+  
 }
 .tagscontainer {
  
   display: flex;
-  width: 100%;
-  height:  120px;
-  flex-wrap: wrap;
+   max-width: 95%;
+  max-height: max-content;
+
   overflow-y: scroll;
 
   align-items: center;
   justify-content: center;
 
+  padding: 10px;
+  padding-left: 30px;
 }
 .crossIcon {
-  background-color: white;
+  background-color: transparent;
   display: flex;
   align-items: center;
   border-radius: 50%;
@@ -438,11 +475,12 @@ body {
   height: 70px;
   border: none;
   margin: 10px;
-  font-family: Loto,sans-serif;
-  font-size: 20px;
-  background-color: #a3a3a5;
+  font-family: 'Lato',sans-serif;
+  font-size: 25px;
+  background-color: #dededf;
   cursor: pointer;
-  color: white;
+  color: black;
+  border-radius: 5px;
 }
 .filterbuttonsinside :hover{
   background-color: rgb(214, 80, 80);
@@ -522,7 +560,7 @@ body {
 
 }
 .filteritems h1{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
 
 }
 
@@ -534,7 +572,7 @@ body {
     max-height:  100%;
   margin: 0 auto;
   flex-direction: column;
-   border-radius: 4px;
+   border-radius: 10px;
   background-color: #fff;
   -ms-flex-item-align: center;
   align-self: center;
@@ -677,7 +715,7 @@ body {
   margin-top: auto;
 }
 .poweredbottomdiv p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 10px;
 }
 .loaderdivmobile p{
@@ -695,7 +733,7 @@ body {
   
 }
 .loadingtextloader p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 15px;
 }
 .loadingimagediv img{
@@ -829,17 +867,17 @@ body {
   margin-top: 10px;
  }
  .productpagelinkgrid p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size:  18px;
  }
  .tooltipinside h3{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size:  18px;
   color: black;
    margin-bottom: 10px;
  }
  .tooltipinside p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
    font-size:  14px;
    color: black;
    margin: 0px ;
@@ -880,7 +918,7 @@ body {
 
 }
 .backtobutton p{
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 .searchitemscontainer{
@@ -972,7 +1010,7 @@ body {
     margin: 0px;
 }
 .wallpaperdetailsinside p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
 }
 .categoryname{
   font-weight: 600;
@@ -987,7 +1025,7 @@ body {
  .wallpaperdetailsinside p{
   margin: 2px;
   font-size: 15px;
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
  }
  .dimensions{
   margin-top: 15px;
@@ -1003,7 +1041,7 @@ body {
 }
 .loadingtext{
   color: rgb(129, 124, 124);
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   margin-left: 20px;
   
 }
@@ -1177,7 +1215,7 @@ body {
  
 }
 .sharediv p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 15px;
   color: #282c34;
   margin: 0px;
@@ -1261,7 +1299,7 @@ body {
   border: 1px solid black;
   background-color: white;
   border-radius: 5px;
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
   cursor: pointer;
   
  }
@@ -1302,7 +1340,7 @@ body {
   border: 1px solid black;
   background-color: white;
   border-radius: 5px;
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
   cursor: pointer;
   
  }
@@ -1334,14 +1372,14 @@ body {
   flex-wrap: wrap;
  }
  .currentproduct p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 15px;
   color: #686868;
   margin: 5px;
 
  }
  .currentproduct h3{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 18px;
   color: #2e2e2e;
   margin: 5px;
@@ -1363,7 +1401,7 @@ body {
   border-radius: 10px;
   border: none;
   font-size: 15px;
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
    
  }
  .producticon{
@@ -1398,7 +1436,7 @@ body {
   margin-top: 20px;
 }
 .starvaluediv p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 18px;
   color: #6e6e6e;
   margin: 5px;
@@ -1411,7 +1449,7 @@ body {
  
 }
 .poweredbydiv p{
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
   font-size: 15px;
   color: #6e6e6e;
 }
@@ -1449,7 +1487,7 @@ body {
   margin: 10px;
 }
 .navitems p{
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
   padding: 10px;
 }
 .navitems p:hover{
@@ -1502,7 +1540,7 @@ body {
   margin-left: 20px;
   padding-left: 50px;
 
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
  
 }
 .headinglogocontainer{
@@ -1605,7 +1643,7 @@ body {
   background-color: rgb(214, 214, 214);
 }
 .floorwalllabel label p {
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
   color: rgb(119, 117, 117);
  width: fit-content;
 
@@ -1625,10 +1663,14 @@ body {
   border: 1px solid red;
 }
 .mobilesearchcontainer{
-  position: absolute;
-  top: 45%;
-  left: 20%;
+ 
+  position: relative;
+  top: -60%;
+  width:  400px;
+  
+ 
   display: none;
+  padding-left: 5px;
  
  
 }
@@ -1638,16 +1680,17 @@ body {
   display: none;
   flex-wrap: wrap;
   flex-direction: column;
-  border: 1px solid rgb(202, 202, 202);
-  border-radius: 5px;
+ 
+ 
 
 }
 .mobilesearchinside input{
   width: 100%;
   height: 40px;
 
-  border: 1px solid rgb(202, 202, 202);
-  border-radius: 5px;
+  border: 1px solid gray;
+  border-radius: 20px;
+  padding-left: 5px;
 }
 .mobilesearchinside input:focus{
   outline: none;
@@ -1698,7 +1741,7 @@ body {
   border: none;
   color: white;
   font-size: 15px;
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
  
 }
 .uploadcam{
@@ -1707,7 +1750,7 @@ margin-top: 2px;
 }
 
  .uploadbuttoncontainer h4{
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
  height: auto;
   
   margin: 5px;
@@ -1734,7 +1777,7 @@ margin-top: 2px;
  
  }
  .tryimagecontainer h2{
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
   color: rgb(160, 157, 157);
   padding-left: 10px;
  }
@@ -1748,6 +1791,7 @@ margin-top: 2px;
     flex: 1 1 240px;
     cursor: pointer;
     margin: 10px;
+    
    
   }
   .imagecontainer img{
@@ -1755,11 +1799,16 @@ margin-top: 2px;
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
+   
+
   }
   .imagecontainer p{
     margin: 0px;
-    font-family: Loto,sans-serif;
+    font-family: 'Lato',sans-serif;
     color: #636262;
+   
+   
+ 
   }
 
 .modal-content {
@@ -2077,7 +2126,7 @@ margin-top: 2px;
 }
 .filtermobileproductname p{
   font-size: auto;
-  font-family: Loto,sans-serif;
+  font-family: 'Lato',sans-serif;
  
 
 }
@@ -2130,10 +2179,11 @@ margin-top: 2px;
   width: auto;
   height: 70px;
  
-  display: flex;
-  
  
-  background-color: #dad9d9;
+  display: flex;
+ 
+background-color: #dad9d9;
+  
   
   
 }
@@ -2254,7 +2304,7 @@ margin-top: 2px;
   border: none;
   background-color: rgb(223, 59, 59);
   color: white;
-  font-family: Loto, sans-serif;
+  font-family: 'Lato', sans-serif;
  z-index: 1;
 
 
@@ -2275,6 +2325,11 @@ margin-top: 2px;
 }
 
 @media (max-width: 600px) {
+
+    .modal-wrapscan{
+      width: 100%;
+      height: auto;
+    }
    .headinglogocontainer{
     width: 120px;
     height: 80px;

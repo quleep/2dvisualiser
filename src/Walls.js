@@ -1,7 +1,7 @@
 
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
-import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
+import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCartArrowDown, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
 import img2 from './images/demoimage2.jpg'
@@ -2507,14 +2507,13 @@ const getSegmentImage = async()=>{
               </div>
 
             </div>
-            <div className='filteritemscroll'>
-                          
             <div className='tagscontainer'  style={checkarray.length === 0 ? {display:'none'}: {display:'flex'}}>
                                          {
                                               checkarray && checkarray.map((tag, index) => {
                                                    return (
                                                        <div className="tags" key={index}>
-                                                           <span>{tag}</span>
+                                                      
+                                                           <span>{tag} </span>
                                                            <div className="crossIcon"
                                                                 >
                                                                <RxCross2  onClick={()=>handleremovechecked(tag)} />
@@ -2527,6 +2526,9 @@ const getSegmentImage = async()=>{
                        
                        
                                            </div>
+            <div className='filteritemscroll'>
+                          
+       
        
             <div className='accordionContainer'>
           
@@ -2571,7 +2573,7 @@ const getSegmentImage = async()=>{
         
 </div>
 
-<button id="view-all-button" onClick={handleviewall}>View All <FaArrowDown /></button>
+<button id="view-all-button" onClick={handleviewall}>View All <FaChevronDown className='viewallicon' /></button>
                                     </div>
                                     
                                     
@@ -2602,7 +2604,7 @@ const getSegmentImage = async()=>{
         
 </div>
 
-<button id="view-all-buttondesign" onClick={handleviewalldesign}>View All <FaArrowDown /></button>
+<button id="view-all-buttondesign" onClick={handleviewalldesign}>View All <FaChevronDown className='viewallicon' /></button>
                                     </div>
                                     
                                     
@@ -2633,7 +2635,7 @@ const getSegmentImage = async()=>{
         
 </div>
 
-<button id="view-all-buttoncollection" onClick={handleviewallcollection}>View All <FaArrowDown /></button>
+<button id="view-all-buttoncollection" onClick={handleviewallcollection}>View All <FaChevronDown className='viewallicon' /></button>
                                     </div>
                                     
                                     
@@ -2816,12 +2818,12 @@ const getSegmentImage = async()=>{
   </div>
      </div>
      <div className='topbuttoncontainer'>
-      <button className='productdetailsbutton' ><a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">Go to website</a> </button>
+      <button className='productdetailsbutton' ><a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">GO TO WEBSITE</a> </button>
        <select id= 'dropdown'  onChange={(e)=> handleRemoveClick(e.target.value)}  > 
-          <option style={{display:'none'}} value= '' selected >Change setttings</option>
+          <option style={{display:'none'}} value= '' selected >PRODUCT OPTIONS</option>
         
-        <option value='removeproduct' >Remove Product</option>
-        <option value='changeroom' >Change Room</option>
+        <option value='removeproduct' >REMOVE PRODUCT</option>
+        <option value='changeroom' >CHANGE ROOM</option>
 
        </select>
       </div>
@@ -2912,15 +2914,9 @@ const getSegmentImage = async()=>{
         </div> 
       </div>
     <img   ref={ imgref} src= {image }/>
-    <div className='mobilesearchcontainer'>
-    <div className='mobilesearchinside'>
-            
-              <input placeholder='search...' id= 'inputsearchmobile'  onChange={(e)=>handleSearchPatternMobile(e.target.value)}/>
-              <BsX className='newicons' onClick={handleseearchclosemobile}   />
-            </div>
-
-       </div>
+ 
     </div>
+ 
     <div className='imageslider'> 
      <button className='changeproductbutton'  onClick={handlechangeproductmobile}>Change product <FaChevronUp className='upicon'/></button>
    
@@ -2935,7 +2931,19 @@ const getSegmentImage = async()=>{
       */
     }
    
+
+
+   
     <div className='filtermobilecontainer'>
+    <div className='mobilesearchcontainer'>
+    <div className='mobilesearchinside'>
+            
+              <input placeholder='search...' id= 'inputsearchmobile'  onChange={(e)=>handleSearchPatternMobile(e.target.value)}/>
+              <BsX className='newicons' onClick={handleseearchclosemobile}   />
+            </div>
+
+       </div>
+  
     <div className='filtermobileproductname'>
         <p>{currentproductmobile && currentproductmobile.Productname} { currentproductmobile && currentproductmobile.Patternnumber }  </p>
     </div>
@@ -3374,9 +3382,9 @@ const getSegmentImage = async()=>{
 
                 {
                   demoimages && demoimages.map(item=>(
-                    <div  onClick={()=>tempRoomClick( item.imgurl)}>
+                    <div style={{ paddingTop:'10px'}} onClick={()=>tempRoomClick( item.imgurl)}>
                     <img src={item.imgurl} />
-                     <p>{item.room}</p>
+                     <p  >{item.room}</p>
                   </div>
                   ))
                 }
