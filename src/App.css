@@ -165,18 +165,18 @@ body {
 }
 .filterheadingdiv{
   display: flex;
-  height: fit-content;
+  height: max-content;
   border-bottom: 0.2px solid rgb(196, 193, 193);
   flex-wrap: wrap;
   width: auto;
   flex-direction: row;
   justify-content: space-between;
-  margin: 10px;
+  margin: 5px;
 }
 .filterheading{
   display: flex;
 
- margin: 10px;
+ margin: 5px;
  
  
 }
@@ -187,9 +187,10 @@ body {
   background-color: white;
   display: flex;
   flex-direction: column;
-  grid-gap: 15px;
+  grid-gap: 5px;
   color: rgb(9, 11, 79);
   transition: 0.6s ease-in-out;
+ 
 }
 .accordion{
   border-radius: 6px;
@@ -197,14 +198,14 @@ body {
   
 }
 .accordionHeading{
-  padding: 1rem;
+  padding: 5px;
   display: flex;
   grid-gap: 10px;
   justify-content: space-between;
   cursor: pointer;
   border-bottom: 0.2px solid rgb(196, 193, 193);
-  margin: 10px;
- 
+  margin: 5px;
+
 }
 .accordionHeading > h3{
   
@@ -365,13 +366,21 @@ body {
   font-family: 'Lato', sans-serif;
 
 }
+.searchcontainermainmobile{
+   position: relative;
+  width: 100%;
+  height: 60px;
+ 
+  border: 1px solid green;
+ 
+}
 
 
 
 .filteritemscroll{
   display: flex;
   width: auto;
-  height: 600px;
+  height: 450px;
  border-bottom: 1px solid rgb(196, 194, 194);
  margin: 10px;
  overflow-y: scroll;
@@ -423,6 +432,8 @@ body {
 
   padding: 10px;
   padding-left: 30px;
+  
+  
 }
 .crossIcon {
   background-color: transparent;
@@ -485,6 +496,7 @@ body {
 .filterbuttonsinside :hover{
   background-color: rgb(214, 80, 80);
 }
+
 .modalscan {
   position: fixed;
   display: none;
@@ -580,6 +592,8 @@ body {
   opacity: 1;
   transform: scale(0.6);
   transition: opacity 250ms 250ms ease, transform 300ms 250ms ease;
+ 
+
 }
 .modal-wrapscanmain {
 
@@ -1093,6 +1107,7 @@ body {
   margin-bottom: 30px;
  
  
+ 
 }
 .mobilemaindisplay img{
   width: 100%;
@@ -1113,6 +1128,13 @@ body {
 
 
 }
+.crossiconclose{
+  position: relative;
+  left: -20px;
+  font-size: 15px;
+  display: none;
+  
+}
 .navbarmobile>*{
   flex: 1 1 300px;
   z-index: 20;
@@ -1120,14 +1142,14 @@ body {
  
 }
 .topbuttoncontainer{
-  display: flex;
-  width: fit-content;
-  height: 100%;
+  flex: 1;
+  border: 1px solid green;
  
   flex-wrap: wrap;
-  flex-direction: column;
+ 
   align-items: center;
   justify-content: center;
+  padding: 5px;
 }
 .topbuttoncontainer a{
   text-decoration: none;
@@ -1223,15 +1245,25 @@ body {
  .brandimagediv{
   flex: 1;
   margin: 5px;
-  height: 70px;
+  
   align-items: center;
   justify-content: center;
  
+ 
+  display: flex;
+ 
+ }
+ .brandlogodivinside{
+  max-width: 150px;
+  max-height: 150px;
+  
+  
  }
  .brandimagediv img{
   width: 100%;
   height: 100%;
   object-fit: contain;
+ 
  }
  .brandproductdiv{
   flex: 1;
@@ -1665,22 +1697,26 @@ body {
 
 .mobilesearchcontainer{
  
-    position: relative;
- 
-  width:  400px;
- 
-  top: -60%;
- height: 40px;
-  display: none;
-  padding-left: 5px;
   
+ 
+  flex: 1;
+ 
+
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+ 
+  padding-left: 5px;
+  border: 1px solid blue;
+  flex-wrap: wrap;
  
  
 }
 .mobilesearchinside {
   width: 100%;
-  height: 40px;
-  display: none;
+ 
+ 
   flex-wrap: wrap;
   flex-direction: column;
  
@@ -2116,12 +2152,13 @@ margin-top: 2px;
   object-fit: contain;
 }
 .filtermobileproductname{
-  width: 350px;
+   
   height: auto;
  
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-left: 10px;
   
 
  
@@ -2181,14 +2218,96 @@ margin-top: 2px;
 }
 .filtermobilecontainer{
   width: auto;
-  height: 70px;
+  max-height: 120px;
  
  
   display: flex;
  
 background-color: #dad9d9;
+
+flex-direction: column;
+   
+}
+.filtermobilesearchiconscontainer{
+  display: flex;
+}
+.searchdivmainmobile{
+  display: flex;
+  width: 95%;
+  height: 80px;
   
+  justify-content: space-between;
+  padding: 5px;
+  flex-wrap: wrap;
   
+}
+.searchcontainerinsidemobile{
+  flex: 1;
+  
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  
+}
+.searchcontainerinsidemobile{
+  height: 100%;
+  
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding-left: 0px;
+
+}
+.searchcontainerinsidemobile input{
+
+  height: 40px;
+  border-radius: 50px;
+  border: none;
+  padding-left: 5px;
+ width: 100%;
+  
+
+}
+.searchcontainerinsidemobile input:focus{
+  outline: none;
+}
+.productoptioncontainer{
+  flex: 1;
+
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+  
+}
+.productoptioncontainerinside{
+  width: 100%;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.productoptioncontainerinside select{
+  width: 100%;
+  height: 40px;
+  border-radius: 50px;
+  border: none;
+  font-family: 'Lato',sans-serif;
+  
+}
+.productoptioncontainerinside select:focus{
+  outline: none;
+}
+
+.productoptioncontainerinside button{
+   margin: 5px;
+   font-family: 'Lato',sans-serif;
+   background-color: none;
+   border-radius: 5px;
+   border: none;
+  
+   background-color: rgb(206, 117, 117);
+   
   
 }
 
@@ -2276,6 +2395,7 @@ background-color: #dad9d9;
  
   height: 100%;
   overflow: scroll;
+ 
   
 }
 .searchdivmobile{
@@ -2347,10 +2467,10 @@ background-color: #dad9d9;
     padding-left: 25px;
    }
    .filtermobilecontainer{
-    margin-top: -70px;
+    margin-top: -50px;
    }
    .mobilemaindisplay{
-    margin-top: -70px;
+    margin-top: -120px;
    }
    .changeroomsidebutton{
     bottom: 220px;

@@ -1,7 +1,7 @@
 
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
-import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCartArrowDown, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
+import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCartArrowDown, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaFontAwesomeAlt, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
 import img2 from './images/demoimage2.jpg'
@@ -113,10 +113,13 @@ const Walls = () => {
    const [tempwalldata, setTempWallData] = useState()
    const [searchapi, setSearchApi] = useState()
    const [tokenvalue, setTokenvalue] = useState()
+   const [searchwalldata, setSearchWallData] = useState()
+   const [issearch, setIsSearch] = useState(false)
    const pid= params.get('brand')
    const user = params.get('user')
     const imgref = useRef()
     const imgurlnew = ''
+    const itemvalue = 0
   
   
   
@@ -485,7 +488,9 @@ const Walls = () => {
         document.querySelector('.searchbar').style.display= 'block' 
       }
      
-     
+     setIsSearch(false)
+     document.getElementById('inputfieldsearch').value = ''
+
       
     }
     const handlesearchclickmain =()=>{
@@ -504,24 +509,17 @@ const Walls = () => {
       document.querySelector('.searchbarmain').style.display = 'block'
    
         
-     setWallData(tempwalldata)
+       setIsSearch(false)
+       document.getElementById('inputfieldsearch').value = ''
         
     }
    
 
     const handleseearchclosemobile = ()=>{
 
-         if(tempwalldata?.length >0){
-          setWallData(tempwalldata)
-          document.querySelector('.mobilesearchcontainer').style.display= 'none'
-         } else{
-          document.querySelector('.mobilesearchcontainer').style.display= 'none'
-         }
-          
-         
-        
-    
-
+       setIsSearch(false)
+       document.querySelector('.crossiconclose').style.display = 'none'
+       document.getElementById('inputmobilesearch').value = ''
         
     }
   
@@ -721,6 +719,13 @@ const Walls = () => {
   
   useEffect(()=>{
   
+
+    if(checkarray.length > 0){
+      document.querySelector('.donebutton').style.backgroundColor= 'rgb(214, 80, 80)'
+    }else{
+      document.querySelector('.donebutton').style.backgroundColor= ''
+
+    }
      
       const sendfunction = async ()=>{
       let newarray = []
@@ -759,6 +764,7 @@ const Walls = () => {
        let newfilearray=[]
   
      if(document.getElementById(`checkinput_${len}`).checked){
+
        
       
         setCheckArray([...checkarray, val])  
@@ -953,7 +959,64 @@ const Walls = () => {
     };
   }, []);
   
- 
+  const handleSearchedMobileItemClick = async (e, val, productname, patternno)=>{
+    e.preventDefault()
+    e.stopPropagation()
+   
+     
+    const activewallpapername = productname.toLowerCase().trim().replace(/\s+/g, '-');
+    
+    setCurrentProductName(activewallpapername)
+  
+    const patternvalue = patternno;
+    
+    setCurrentProductMobile(searchwalldata[0])
+    document.querySelector('.loadingcontainermobile').style.display = 'block';
+
+    let newres;
+
+    await resizeImage(val).then(res=>{
+      newres = res
+    })
+
+    const body = {
+      wallimg: temporgimage,
+      designimg: newres,
+      detectionmode: detection,
+    };
+
+    let count = 1;
+
+    const countbody = {
+      brand: pid,
+      viewscount: count,
+      user: user,
+      patternno: patternvalue,
+    };
+
+    const config = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
+      },
+    };
+
+    axios.post('https://wallserver.arnxt.com/api/v1/infer', body, config).then((res) => {
+      document.querySelector('.loadingcontainermobile').style.display = 'none';
+      setSegmentImg(true);
+      imgref.current.src = `data:image/png;base64, ${res.data}`;
+    }).then(() => {
+      axios.post(addviewsurl, countbody).then((res) => {});
+    }).catch((error) => {
+      console.log(error);
+      window.alert('Please try again...');
+      document.querySelector('.loadingcontainermobile').style.display = 'none';
+    });
+
+    
+
+  }
   
   const mobileImageClick= async (e, len, val)=>{
     e.preventDefault()
@@ -1045,8 +1108,7 @@ const Walls = () => {
             setInputSearchValue(val)
          
              if(val.length >= 4){
-              setTempWallData(walldata)
-
+            
               const config = {
                headers: {
                'Access-Control-Allow-Origin': '*',
@@ -1057,7 +1119,8 @@ const Walls = () => {
                try{
                  await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
                      if(res.data.data.length > 0){
-                      setWallData(res.data.data)
+                        setSearchWallData(res.data.data)
+                        setIsSearch(true)
                      }
                       
                      
@@ -1072,27 +1135,40 @@ const Walls = () => {
      
   }
 
+
+
  
 
   const handleSearchPatternMobile = async (val)=>{
     setTempWallData(walldata)
+    
+         
+             if(val.length >= 4){
 
-    const config = {
-     headers: {
-     'Access-Control-Allow-Origin': '*',
-     
-     },
-     };
-
-     try{
-       await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
+              document.querySelector('.crossiconclose').style.display = 'block'
             
-             setWallData(res.data.data)
-           
-       })
-     }catch(error){
-        console.log(error)
-     }
+              const config = {
+               headers: {
+               'Access-Control-Allow-Origin': '*',
+               
+               },
+               };
+ 
+               try{
+                 await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
+                     if(res.data.data.length > 0){
+                        setSearchWallData(res.data.data)
+                        setIsSearch(true)
+                     }
+                      
+                     
+                     
+                 })
+               }catch(error){
+                  console.log(error)
+               }
+             }
+  
 
   }
 
@@ -2079,6 +2155,74 @@ const getSegmentImage = async()=>{
       return null;
     }
   }
+
+  const handlewallpaperclicksearch = async (e,val,productname, designstyle, patternno)=>{
+
+      if(document.getElementById('searchitembox').checked){
+        document.getElementById('maincontaineritemsearch').classList.add('activesearchitem')
+        document.querySelector('.loadingcontainermain').style.display= 'block'
+        let newres;
+        let urlproductname = productname
+        setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
+      setCurrentProduct(patternno)
+
+      await  resizeImage(val, designstyle).then(res=>{
+       
+        newres = res
+       })
+
+       const body={
+        wallimg: temporgimage,
+        designimg: newres,
+         detectionmode: detection
+      }
+
+      let count = 1
+
+      const countbody = {
+        brand: pid,
+        viewscount : count,
+        user : user,
+        patternno: patternno
+      }
+  
+      const config = {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Content-Type': 'application/json',
+          'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+        },
+      };
+    await  axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+       
+   
+      document.querySelector('.loadingcontainermain').style.display= 'none'   
+      setSegmentImg(true)
+      setProcessImg(res.data)
+     
+      }).then(res=>{
+        axios.post(addviewsurl, countbody).then(res=>{
+          
+        })
+      }).
+      
+      catch(error=>{
+        console.log(error)
+        window.alert('Please try again...')
+        document.querySelector('.loadingcontainermain').style.display= 'none'
+
+      })
+
+
+
+      }
+      else{
+        document.getElementById('maincontaineritemsearch').classList.remove('activesearchitem')
+      document.querySelector('.loadingcontainermain').style.display= 'none'   
+
+
+      }
+  }
   const handlewallpaperclick = async (e, len, val, designstyle, patternno)=>{
 
     allmaincontainer && allmaincontainer.forEach(item=>{
@@ -2734,7 +2878,7 @@ const getSegmentImage = async()=>{
             </div>
             <div className='inputsearchmain'>
               <BsSearch className='newicons'  />
-              <input placeholder='search...' id= 'inputfieldsearch' value={inputsearchvalue}  onChange={(e)=>handleSearchPattern(e.target.value)}/>
+              <input placeholder='search...' id= 'inputfieldsearch'   onChange={(e)=>handleSearchPattern(e.target.value)}/>
               <BsX className='newicons' onClick={handlesearchclosemain}   />
             </div>
             <div className='searchitemgridmob'>
@@ -2817,16 +2961,7 @@ const getSegmentImage = async()=>{
   
   </div>
      </div>
-     <div className='topbuttoncontainer'>
-      <button className='productdetailsbutton' ><a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">GO TO WEBSITE</a> </button>
-       <select id= 'dropdown'  onChange={(e)=> handleRemoveClick(e.target.value)}  > 
-          <option style={{display:'none'}} value= '' selected >PRODUCT OPTIONS</option>
-        
-        <option value='removeproduct' >REMOVE PRODUCT</option>
-        <option value='changeroom' >CHANGE ROOM</option>
 
-       </select>
-      </div>
 
      <div className='hamburgerbutton'>
      <div class="container"  >
@@ -2838,7 +2973,10 @@ const getSegmentImage = async()=>{
           <div className='branddetailscontainer'> 
             <div className='brandinside'>
             <div className='brandimagediv'>
-              <img src= {brandimage && brandimage}/>
+               <div className='brandlogodivinside'>
+               <img src= {brandimage && brandimage}/>
+               </div>
+             
             </div>
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
@@ -2914,14 +3052,18 @@ const getSegmentImage = async()=>{
         </div> 
       </div>
     <img   ref={ imgref} src= {image }/>
+
  
     </div>
+
  
     <div className='imageslider'> 
      <button className='changeproductbutton'  onClick={handlechangeproductmobile}>Change product <FaChevronUp className='upicon'/></button>
    
 
     </div>
+
+
     {
       /*
        <div className='changeroomsidebutton' onClick={handlechangeroomclick}>
@@ -2935,33 +3077,44 @@ const getSegmentImage = async()=>{
 
   
 
- 
-    <div className='filtermobilecontainer'>
-    <div className='mobilesearchcontainer'>
-    <div className='mobilesearchinside'>
-            
-              <input placeholder='search...' id= 'inputsearchmobile'  onChange={(e)=>handleSearchPatternMobile(e.target.value)}/>
-              <BsX className='newicons' onClick={handleseearchclosemobile}   />
-            </div>
-
-       </div>
-
   
+    <div className='filtermobilecontainer'>
+    <div className='searchdivmainmobile'>
+     <div className='searchcontainerinsidemobile'>
+      <input placeholder='search pattern...'  id='inputmobilesearch'   onChange={(e)=>handleSearchPatternMobile(e.target.value)} />
+       <span className='crossiconclose'onClick={handleseearchclosemobile} ><BsX/></span>
+     </div>
+     <div className='productoptioncontainer'>
+       <div className='productoptioncontainerinside'>
+        <select onChange={(e)=>handleRemoveClick(e.target.value)}>
+          <option value= '' disabled>
+            Change room
+          </option>
+           <option value='removeproduct'>
+             Remove product
+           </option>
+          <option value='changeroom'>
+             Change room
+          </option>
+        </select>
+     
+       </div>
+      
+
+     </div>
+ 
+
+    </div>
+
+ 
+
+       <div className='filtermobilesearchiconscontainer'>
+         
     <div className='filtermobileproductname'>
-        <p>{currentproductmobile && currentproductmobile.Productname} { currentproductmobile && currentproductmobile.Patternnumber }  </p>
+        <p> Current product:  { currentproductmobile && currentproductmobile.Patternnumber }  </p>
     </div>
     <div className='filtercontainermobile'>
-     <div>
-      {
-        
-          <div className='mobilecontainersearchfilter'  onClick={handlesearchmobileclick}>
-      <FaSearch/>
-      </div>
-      
-      }
-    
-      
-     </div>
+ 
      <div>
      <div className='mobilecontainermainfilter' onClick={handlefilterclick}>
       <FaFilter/>
@@ -2969,7 +3122,9 @@ const getSegmentImage = async()=>{
      </div>
      <div>
      <div className='mobilecontainermainfilter'>
-      <FaExpandAlt/>
+      
+      <a  href= {`https://excelwallpapers.com/product-detail/${currentproductname}`} target="_blank">  <FaExpandAlt/> </a>
+     
       </div>
      </div>
      <div>
@@ -2980,6 +3135,10 @@ const getSegmentImage = async()=>{
      </div>
 
     </div>
+
+       </div>
+
+ 
 
 </div>
     <div class="slider-container">
@@ -2996,7 +3155,10 @@ const getSegmentImage = async()=>{
      
        ))  :
 
-
+         issearch ?  
+         <div  >
+         <img className='mobilesliderimage'  id= 'mobilesliderimagesearch'  src={searchwalldata[0]?.Imageurl2} alt="No data"   onClick={(e)=>handleSearchedMobileItemClick(e, searchwalldata[0].Imageurl,searchwalldata[0].Productname, searchwalldata[0].Patternnumber )} />
+        </div> :
           walldata && walldata.map((item,i)=>(
             <div  >
             <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
@@ -3091,7 +3253,7 @@ const getSegmentImage = async()=>{
               <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)} />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
-             <div className='searchitemgrid'>
+             <div className= {issearch ? 'searchitemscontainer' : 'searchitemgrid' } >
 
               {  
 
@@ -3118,7 +3280,41 @@ const getSegmentImage = async()=>{
                 </div>
               
                 )) : 
+                issearch ?
 
+                <div    className='maincontaineritems'  id='maincontaineritemsearch' >
+                <label  className='labelcontainer' >
+
+                <input  type='checkbox' style={{display:'none'}}  id= 'searchitembox'  onClick={(e)=>handlewallpaperclicksearch(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
+               <div className='itemdetailscontainer'>
+               <div className='wallpaperimage'>
+               <img  src= {searchwalldata[0]?.Imageurl2}/>
+             </div>
+             <div className='wallpaperdetails'>
+             
+
+               <div className='wallpaperdetailsinside'>
+                 <p>{searchwalldata[0]?.Collection}</p>
+                 <p className='categoryname'>{searchwalldata[0]?.Productname}</p>
+                 <p >{searchwalldata[0]?.Patternnumber}</p>
+                 <div className='dimensions'>
+                 <p className='productid'>size: {searchwalldata[0]?.length}*{searchwalldata[0]?.wide} mtrs </p>
+                 <p>Roll size: {searchwalldata[0]?.Rollsize} sqft</p>
+                 </div>
+                
+               </div>
+
+             </div>
+             </div>
+
+             
+       
+          </label>
+
+    
+           </div>
+
+                    :
                      walldata && walldata.map((item,i)=>(
                   <div  key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}} className='maincontainergrid' id ={`maincontainergrid_${i}`}>
                     <label className='labelcontainergrid'>
@@ -3192,7 +3388,43 @@ const getSegmentImage = async()=>{
                   
                 </div>
                 )) : 
-                   walldata?.map((item,i)=>(
+                     issearch ?
+
+                     <div    className='maincontaineritems'  id='maincontaineritemsearch' >
+                     <label  className='labelcontainer' >
+
+                     <input  type='checkbox' style={{display:'none'}}  id= 'searchitembox'  onClick={(e)=>handlewallpaperclicksearch(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
+                    <div className='itemdetailscontainer'>
+                    <div className='wallpaperimage'>
+                    <img  src= {searchwalldata[0]?.Imageurl2}/>
+                  </div>
+                  <div className='wallpaperdetails'>
+                  
+  
+                    <div className='wallpaperdetailsinside'>
+                      <p>{searchwalldata[0]?.Collection}</p>
+                      <p className='categoryname'>{searchwalldata[0]?.Productname}</p>
+                      <p >{searchwalldata[0]?.Patternnumber}</p>
+                      <div className='dimensions'>
+                      <p className='productid'>size: {searchwalldata[0]?.length}*{searchwalldata[0]?.wide} mtrs </p>
+                      <p>Roll size: {searchwalldata[0]?.Rollsize} sqft</p>
+                      </div>
+                     
+                    </div>
+  
+                  </div>
+                  </div>
+
+                  
+            
+               </label>
+
+         
+                </div>
+
+
+                       :
+                    walldata?.map((item,i)=>(  
                   <div key={i} style={i === walldata.length -1 ? {marginBottom: '280px' }: {marginBottom:'10px'}}  className='maincontaineritems' id= {`maincontaineritems_${i}`}>
                      <label  className='labelcontainer' >
 
@@ -3236,6 +3468,8 @@ const getSegmentImage = async()=>{
                 ))
 
               }
+
+              
         
         
             </div>
@@ -3263,7 +3497,10 @@ const getSegmentImage = async()=>{
           <div className='branddetailscontainer'> 
             <div className='brandinside'>
             <div className='brandimagediv'>
+              <div className='brandlogodivinside'> 
               <img src= {brandimage && brandimage}/>
+              </div>
+             
             </div>
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
