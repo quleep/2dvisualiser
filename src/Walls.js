@@ -3253,7 +3253,7 @@ const getSegmentImage = async()=>{
               <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)} />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
-             <div className= {issearch ? 'searchitemscontainer' : 'searchitemgrid' } >
+             <div className = 'searchitemgrid'  >
 
               {  
 
