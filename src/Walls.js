@@ -115,6 +115,9 @@ const Walls = () => {
    const [tokenvalue, setTokenvalue] = useState()
    const [searchwalldata, setSearchWallData] = useState()
    const [issearch, setIsSearch] = useState(false)
+   const [issearchgrid, setIsSearchGrid] = useState(false)
+   const [gridclicktoggle, setGridClickToggle] = useState(false)
+
    const pid= params.get('brand')
    const user = params.get('user')
     const imgref = useRef()
@@ -489,7 +492,13 @@ const Walls = () => {
       }
      
      setIsSearch(false)
-     document.getElementById('inputfieldsearch').value = ''
+     setIsSearchGrid(false)
+     document.getElementById('inputsearchmain').value = ''
+    if(document.querySelector('.searchitemgrid').classList.contains('searchitemscontainer')){
+    document.querySelector('.searchitemgrid').classList.remove('searchitemscontainer')
+
+    }
+
 
       
     }
@@ -510,6 +519,8 @@ const Walls = () => {
    
         
        setIsSearch(false)
+     setIsSearchGrid(false)
+
        document.getElementById('inputfieldsearch').value = ''
         
     }
@@ -1106,6 +1117,10 @@ const Walls = () => {
   const handleSearchPattern= async (val)=>{
 
             setInputSearchValue(val)
+
+              if(val.length >= 4 && gridclicktoggle){
+                document.querySelector('.searchitemgrid').classList.add('searchitemscontainer')
+              }
          
              if(val.length >= 4){
             
@@ -1121,23 +1136,16 @@ const Walls = () => {
                      if(res.data.data.length > 0){
                         setSearchWallData(res.data.data)
                         setIsSearch(true)
+                          
                      }
                       
-                     
-                     
                  })
                }catch(error){
                   console.log(error)
                }
              }
-  
-           
-     
+      
   }
-
-
-
- 
 
   const handleSearchPatternMobile = async (val)=>{
     setTempWallData(walldata)
@@ -1547,8 +1555,10 @@ const getSegmentImage = async()=>{
     document.querySelector('.searchicongriddiv').classList.remove('gridviewactive')
     document.querySelector('.searchitemscontainer').style.display = 'flex'
     document.querySelector('.searchitemgrid').style.display = 'none'
+    setGridClickToggle(!gridclicktoggle)
   
   }
+  
   const handlegridclickmob = ()=>{
     document.querySelector('.searchiconbardivmain').classList.toggle('gridviewactive')
     document.querySelector('.searchicongriddivmain').classList.remove('gridviewactive')
@@ -1562,7 +1572,7 @@ const getSegmentImage = async()=>{
     document.querySelector('.searchitemscontainer').style.display = 'none'
     document.querySelector('.searchitemgrid').style.display = 'flex'
   
-  
+   setGridClickToggle(!gridclicktoggle)
   
   }
   const handlegridchangeclickmob = ()=>{
@@ -3250,10 +3260,10 @@ const getSegmentImage = async()=>{
             </div>
             <div className='inputsearch'>
               <BsSearch className='newicons'/>
-              <input placeholder='search...'  onChange={(e)=>handleSearchPattern(e.target.value)} />
+              <input placeholder='search...'  id= 'inputsearchmain'  onChange={(e)=>handleSearchPattern(e.target.value)} />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
-             <div className = 'searchitemgrid'  >
+             <div className =  'searchitemgrid'  >
 
               {  
 
