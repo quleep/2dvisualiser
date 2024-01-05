@@ -92,12 +92,14 @@ body {
 }
  .filterdatainside h2{
   font-family: 'Lato',sans-serif;
+  padding-left: 10px;
  }
 .searchtabcontainer{
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   height: fit-content;
+  margin: 0px 5px 0px 5px;
  
   
 }
@@ -105,12 +107,13 @@ body {
   flex: 1;
   border: 1px solid rgb(207, 205, 205);
   border-radius: 5px;
-  height: 50px;
+  height: 40px;
   cursor: pointer;
   margin: 5px;
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  
   
   
   
@@ -129,7 +132,8 @@ body {
   align-items: center;
   justify-content: center;
   width: auto;
-  height: 50px;
+  height: 40px;
+ 
 }
 .searchicondiv p{
   font-family: 'Lato',sans-serif;
@@ -150,7 +154,7 @@ body {
   justify-content: center;
  
   width: auto;
-  height: 50px;
+  height: 40px;
   
 }
 .filtertextdiv p{
@@ -163,6 +167,13 @@ body {
   font-size: 20px;
   margin-left: 5px;
   margin-right: 5px;
+ 
+}
+.filtericonmain{
+  font-size: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 2px;
  
 }
 .filterheadingdiv{
@@ -200,13 +211,14 @@ body {
   
 }
 .accordionHeading{
-  padding: 5px;
+  padding:  0px 15px 0px 15px;
   display: flex;
   grid-gap: 10px;
   justify-content: space-between;
   cursor: pointer;
   border-bottom: 0.2px solid rgb(196, 193, 193);
   margin: 5px;
+ 
 
 }
 .accordionHeading > h3{
@@ -434,6 +446,7 @@ body {
 
   padding: 10px;
   padding-left: 30px;
+  
   
   
 }
@@ -672,14 +685,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 10px;
+ 
+  height: 40px;
+  
 }
   
 .filterbar{
   flex: 3;
   border: 1px solid rgb(207, 205, 205);
   border-radius: 5px;
-  height: 50px;
+  height: 40px;
   cursor: pointer;
   margin: 5px;
 
@@ -764,9 +779,10 @@ body {
   flex-wrap: wrap;
   flex-direction: column;
   border: 1px solid rgb(202, 202, 202);
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 50px;
+  margin: 0px 10px 0px 10px ;
   opacity: 0; 
+  padding: 0px 10px 0px 10px;
  
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -797,6 +813,17 @@ body {
 
   
 }
+.newiconssearch{
+ 
+  width: auto;
+  height: fit-content;
+  margin-top: 12px;
+  font-size: 15px;
+  cursor: pointer;
+ 
+ 
+  
+}
 .newicons{
  
   width: auto;
@@ -804,6 +831,7 @@ body {
   margin-top: 10px;
   font-size: 20px;
   cursor: pointer;
+ 
  
   
 }
@@ -1050,6 +1078,7 @@ body {
   width: calc(100% - 40px);
   outline: none;
   height: 40px;
+  padding-left: 5px;
  
  border: none;
 
@@ -1072,9 +1101,11 @@ body {
   flex: 2;
   border: 1px solid rgb(207, 205, 205);
   border-radius: 5px;
-  height: 50px;
+  height: 40px;
   cursor: pointer;
   margin: 5px;
+  justify-content: center;
+  align-items: center;
 
 
 }
@@ -2420,7 +2451,7 @@ flex-direction: column;
 
 }
 .gridviewactive{
-  background-color: #8d8d8d;
+  background-color: #d1cfcf;
   border-radius: 5px;
 }
 .imageslider button{

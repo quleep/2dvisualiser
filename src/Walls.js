@@ -3305,7 +3305,7 @@ const getSegmentImage = async()=>{
                 </div>
                 <div className='filterbar'> 
                 <div className='filtertextdiv' onClick={handlefilterclick}>
-               <p>Filter </p> <BsFilter className='searchicon'/>{checkarray && checkarray.length > 0 ?filtercount : ''}
+               <p>Filter </p> <BsFilter className='filtericonmain'/>{checkarray && checkarray.length > 0 ?filtercount : ''}
                 </div>
                  
                 </div>
@@ -3325,7 +3325,7 @@ const getSegmentImage = async()=>{
 
             </div>
             <div className='inputsearch'>
-              <BsSearch className='newicons'/>
+              <BsSearch className='newiconssearch'/>
               <input placeholder='search...'  id= 'inputsearchmain'  onChange={(e)=>handleSearchPattern(e.target.value)} />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
