@@ -494,11 +494,9 @@ const Walls = () => {
      setIsSearch(false)
      setIsSearchGrid(false)
      document.getElementById('inputsearchmain').value = ''
-    if(document.querySelector('.searchitemgrid').classList.contains('searchitemscontainer')){
-    document.querySelector('.searchitemgrid').classList.remove('searchitemscontainer')
-
-    }
-
+     if(document.querySelector('.searchitemgrid').classList.contains('searchitemscontainer')){
+      document.querySelector('.searchitemgrid').classList.remove('searchitemscontainer')
+     }
 
       
     }
@@ -1118,9 +1116,9 @@ const Walls = () => {
 
             setInputSearchValue(val)
 
-              if(val.length >= 4 && gridclicktoggle){
-                document.querySelector('.searchitemgrid').classList.add('searchitemscontainer')
-              }
+            if(val.length >= 4 && gridclicktoggle){
+              document.querySelector('.searchitemgrid').classList.add('searchitemscontainer')
+            } 
          
              if(val.length >= 4){
             
@@ -2166,10 +2164,78 @@ const getSegmentImage = async()=>{
     }
   }
 
+  const handlewallpaperclicksearchgrid = async (e,val,productname, designstyle, patternno)=>{
+
+    if(document.getElementById('searchitembox').checked){
+      document.getElementById('maincontaineritemsearch').classList.add('activesearchitem')
+      document.querySelector('.loadingcontainermain').style.display= 'block'
+      let newres;
+      let urlproductname = productname
+      setCurrentProductName(urlproductname.toLowerCase().trim().replace(/\s+/g, '-'))
+    setCurrentProduct(patternno)
+
+    await  resizeImage(val, designstyle).then(res=>{
+     
+      newres = res
+     })
+
+     const body={
+      wallimg: temporgimage,
+      designimg: newres,
+       detectionmode: detection
+    }
+
+    let count = 1
+
+    const countbody = {
+      brand: pid,
+      viewscount : count,
+      user : user,
+      patternno: patternno
+    }
+
+    const config = {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+      },
+    };
+  await  axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+     
+ 
+    document.querySelector('.loadingcontainermain').style.display= 'none'   
+    setSegmentImg(true)
+    setProcessImg(res.data)
+   
+    }).then(res=>{
+      axios.post(addviewsurl, countbody).then(res=>{
+        
+      })
+    }).
+    
+    catch(error=>{
+      console.log(error)
+      window.alert('Please try again...')
+      document.querySelector('.loadingcontainermain').style.display= 'none'
+
+    })
+
+
+
+    }
+    else{
+      document.getElementById('maincontaineritemsearch').classList.remove('activesearchitem')
+    document.querySelector('.loadingcontainermain').style.display= 'none'   
+
+
+    }
+}
+
   const handlewallpaperclicksearch = async (e,val,productname, designstyle, patternno)=>{
 
-      if(document.getElementById('searchitembox').checked){
-        document.getElementById('maincontaineritemsearch').classList.add('activesearchitem')
+      if(document.getElementById('searchitemboxnormal').checked){
+        document.getElementById('maincontaineritemsearchnormal').classList.add('activesearchitem')
         document.querySelector('.loadingcontainermain').style.display= 'block'
         let newres;
         let urlproductname = productname
@@ -2227,7 +2293,7 @@ const getSegmentImage = async()=>{
 
       }
       else{
-        document.getElementById('maincontaineritemsearch').classList.remove('activesearchitem')
+        document.getElementById('maincontaineritemsearchnormal').classList.remove('activesearchitem')
       document.querySelector('.loadingcontainermain').style.display= 'none'   
 
 
@@ -3263,7 +3329,7 @@ const getSegmentImage = async()=>{
               <input placeholder='search...'  id= 'inputsearchmain'  onChange={(e)=>handleSearchPattern(e.target.value)} />
               <BsX className='newicons' onClick={handlesearchclose}  />
             </div>
-             <div className =  'searchitemgrid'  >
+             <div className = 'searchitemgrid'  >
 
               {  
 
@@ -3295,7 +3361,7 @@ const getSegmentImage = async()=>{
                 <div    className='maincontaineritems'  id='maincontaineritemsearch' >
                 <label  className='labelcontainer' >
 
-                <input  type='checkbox' style={{display:'none'}}  id= 'searchitembox'  onClick={(e)=>handlewallpaperclicksearch(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
+                <input  type='checkbox' style={{display:'none'}}  id= 'searchitembox'  onClick={(e)=>handlewallpaperclicksearchgrid(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
                <div className='itemdetailscontainer'>
                <div className='wallpaperimage'>
                <img  src= {searchwalldata[0]?.Imageurl2}/>
@@ -3400,10 +3466,10 @@ const getSegmentImage = async()=>{
                 )) : 
                      issearch ?
 
-                     <div    className='maincontaineritems'  id='maincontaineritemsearch' >
+                     <div    className='maincontaineritems'  id='maincontaineritemsearchnormal' >
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}}  id= 'searchitembox'  onClick={(e)=>handlewallpaperclicksearch(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
+                     <input  type='checkbox' style={{display:'none'}}  id= 'searchitemboxnormal'  onClick={(e)=>handlewallpaperclicksearch(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
                     <img  src= {searchwalldata[0]?.Imageurl2}/>
