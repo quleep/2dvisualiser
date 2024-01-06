@@ -1027,9 +1027,8 @@ const Walls = () => {
 
   }
   
-  const mobileImageClick= async (e, len, val)=>{
-    e.preventDefault()
-    e.stopPropagation()
+  const mobileImageClick= async ( len, val)=>{
+ 
    
      showSlide(len)
    setActiveIndex(len)
@@ -1341,7 +1340,7 @@ const getSegmentImage = async()=>{
   
    
   
-  const handleScroll = (scrollValue) => {
+  const handleScroll = async ( scrollValue) => {
       
   
     if (scrollContainerRef.current) {
@@ -1352,11 +1351,15 @@ const getSegmentImage = async()=>{
   
     if(scrollValue === 100 ){
        setActiveIndex(activeIndex+1)
+         await mobileImageClick(activeIndex+1)
+      
         
     }
     if(scrollValue === -100 && activeIndex > 0){
       setActiveIndex(activeIndex-1)
-  
+              await mobileImageClick(activeIndex-1)
+
+
     }
   };
   const leftArrowClick = async (e)=>{
@@ -3163,7 +3166,7 @@ const getSegmentImage = async()=>{
      <div className='productoptioncontainer'>
        <div className='productoptioncontainerinside'>
         <select onChange={(e)=>handleRemoveClick(e.target.value)}>
-          <option value= '' disabled>
+          <option value= '' selected style={{display:'none'}} disabled>
             Change room
           </option>
            <option value='removeproduct'>
@@ -3226,7 +3229,7 @@ const getSegmentImage = async()=>{
        filteredarray && filteredarray.length > 0 ? 
        filteredarray && filteredarray.map((item,i)=>(
         <div  >
-        <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
+        <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={()=>mobileImageClick( i, item.Imageurl)} />
        </div>
      
        ))  :
@@ -3237,7 +3240,7 @@ const getSegmentImage = async()=>{
         </div> :
           walldata && walldata.map((item,i)=>(
             <div  >
-            <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={(e)=>mobileImageClick(e, i, item.Imageurl)} />
+            <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={()=>mobileImageClick(i, item.Imageurl)} />
            </div>
           ))
         }
