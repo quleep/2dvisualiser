@@ -1,12 +1,15 @@
 
 import './App.css';
 import { useEffect, useRef, useState } from 'react';
-import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBars, FaCamera, FaCameraRetro, FaCartArrowDown, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaFontAwesomeAlt, FaGripVertical, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
+import { FaArrowAltCircleDown, FaArrowDown, FaArrowLeft, FaArrowUp, FaArrowsAltV, FaBackward, FaBars, FaCamera, FaCameraRetro, FaCartArrowDown, FaCheckDouble, FaChevronDown, FaChevronUp, FaCross, FaCube, FaExpand, FaExpandAlt, FaFacebook, FaFilter, FaFontAwesomeAlt, FaGripVertical, FaLongArrowAltRight, FaPlus, FaRedo, FaRegShareSquare, FaRemoveFormat, FaSearch, FaShare, FaShareAlt, FaTicketAlt, FaTimes, FaTrash, FaWhatsapp } from 'react-icons/fa'
 import { BsFilter, BsGrid, BsList, BsSearch, BsX } from "react-icons/bs";
 import img1 from './images/demoimage1.jpg'
 import img2 from './images/demoimage2.jpg'
 import { Helmet } from "react-helmet";
 import Resizer from 'react-image-file-resizer';
+
+import 'primeicons/primeicons.css';
+        
 
 
 
@@ -117,6 +120,10 @@ const Walls = () => {
    const [issearch, setIsSearch] = useState(false)
    const [issearchgrid, setIsSearchGrid] = useState(false)
    const [gridclicktoggle, setGridClickToggle] = useState(false)
+   const [itemarray, setItemArray] = useState()
+   const [designstylearray, setDesignstyleArray] = useState()
+   const [collectionArray, setCollectionArray] = useState()
+   const [tempdivisonfactor, setTempDivisonFactor] = useState([])
 
    const pid= params.get('brand')
    const user = params.get('user')
@@ -143,6 +150,7 @@ const Walls = () => {
     const singledemourl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getsingledemoimage'
     const designpatterurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getdesignpatterntable'
     const getbrandpatterntable = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getbrandpatterntable'
+    const getvisualiserdesingnurl = 'https://ymxx21tb7l.execute-api.ap-south-1.amazonaws.com/production/getvisualiserbranddesign'
   
   
     const newimg = ''
@@ -158,6 +166,31 @@ const Walls = () => {
      
     let designapi;
     let token;
+
+
+    useEffect(()=>{
+
+      const getdesign = async ()=>{
+       const body = {
+        brand: pid
+       } 
+         await axios.post(getvisualiserdesingnurl, body).then(res=>{
+          setItemArray(res.data[0].color)
+          setDesignstyleArray(res.data[0].designstyle)
+          setCollectionArray(res.data[0].collection)
+         }).catch(err=>{
+          console.log(err)
+         })
+
+
+      }
+     
+    getdesign()
+
+
+    },[])
+
+
   
     useEffect(()=>{
   
@@ -328,12 +361,7 @@ const Walls = () => {
     img.src = val+ '?r=' + Math.floor(Math.random()*100000);
       img.setAttribute('crossOrigin', 'Anonymous');
   
-  
-  
-   
     img.onload = function () {
-  
-  
   
       const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -385,12 +413,6 @@ const Walls = () => {
   
       })
 
-    
-      
-  
-     
-
-  
       }
     const handleimageclick = async (room, val)=>{
   
@@ -525,6 +547,9 @@ const Walls = () => {
    
 
     const handleseearchclosemobile = ()=>{
+      document.querySelector('.next').style.display = 'none'
+      document.querySelector('.prev').style.display = 'none'
+
 
        setIsSearch(false)
        document.querySelector('.crossiconclose').style.display = 'none'
@@ -565,8 +590,7 @@ const Walls = () => {
     const handleActive = (e,index) => {
   
         if(accActive === index){
-         
-     
+        
        setViewAll(false)
        setViewAllDesign(false)
        setViewAllCollection(false)
@@ -589,103 +613,7 @@ const Walls = () => {
     }
   
   
-    const itemarray = [
-      "Beige",
-      "Black",
-      "Blue",
-      "Brown",
-       "Cream",
-       "Golden",
-       "Green",
-       "Grey",
-       "Multicoloured",
-       "Orange",
-       "Peach",
-       "Pink",
-       "Purple",
-       "Purplish Blue",
-       "Red",
-       "Silver",
-       "White",
-       "White.Grey",
-       "Yellow"
-    ]
-  
-    const designstylearray = [
-      "Young & Contemporary",
-      "3 D Geometric",
-      "Abstract",
-      "Abstract, Young & Contemporary",
-      "Animal",
-      "Botanical",
-      "Botanicals",
-      "Brick",
-      "Classic",
-      "Damask",
-      "Floral",
-      "Geometric",
-      "Indian Heritage",
-      "Kids",
-      "Marble",
-      "Marble Finish",
-      "Nature",
-      "Nature & Botanical",
-      "Plain & Checkered",
-      "Plain & Stripes",
-      "Plain & Textured",
-      "Stone Finish",
-      "Tropical",
-      "Wood Finish"
-    ]
-  
-    const collectionArray = [
-      "Allure",
-      "Altis",
-      "Aurora",
-      "Aventus",
-      "Avenue 7",
-      "Avenue 8",
-      "Best Of Living Walls",
-      "Blooming",
-      "Brazil",
-      "Celebration",
-      "Darae 5",
-      "Decortex",
-      "Deshaj",
-      "Divine",
-      "Floral Impression",
-      "Glitz & Glam",
-      "Harmony",
-      "Hera 5",
-      "House Of Turnowsky",
-      "Imperial",
-      "Little Love",
-      "Metropolitan Stories",
-      "Metropolitan Stories II Vol. I",
-      "Metropolitan Stories II Vol. II",
-      "Mix & Match 2",
-      "Modern & Glam",
-      "Modern Bytes",
-      "Modernist",
-      "My Home My Space",
-      "Nature's Ragas",
-      "New Walls",
-      "Opulence",
-      "Paradise",
-      "Primo",
-      "Reflection",
-      "Regal",
-      "Royal Shades",
-      "Superhit",
-      "Tapestry",
-      "Trendy Walls",
-      "Versace Iv",
-      "Versace V",
-      "Wall Art",
-      "Wall Fabric",
-      "Zenith"
-    ]
-  
+
   
   
   
@@ -701,7 +629,7 @@ const Walls = () => {
       newitemarray = [...itemarray]
    }
    else{
-    newitemarray =  itemarray.slice(0,4)
+    newitemarray =  itemarray?.slice(0,4)
    }
   
    let newdesignarray = [].sort()
@@ -709,14 +637,14 @@ const Walls = () => {
     newdesignarray = [...designstylearray]
   }
   else{
-    newdesignarray =  designstylearray.slice(0,4)
+    newdesignarray =  designstylearray?.slice(0,4)
   }
   let newcollectionarray = [].sort()
   if(viewallcollection){
    newcollectionarray = [...collectionArray]
   }
   else{
-    newcollectionarray =  collectionArray.slice(0,4)
+    newcollectionarray =  collectionArray?.slice(0,4)
   }
   let newpatternarray = [].sort()
   if(viewallpattern){
@@ -1147,7 +1075,8 @@ const Walls = () => {
   const handleSearchPatternMobile = async (val)=>{
     setTempWallData(walldata)
     
-         
+           
+
              if(val.length >= 4){
 
               document.querySelector('.crossiconclose').style.display = 'block'
@@ -1163,6 +1092,8 @@ const Walls = () => {
                  await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
                      if(res.data.data.length > 0){
                         setSearchWallData(res.data.data)
+                        document.querySelector('.next').style.display = 'none'
+                        document.querySelector('.prev').style.display = 'none'
                         setIsSearch(true)
                      }
                       
@@ -1323,10 +1254,6 @@ const getSegmentImage = async()=>{
   
   useEffect(()=>{
 
- 
-    
- 
-
     if (activeIndex === walldata.length - 1) {
       handleLoadMore();
     }
@@ -1335,40 +1262,27 @@ const getSegmentImage = async()=>{
       
   },[activeIndex])
 
-
+ 
   
-  
-   
+  const handleScrollnew = async ()=>{
+    const newScrollPosition = scrollPosition - scrollPosition;
+    scrollContainerRef.current.scrollLeft = newScrollPosition;
+    setScrollPosition(newScrollPosition);
+  }
+  console.log(scrollPosition)
   
   const handleScroll = async ( scrollValue) => {
+ 
       
-  
-    if (scrollContainerRef.current) {
       const newScrollPosition = scrollPosition + scrollValue;
-      scrollContainerRef.current.scrollLeft = newScrollPosition;
+      scrollContainerRef.current.scrollLeft = newScrollPosition ;
       setScrollPosition(newScrollPosition);
-    }
-  
-    if(scrollValue === 100 ){
-       setActiveIndex(activeIndex+1)
-         await mobileImageClick(activeIndex+1)
-      
-        
-    }
-    if(scrollValue === -100 && activeIndex > 0){
-      setActiveIndex(activeIndex-1)
-              await mobileImageClick(activeIndex-1)
+     
 
-
-    }
   };
   const leftArrowClick = async (e)=>{
    
     let newres;
-    
-  
-  
-    
     
    await showSlide(currentIndex);
   
@@ -1769,6 +1683,79 @@ const getSegmentImage = async()=>{
       }
     });
   }
+
+  
+
+
+    const checkConditions = async (width, height) => {
+   
+
+      let firstreturnvalue;
+      let secondreturnvalue;
+
+    for (let i=0; i< brandpatterndata.length; i++) {
+
+
+       firstreturnvalue =  evaluateCondition(parseFloat(width), brandpatterndata[i].conditionsymbol1, parseFloat(brandpatterndata[i].condition1))
+     
+       secondreturnvalue =  evaluateCondition(parseFloat(width), brandpatterndata[i].conditionsymbol2, parseFloat(brandpatterndata[i].condition2)) 
+     
+   
+       if( firstreturnvalue && secondreturnvalue ) {
+
+          return(brandpatterndata[i].divisonfactor) 
+      
+    }
+  }
+    }
+ 
+
+    const evaluateCondition = (value1, symbol, value2) => {
+ 
+  
+    switch (symbol.toString()) {
+      case '>':
+         if(value1 > value2){
+  return true;
+         }else{
+          return false
+         }
+      
+      case '<':
+       
+                if(value1 < value2){
+                
+           return true;
+         
+         }else{
+      
+          return false
+         }
+      case '===':
+               if(value1 === value2){
+  return true;
+         }else{
+          return false
+         }
+           case '<=':
+                if(value1 <= value2){
+  return true;
+  
+         }else{
+          return false
+         }
+                   case '>=':
+                if(value1 >= value2){
+            return true;
+  
+         }else{
+          return false;
+         }
+ 
+      default:
+        return false;
+    }
+  };
   
   
   
@@ -1790,257 +1777,14 @@ const getSegmentImage = async()=>{
   const  allgriditems = document.querySelectorAll('.maincontainergrid')
   
 
-  const resizePattern = async (val, designstyle)=>{
-    let maxWidth 
-    let maxHeight 
-  
-    return new Promise((resolve)=>{
-        const img = new Image();
-   
-    img.src = val+ '?r=' + Math.floor(Math.random()*100000);
-      img.setAttribute('crossOrigin', 'Anonymous');
-  
-  
-  
-   
-    img.onload = function () {
-  
-     if(detection === 'walls'){
-       let resizedDataURL;
-    let newWidth, newHeight;
-  
-   
-  
-    if( brandpatterndata[0].conditionsymbol1 === '>' &&    img.width > brandpatterndata[0].condition1 &&  brandpatterndata[0].conditionsymbol2 === '<' &&  img.width  < brandpatterndata[0].condition2 ){
-      maxWidth = wallimagewidth/brandpatterndata[0].divisonfactor
-      maxHeight = wallimageheight/brandpatterndata[0].divisonfactor
-     
-    }
-    
-   
-    else if(brandpatterndata[1].conditionsymbol1 === '<=' &&  img.width <=  brandpatterndata[1].condition1  ) {
-      maxWidth = wallimagewidth/brandpatterndata[1].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[1].divisonfactor
-    
-    }
-  
-   else if(brandpatterndata[2].conditionsymbol1 === '===' &&  brandpatterndata[2].condition1 === img.width &&  brandpatterndata[2].conditionsymbol2 === '>' &&   img.width > brandpatterndata[2].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[2].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[2].divisonfactor
-     
-    }
-    
-   else if(brandpatterndata[3].conditionsymbol1 === '===' &&  brandpatterndata[3].condition1 === img.width &&  brandpatterndata[3].conditionsymbol2 === '>' &&   img.width > brandpatterndata[3].condition2){
-    maxWidth = wallimagewidth/brandpatterndata[3].divisonfactor
-  
-    maxHeight = wallimageheight/brandpatterndata[3].divisonfactor
-   
-  }
-     else if(brandpatterndata[4].conditionsymbol1 === '>' &&  img.width > brandpatterndata[4].condition1 &&  brandpatterndata[4].conditionsymbol2 === '<' &&   img.width < brandpatterndata[4].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[4].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[4].divisonfactor
-     
-     }
-     else if(brandpatterndata[5].conditionsymbol1 === '>' &&  img.width > brandpatterndata[5].condition1 &&  brandpatterndata[5].conditionsymbol2 === '<' &&   img.width < brandpatterndata[5].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[5].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[5].divisonfactor
-  
-     }else if(brandpatterndata[6].conditionsymbol1 === '>' &&  img.width > brandpatterndata[6].condition1 &&  brandpatterndata[6].conditionsymbol2 === '<' &&   img.width < brandpatterndata[6].condition2) {
-      maxWidth = wallimagewidth/brandpatterndata[6].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[6].divisonfactor
-      
-     }
-     else if(brandpatterndata[7].conditionsymbol1 === '>' &&  img.width > brandpatterndata[7].condition1 ) {
-      maxWidth = wallimagewidth/brandpatterndata[7].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[7].divisonfactor
-    
-     }
-     else{
-      maxWidth = img.width
-  
-      maxHeight = img.height
-     }
-        fetch(val)
-          .then((response) => response.blob())
-          .then((blob) => {
-            // Resize the image
-            Resizer.imageFileResizer(
-              blob,
-              maxWidth,
-              maxHeight,
-              'JPEG',
-              100,
-              0,
-              (uri) => {
-                resolve(uri);
-              },
-              'base64'
-            );
-          })
-          .catch((error) => {
-            console.error('Error fetching image:', error);
-            // If there's an error, resolve with the original image
-            resolve({ uri: val, maxWidth, maxHeight });
-          });
-
-  
-     } 
-   
-  }
-  
-    })
-     
-
-  }
-
-   const calculateWidthHeight = (img, condition)=>{
-    const { conditionsymbol1, conditionsymbol2, condition1, condition2, divisonfactor } = condition;
-
-    switch (conditionsymbol1) {
-      case '>':
-        if (img.width > condition1) {
-          if (conditionsymbol2 === '<' && img.width < condition2) {
-            return {
-              maxWidth: wallimagewidth / divisonfactor,
-              maxHeight: wallimageheight / divisonfactor,
-            };
-          }
-        }
-        break;
-  
-      case '<=':
-        if (img.width <= condition1) {
-          return {
-            maxWidth: wallimagewidth / divisonfactor,
-            maxHeight: wallimageheight / divisonfactor,
-          };
-        }
-        break;
-
-        case '===':
-          if (img.width === condition1) {
-            if (conditionsymbol2 === '>' && img.width > condition2) {
-              return {
-                maxWidth: wallimagewidth / divisonfactor,
-                maxHeight: wallimageheight / divisonfactor,
-              };
-            }
-          }
-          break;
-          case '===':
-            if (img.width === condition1) {
-              if (conditionsymbol2 === '>' && img.width > condition2) {
-                return {
-                  maxWidth: wallimagewidth / divisonfactor,
-                  maxHeight: wallimageheight / divisonfactor,
-                };
-              }
-            }
-            break;
-            case '>':
-              if (img.width > condition1) {
-                if (conditionsymbol2 === '<' && img.width < condition2) {
-                  return {
-                    maxWidth: wallimagewidth / divisonfactor,
-                    maxHeight: wallimageheight / divisonfactor,
-                  };
-                }
-              }
-              break;
-              case '>':
-                if (img.width > condition1) {
-                  if (conditionsymbol2 === '<' && img.width < condition2) {
-                    return {
-                      maxWidth: wallimagewidth / divisonfactor,
-                      maxHeight: wallimageheight / divisonfactor,
-                    };
-                  }
-                }
-                break;
-                case '>':
-                  if (img.width > condition1) {
-                    if (conditionsymbol2 === '<' && img.width < condition2) {
-                      return {
-                        maxWidth: wallimagewidth / divisonfactor,
-                        maxHeight: wallimageheight / divisonfactor,
-                      };
-                    }
-                  }
-                  break;
-                  case '>':
-                    if (img.width > condition1) {
-                    
-                        return {
-                          maxWidth: wallimagewidth / divisonfactor,
-                          maxHeight: wallimageheight / divisonfactor,
-                        };
-                      
-                    }
-                    break;
-  
-    
-  
-      default:
-        break;
-    }
-  
-    // Default dimensions if no condition is satisfied
-    return {
-      maxWidth: img.width,
-      maxHeight: img.height,
-    };
 
 
-   }
-
-   const dataURLtoBlob = (dataURL) => {
-    try {
-      const base64String = dataURL.split(',')[1];
-      if (!base64String) {
-        throw new Error('Invalid data URL: missing base64-encoded data');
-      }
-  
-      const byteString = atob(base64String);
-      const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-  
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-  
-      return new Blob([ab], { type: mimeString });
-    } catch (error) {
-      console.error('Error converting data URL to Blob:', error);
-      return null; // Return null or handle the error accordingly
-    }
-};
-
-
-   const newReSizeImage = async (val, designstyle) =>{
-
- 
-
- 
-
-  
-  
-
-   }
-  
   const  resizeImage = async (val, designstyle)=>{
 
-
-    
-   
     let maxWidth 
     let maxHeight 
+
+    let divisonvalue;
   
     return new Promise((resolve)=>{
         const img = new Image();
@@ -2048,72 +1792,83 @@ const getSegmentImage = async()=>{
     img.src = val+ '?r=' + Math.floor(Math.random()*100000);
       img.setAttribute('crossOrigin', 'Anonymous');
   
-  
-  
-   
-    img.onload = function () {
+    img.onload = async function () {
   
      if(detection === 'walls'){
        let resizedDataURL;
-    let newWidth, newHeight;
-  
-   
-  
-    if( brandpatterndata[0].conditionsymbol1 === '>' &&    img.width > brandpatterndata[0].condition1 &&  brandpatterndata[0].conditionsymbol2 === '<' &&  img.width  < brandpatterndata[0].condition2 ){
-      maxWidth = wallimagewidth/brandpatterndata[0].divisonfactor
-      maxHeight = wallimageheight/brandpatterndata[0].divisonfactor
-     
-    }
+       let newWidth, newHeight;
+
+
+          divisonvalue = await  checkConditions(img.width).then(res=>{
+            return res
+        })
     
-   
-    else if(brandpatterndata[1].conditionsymbol1 === '<=' &&  img.width <=  brandpatterndata[1].condition1  ) {
-      maxWidth = wallimagewidth/brandpatterndata[1].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[1].divisonfactor
-    
-    }
-  
-   else if(brandpatterndata[2].conditionsymbol1 === '===' &&  brandpatterndata[2].condition1 === img.width &&  brandpatterndata[2].conditionsymbol2 === '>' &&   img.width > brandpatterndata[2].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[2].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[2].divisonfactor
-     
-    }
-    
-   else if(brandpatterndata[3].conditionsymbol1 === '===' &&  brandpatterndata[3].condition1 === img.width &&  brandpatterndata[3].conditionsymbol2 === '>' &&   img.width > brandpatterndata[3].condition2){
-    maxWidth = wallimagewidth/brandpatterndata[3].divisonfactor
-  
-    maxHeight = wallimageheight/brandpatterndata[3].divisonfactor
-   
-  }
-     else if(brandpatterndata[4].conditionsymbol1 === '>' &&  img.width > brandpatterndata[4].condition1 &&  brandpatterndata[4].conditionsymbol2 === '<' &&   img.width < brandpatterndata[4].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[4].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[4].divisonfactor
-     
-     }
-     else if(brandpatterndata[5].conditionsymbol1 === '>' &&  img.width > brandpatterndata[5].condition1 &&  brandpatterndata[5].conditionsymbol2 === '<' &&   img.width < brandpatterndata[5].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[5].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[5].divisonfactor
-  
-     }else if(brandpatterndata[6].conditionsymbol1 === '>' &&  img.width > brandpatterndata[6].condition1 &&  brandpatterndata[6].conditionsymbol2 === '<' &&   img.width < brandpatterndata[6].condition2) {
-      maxWidth = wallimagewidth/brandpatterndata[6].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[6].divisonfactor
-      
-     }
-     else if(brandpatterndata[7].conditionsymbol1 === '>' &&  img.width > brandpatterndata[7].condition1 ) {
-      maxWidth = wallimagewidth/brandpatterndata[7].divisonfactor
-  
-      maxHeight = wallimageheight/brandpatterndata[7].divisonfactor
-    
-     }
-     else{
+    if(divisonvalue === undefined){
+       
       maxWidth = img.width
-  
       maxHeight = img.height
-     }
+    }else{
+      maxWidth = wallimagewidth/divisonvalue
+      maxHeight = wallimageheight/divisonvalue
+    }
+
+ 
+  
+  //    if( brandpatterndata[0].conditionsymbol1 === '>' &&    img.width > brandpatterndata[0].condition1 &&  brandpatterndata[0].conditionsymbol2 === '<' &&  img.width  < brandpatterndata[0].condition2 ){
+  // //     maxWidth = wallimagewidth/brandpatterndata[0].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[0].divisonfactor
+     
+  //   }
+    
+   
+  //   else if(brandpatterndata[1].conditionsymbol1 === '<=' &&  img.width <=  brandpatterndata[1].condition1  ) {
+  //     maxWidth = wallimagewidth/brandpatterndata[1].divisonfactor
+  
+  //     maxHeight = wallimageheight/brandpatterndata[1].divisonfactor
+    
+  //   }
+  
+  //  else if(brandpatterndata[2].conditionsymbol1 === '===' &&  brandpatterndata[2].condition1 === img.width &&  brandpatterndata[2].conditionsymbol2 === '>' &&   img.width > brandpatterndata[2].condition2){
+  //     maxWidth = wallimagewidth/brandpatterndata[2].divisonfactor
+  
+  //     maxHeight = wallimageheight/brandpatterndata[2].divisonfactor
+     
+  //   }
+    
+  //  else if(brandpatterndata[3].conditionsymbol1 === '===' &&  brandpatterndata[3].condition1 === img.width &&  brandpatterndata[3].conditionsymbol2 === '>' &&   img.width > brandpatterndata[3].condition2){
+  //   maxWidth = wallimagewidth/brandpatterndata[3].divisonfactor
+  
+  //   maxHeight = wallimageheight/brandpatterndata[3].divisonfactor
+   
+  // }
+  //    else if(brandpatterndata[4].conditionsymbol1 === '>' &&  img.width > brandpatterndata[4].condition1 &&  brandpatterndata[4].conditionsymbol2 === '<' &&   img.width < brandpatterndata[4].condition2){
+  //     maxWidth = wallimagewidth/brandpatterndata[4].divisonfactor
+  
+  //     maxHeight = wallimageheight/brandpatterndata[4].divisonfactor
+     
+  //    }
+  //    else if(brandpatterndata[5].conditionsymbol1 === '>' &&  img.width > brandpatterndata[5].condition1 &&  brandpatterndata[5].conditionsymbol2 === '<' &&   img.width < brandpatterndata[5].condition2){
+  //     maxWidth = wallimagewidth/brandpatterndata[5].divisonfactor
+  
+  //     maxHeight = wallimageheight/brandpatterndata[5].divisonfactor
+  
+  //    }else if(brandpatterndata[6].conditionsymbol1 === '>' &&  img.width > brandpatterndata[6].condition1 &&  brandpatterndata[6].conditionsymbol2 === '<' &&   img.width < brandpatterndata[6].condition2) {
+  //     maxWidth = wallimagewidth/brandpatterndata[6].divisonfactor
+  
+  //     maxHeight = wallimageheight/brandpatterndata[6].divisonfactor
+      
+  //    }
+  //    else if(brandpatterndata[7].conditionsymbol1 === '>' &&  img.width > brandpatterndata[7].condition1 ) {
+  //     maxWidth = wallimagewidth/brandpatterndata[7].divisonfactor
+  
+  //     maxHeight = wallimageheight/brandpatterndata[7].divisonfactor
+    
+    //   }
+    //  else{
+    //   maxWidth = img.width
+  
+    //   maxHeight = img.height
+    //  }
   
   
   
@@ -2139,9 +1894,8 @@ const getSegmentImage = async()=>{
    
       resizedDataURL = canvas.toDataURL('image/jpeg')
 
-     
-  
      resolve(resizedDataURL)
+   
   
      } 
    
@@ -2605,6 +2359,31 @@ const getSegmentImage = async()=>{
   
   const handleLoadMore =()=>{
     setPageNo(pageno+1)
+    document.querySelector('.next').style.display = 'none'
+    
+  }
+
+  const handleLoadMoreMobile = ()=>{
+    setPageNo(pageno+1)
+   
+    document.querySelector('.next').style.display = 'none'
+   setTimeout(() => {
+    handleScroll(350)
+    document.querySelector('.next').style.display = 'none'
+   }, 3000);
+
+    if(walldata.length > 60){
+    document.querySelector('.prev').style.display = 'block'
+
+    }
+  }
+
+  const handlebackbuttonclick = ()=>{
+    handleScrollnew()
+    document.querySelector('.prev').style.display = 'none'
+    document.querySelector('.next').style.display = 'none'
+
+
   }
   
   
@@ -2651,13 +2430,14 @@ const getSegmentImage = async()=>{
   
   slidercontainermobile && slidercontainermobile.addEventListener('scroll', async () => {
   
-  
+     document.querySelector('.next').style.display = 'none'
   
     if (
       slidercontainermobile.scrollLeft + slidercontainermobile.clientHeight >= (slidercontainermobile.scrollWidth-300)
     ) {
        
-     handleLoadMore()
+      document.querySelector('.next').style.display = 'block'
+    
      
     }
      
@@ -3034,7 +2814,7 @@ const getSegmentImage = async()=>{
       <div className='navbarmobile'>
      <div className='closedivmobile'>
      <div class="closecontainer"  >
-    <button class="hamburger-button" id="openSidebar" onClick={handlemodalclose} ><FaTimes/></button>
+    <button class="hamburger-button" id="openSidebar" onClick={()=>handleRemoveClick('changeroom')} ><FaBackward/></button>
     <div class="" id="">
       </div>
   
@@ -3057,16 +2837,16 @@ const getSegmentImage = async()=>{
                </div>
              
             </div>
-            <div className='brandproductdiv'>
+            <div className='brandproductdiv' style={{display:'none'}}>
               <div  className='currentproduct'>
               <p>You are viewing:</p>
               <h3>Current product: {currentproduct && currentproduct}</h3>
               </div>
             
             </div>
-            <div className='brandproductbutton'>
+            <div className='brandproductbutton' style={{display:'none'}}>
               <div className='productpagebutton'>
-                <button > <a href= {`https://excelwallpapers.com/product-detail/${currentproductname}`} target="_blank" >Go to website <FaRegShareSquare className='producticon'/></a> </button>
+                <button > <a href= { currentproductname === undefined ? `https://excelwallpapers.com/` :  `https://excelwallpapers.com/product-detail/${currentproductname}`} target="_blank" >Visit website  <i className="pi pi-arrow-up-right" style={{ color: 'white' }}></i> </a> </button>
 
               </div>
 
@@ -3161,36 +2941,21 @@ const getSegmentImage = async()=>{
     <div className='searchdivmainmobile'>
      <div className='searchcontainerinsidemobile'>
       <input placeholder='search pattern...'  id='inputmobilesearch'   onChange={(e)=>handleSearchPatternMobile(e.target.value)} />
-       <span className='crossiconclose'onClick={handleseearchclosemobile} ><BsX/></span>
+       <span className='crossiconclose'onClick={handleseearchclosemobile} ><BsX /></span>
      </div>
      <div className='productoptioncontainer'>
        <div className='productoptioncontainerinside'>
-        <select onChange={(e)=>handleRemoveClick(e.target.value)}>
-          <option value= '' selected style={{display:'none'}} disabled>
-            Change room
-          </option>
-           <option value='removeproduct'>
-             Remove product
-           </option>
-          <option value='changeroom'>
-             Change room
-          </option>
-        </select>
+         <button>  <a  href= {currentproductname === undefined ? `https://excelwallpapers.com/` :  `https://excelwallpapers.com/product-detail/${currentproductname}`} target="_blank">  Visit website <i className="pi pi-arrow-up-right" style={{ color: 'white' }}></i> </a> </button>
      
        </div>
-      
+       
+        </div>
+      </div>
 
-     </div>
- 
-
-    </div>
-
- 
-
-       <div className='filtermobilesearchiconscontainer'>
+        <div className='filtermobilesearchiconscontainer'>
          
     <div className='filtermobileproductname'>
-        <p> Current product:  { currentproductmobile && currentproductmobile.Patternnumber }  </p>
+    Current product:  <p>   { currentproductmobile && currentproductmobile.Patternnumber }  </p>
     </div>
     <div className='filtercontainermobile'>
  
@@ -3202,7 +2967,7 @@ const getSegmentImage = async()=>{
      <div>
      <div className='mobilecontainermainfilter'>
       
-      <a  href= {`https://excelwallpapers.com/product-detail/${currentproductname}`} target="_blank">  <FaExpandAlt/> </a>
+       <FaRedo onClick={()=>handleRemoveClick('removeproduct')} />
      
       </div>
      </div>
@@ -3266,8 +3031,8 @@ const getSegmentImage = async()=>{
       }
     
  
-    <button class="prev" id="prevButton" onClick={()=>handleScroll(-100)}>&#10094;</button>
-    <button class="next" id="nextButton"  onClick={()=>handleScroll(100)}>&#10095;</button>
+    <button class="prev" id="prevButton" onClick={()=>handlebackbuttonclick()} >&#10094;</button>
+    <button class="next" id="nextButton"  onClick={()=>handleLoadMoreMobile()}>&#10095;</button>
   </div>
 
       </div>
@@ -3279,9 +3044,7 @@ const getSegmentImage = async()=>{
       <div className='datashowcontainer'>
       
         <div className='displaynav'>
-          <div className='closevisualiser' onClick={handlemodalclose}> 
-           <FaTimes className='searchicons'/>
-          </div>
+      
           <div className='navitems'>
            
           </div >
@@ -3583,14 +3346,14 @@ const getSegmentImage = async()=>{
             </div>
             <div className='brandproductdiv'>
               <div  className='currentproduct'>
-              <p>You are viewing:</p>
-              <h3>Current product: {currentproduct && currentproduct}</h3>
+            
+            <p> Current product: </p>   <h3> {currentproduct && currentproduct}</h3>
               </div>
             
             </div>
             <div className='brandproductbutton'>
               <div className='productpagebutton'>
-                <button><a href={`https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">Go to website</a> <FaRegShareSquare className='producticon'/></button>
+                <button><a href={ currentproductname === undefined ? `https://excelwallpapers.com/` : `https://excelwallpapers.com/product-detail/${currentproductname}`}  target="_blank">Visit website <i className="pi pi-arrow-up-right" style={{ color: 'white', marginLeft:'5px' }}></i></a> </button>
 
               </div>
 
@@ -3647,9 +3410,7 @@ const getSegmentImage = async()=>{
           <div className='modaltopcontainer'>
           <div  className='headingcontainer'>
             <div className='headingcontainerinsideone'>
-              <div>
-              <FaTimes  onClick={handlemodalclose} style={{cursor:'pointer'}}/>
-              </div>
+             
               <div>
               <h1> See {brandtitle && brandtitle} {brandcategory && brandcategory} in your room</h1>
               </div>
@@ -3661,15 +3422,7 @@ const getSegmentImage = async()=>{
 
            </div>
             </div>
-             
-            <span style={{cursor:'pointer'}} onClick={handlemodalclose}>
-           
-           
-            </span>
-       
-       
-      
-             
+              
           </div>
           <div className='uploaddivcontainer'>
           <div className='uploadbuttoncontainer'>
