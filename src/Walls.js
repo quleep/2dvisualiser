@@ -66,6 +66,7 @@ const Walls = () => {
     const [viewalldesign, setViewAllDesign ] = useState(false)
     const [viewallcollection, setViewAllCollection ] = useState(false)
     const [viewallpattern, setViewAllPattern] = useState(false)
+    const [dealerapi, setDealerApi] = useState()
   
     const [pageno, setPageNo] = useState(1)
     const [inputsearchvalue, setInputSearchValue] = useState('')
@@ -126,12 +127,15 @@ const Walls = () => {
    const [tempdivisonfactor, setTempDivisonFactor] = useState([])
 
    const pid= params.get('brand')
+   const  dealername = params.get('dealer')
+  
+ 
    const user = params.get('user')
     const imgref = useRef()
     const imgurlnew = ''
     const itemvalue = 0
   
-  
+
   
    
     const colorArray = [
@@ -262,8 +266,6 @@ const Walls = () => {
         }
        await axios.post(getbrandapi, body).then(res=>{
 
-
-       
             designapi = res.data[0].designapi
             token = res.data[0].token
             setBrandTitle(res.data[0].brandid)
@@ -273,12 +275,16 @@ const Walls = () => {
             setSearchApi(res.data[0].searchapi)
             setTokenvalue(res.data[0].token)
            
+           
            newvalue = {
             designapi : designapi,
             token : token,
             brandname: res.data[0].brandid,
             brandlogo : res.data[0].brandlogo,
-            branddemoname : res.data[0].brand
+            branddemoname : res.data[0].brand,
+            name : res.data[0].brandname,
+            dealerapi :res.data[0].designapidealer
+
           }
            
         
@@ -310,7 +316,7 @@ const Walls = () => {
             },
             };
           try {
-            const response = await axios.get(`${getvalue && getvalue.designapi}?token=${getvalue && getvalue.token}&page=${pageno}&brand=${getvalue && getvalue.branddemoname}`);
+            const response = await axios.get(`${ dealername === null ?  getvalue?.designapi : getvalue?.dealerapi}?token=${getvalue && getvalue.token}&page=${pageno}&brand=${getvalue && getvalue.branddemoname}&name=${dealername && dealername}`);
            
             const newData = response.data.data; 
                  if(newData && newData.length > 0){
@@ -1989,6 +1995,8 @@ const getSegmentImage = async()=>{
     }
 }
 
+
+
   const handlewallpaperclicksearch = async (e,val,productname, designstyle, patternno)=>{
 
       if(document.getElementById('searchitemboxnormal').checked){
@@ -2080,6 +2088,8 @@ const getSegmentImage = async()=>{
        
        newres = res
       })
+
+      console.log(newres)
       
           const body={
             wallimg: temporgimage,
