@@ -916,13 +916,8 @@ const Floors = () => {
     e.preventDefault()
     e.stopPropagation()
    
-   
-  
-   
      setActiveIndex(len)
     
-   
-   
   }
   
   const handleSearchPattern=(val)=>{
@@ -1484,67 +1479,67 @@ const Floors = () => {
    
     img.onload = function () {
   
-     if(detection === 'walls'){
+     if(detection === 'floors'){
        let resizedDataURL;
     let newWidth, newHeight;
   
   
   
-    if( brandpatterndata[0].conditionsymbol1 === '>' &&    img.width > brandpatterndata[0].condition1 &&  brandpatterndata[0].conditionsymbol2 === '<' &&  img.width  < brandpatterndata[0].condition2 ){
-      maxWidth = wallimagewidth/brandpatterndata[0].divisonfactor
-      maxHeight = wallimageheight/brandpatterndata[0].divisonfactor
+  //   if( brandpatterndata[0].conditionsymbol1 === '>' &&    img.width > brandpatterndata[0].condition1 &&  brandpatterndata[0].conditionsymbol2 === '<' &&  img.width  < brandpatterndata[0].condition2 ){
+  //     maxWidth = wallimagewidth/brandpatterndata[0].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[0].divisonfactor
      
-    }
+  //   }
     
    
-    else if(brandpatterndata[1].conditionsymbol1 === '<=' &&  img.width <=  brandpatterndata[1].condition1  ) {
-      maxWidth = wallimagewidth/brandpatterndata[1].divisonfactor
+  //   else if(brandpatterndata[1].conditionsymbol1 === '<=' &&  img.width <=  brandpatterndata[1].condition1  ) {
+  //     maxWidth = wallimagewidth/brandpatterndata[1].divisonfactor
   
-      maxHeight = wallimageheight/brandpatterndata[1].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[1].divisonfactor
     
-    }
+  //   }
   
-   else if(brandpatterndata[2].conditionsymbol1 === '===' &&  brandpatterndata[2].condition1 === img.width &&  brandpatterndata[2].conditionsymbol2 === '>' &&   img.width > brandpatterndata[2].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[2].divisonfactor
+  //  else if(brandpatterndata[2].conditionsymbol1 === '===' &&  brandpatterndata[2].condition1 === img.width &&  brandpatterndata[2].conditionsymbol2 === '>' &&   img.width > brandpatterndata[2].condition2){
+  //     maxWidth = wallimagewidth/brandpatterndata[2].divisonfactor
   
-      maxHeight = wallimageheight/brandpatterndata[2].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[2].divisonfactor
      
-    }
+  //   }
     
-   else if(brandpatterndata[3].conditionsymbol1 === '===' &&  brandpatterndata[3].condition1 === img.width &&  brandpatterndata[3].conditionsymbol2 === '>' &&   img.width > brandpatterndata[3].condition2){
-    maxWidth = wallimagewidth/brandpatterndata[3].divisonfactor
+  //  else if(brandpatterndata[3].conditionsymbol1 === '===' &&  brandpatterndata[3].condition1 === img.width &&  brandpatterndata[3].conditionsymbol2 === '>' &&   img.width > brandpatterndata[3].condition2){
+  //   maxWidth = wallimagewidth/brandpatterndata[3].divisonfactor
   
-    maxHeight = wallimageheight/brandpatterndata[3].divisonfactor
+  //   maxHeight = wallimageheight/brandpatterndata[3].divisonfactor
    
-  }
-     else if(brandpatterndata[4].conditionsymbol1 === '>' &&  img.width > brandpatterndata[4].condition1 &&  brandpatterndata[4].conditionsymbol2 === '<' &&   img.width < brandpatterndata[4].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[4].divisonfactor
+  // }
+  //    else if(brandpatterndata[4].conditionsymbol1 === '>' &&  img.width > brandpatterndata[4].condition1 &&  brandpatterndata[4].conditionsymbol2 === '<' &&   img.width < brandpatterndata[4].condition2){
+  //     maxWidth = wallimagewidth/brandpatterndata[4].divisonfactor
   
-      maxHeight = wallimageheight/brandpatterndata[4].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[4].divisonfactor
      
-     }
-     else if(brandpatterndata[5].conditionsymbol1 === '>' &&  img.width > brandpatterndata[5].condition1 &&  brandpatterndata[5].conditionsymbol2 === '<' &&   img.width < brandpatterndata[5].condition2){
-      maxWidth = wallimagewidth/brandpatterndata[5].divisonfactor
+  //    }
+  //    else if(brandpatterndata[5].conditionsymbol1 === '>' &&  img.width > brandpatterndata[5].condition1 &&  brandpatterndata[5].conditionsymbol2 === '<' &&   img.width < brandpatterndata[5].condition2){
+  //     maxWidth = wallimagewidth/brandpatterndata[5].divisonfactor
   
-      maxHeight = wallimageheight/brandpatterndata[5].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[5].divisonfactor
   
-     }else if(brandpatterndata[6].conditionsymbol1 === '>' &&  img.width > brandpatterndata[6].condition1 &&  brandpatterndata[6].conditionsymbol2 === '<' &&   img.width < brandpatterndata[6].condition2) {
-      maxWidth = wallimagewidth/brandpatterndata[6].divisonfactor
+  //    }else if(brandpatterndata[6].conditionsymbol1 === '>' &&  img.width > brandpatterndata[6].condition1 &&  brandpatterndata[6].conditionsymbol2 === '<' &&   img.width < brandpatterndata[6].condition2) {
+  //     maxWidth = wallimagewidth/brandpatterndata[6].divisonfactor
   
-      maxHeight = wallimageheight/brandpatterndata[6].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[6].divisonfactor
       
-     }
-     else if(brandpatterndata[7].conditionsymbol1 === '>' &&  img.width > brandpatterndata[7].condition1 ) {
-      maxWidth = wallimagewidth/brandpatterndata[7].divisonfactor
+  //    }
+  //    else if(brandpatterndata[7].conditionsymbol1 === '>' &&  img.width > brandpatterndata[7].condition1 ) {
+  //     maxWidth = wallimagewidth/brandpatterndata[7].divisonfactor
   
-      maxHeight = wallimageheight/brandpatterndata[7].divisonfactor
+  //     maxHeight = wallimageheight/brandpatterndata[7].divisonfactor
     
-     }
-     else{
+  //    }
+ 
       maxWidth = img.width
   
       maxHeight = img.height
-     }
+     
   
   
   
@@ -1572,35 +1567,6 @@ const Floors = () => {
   
      resolve(resizedDataURL)
   
-     } else{
-       let resizedDataURL;
-
-       const canvas = document.createElement('canvas');
-       const ctx = canvas.getContext('2d');
-       const newWidth = 240;
-       const newHeight = 120;
-
-       // Calculate the aspect ratio of the original image
-       const aspectRatio = img.width / img.height;
-
-       // Calculate the new height based on the aspect ratio and desired width
-       const calculatedHeight = newWidth / aspectRatio;
-
-       // If the calculated height is greater than the desired height, adjust the width
-       const finalWidth = calculatedHeight > newHeight ? newWidth * (newHeight / calculatedHeight) : newWidth;
-       const finalHeight = calculatedHeight > newHeight ? newHeight : calculatedHeight;
-
-       // Set the canvas size to the desired width and height
-       canvas.width = finalWidth;
-       canvas.height = finalHeight;
-
-       // Draw the image on the canvas with the desired dimensions
-       ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, finalWidth, finalHeight);
-     
-      resizedDataURL = canvas.toDataURL('image/jpeg')
-  
-     resolve(resizedDataURL)
-     console.log(resizedDataURL)
      }
    
   }
@@ -1639,7 +1605,7 @@ const Floors = () => {
       })
   
      
-    
+   
   
     allmaincontainer && allmaincontainer.forEach(item=>{
      

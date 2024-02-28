@@ -47,6 +47,8 @@ import {
 import Errorpage from './Errorpage';
 import Walls from './Walls';
 import Floors from './Floors';
+import Paints from './Paints';
+import Test from './Test';
 
 
 
@@ -66,6 +68,10 @@ function App() {
     <Route path="/error" exact component={Errorpage} />
     <Route path="/walls" exact component={Walls} />
     <Route path="/floors" exact component={Floors} />
+    <Route path="/paints" exact component={Paints} />
+    <Route path="/test" exact component={Test} />
+
+
 
 
     
