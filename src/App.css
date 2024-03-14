@@ -15,13 +15,14 @@
   width: 100%;
   height: auto;
   transform-style: preserve-3d;
+  
  
 }
 
 .carpet-container img {
   width: 100%;
   height: auto;
-  transform: rotateX(90deg) translateY(-50%);
+  transform: rotateX(90deg) translateY(40%) translateX(40%);
 }
 
 .App-logo {

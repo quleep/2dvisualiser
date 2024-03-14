@@ -81,7 +81,7 @@ const Walls = () => {
     const [scrolltopvalue, setScrollTopValue] = useState(false)
     const [scrolltopgrid, setScrollTopGrid] = useState(false)
     const [walldata, setWallData] = useState([])
-    const [filteredarray, setFilteredArray] = useState()
+    const [filteredarray, setFilteredArray] = useState([])
    
     const [scrollPosition, setScrollPosition] = useState(0);
   const scrollContainerRef = useRef(null);
@@ -116,6 +116,7 @@ const Walls = () => {
    const [loading, setLoading] = useState(false)
    const [tempwalldata, setTempWallData] = useState()
    const [searchapi, setSearchApi] = useState()
+   const [searchapibyname, setSearchApiByName] = useState()
    const [tokenvalue, setTokenvalue] = useState()
    const [searchwalldata, setSearchWallData] = useState()
    const [issearch, setIsSearch] = useState(false)
@@ -125,6 +126,8 @@ const Walls = () => {
    const [designstylearray, setDesignstyleArray] = useState()
    const [collectionArray, setCollectionArray] = useState()
    const [tempdivisonfactor, setTempDivisonFactor] = useState([])
+   const [currentfiltertype, setCurrentFilterType] = useState()
+  
 
    const pid= params.get('brand')
    const  dealername = params.get('dealer')
@@ -135,9 +138,6 @@ const Walls = () => {
     const imgurlnew = ''
     const itemvalue = 0
   
-
-  
-   
     const colorArray = [
    
   
@@ -671,46 +671,95 @@ const Walls = () => {
     }
      
       const sendfunction = async ()=>{
+
+        const paramsarray = ['color_name' , 'Design' , 'collection']
+
+        const getvalue = await getapidata()
       let newarray = []
-       for(let i =0; i < walldata.length ; i++){
-         
-         if( checkarray.includes(walldata[i].Collection) ){
-           
-           newarray.push(walldata[i])
-          }else if(checkarray.includes(walldata[i].Designstyle)){
-         
-  
-             newarray.push(walldata[i])
-          }else if(checkarray.includes(walldata[i].Color)){
-        
-  
-             newarray.push(walldata[i])
-  
-          }else if(checkarray.includes(walldata[i].Patternnumber)){
-               newarray.push(walldata[i])
-          }
+
+      
+
+
+         for(let i =0; i < checkarray.length ; i++){
+
+              try {
+                const response = await axios.get(`${ getvalue?.designapi}?token=${getvalue && getvalue.token}&collection=${checkarray[i]}`);
+               
+                 const newData = response.data.data 
+    
+                  if(newData !== 'Data Not Found' ){
+                  
+                      newarray.push(...newData)
+                 
+                     
+                  }
+    
+                
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              }
+
+
+              try {
+                const response = await axios.get(`${ getvalue?.designapi}?token=${getvalue && getvalue.token}&color_name=${checkarray[i]}`);
+               
+                 const newData = response.data.data 
+    
+                  if(newData !== 'Data Not Found' ){
+                  
+                      newarray.push(...newData)
+                   
+                  }
+    
+                
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              }
+              try {
+                const response = await axios.get(`${ getvalue?.designapi}?token=${getvalue && getvalue.token}&design=${checkarray[i]}`);
+               
+                 const newData = response.data.data 
+    
+                  if(newData !== 'Data Not Found' ){
+                     newarray.push(...newData)
+                  }
+    
+                
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              }
+
+              
+
+          
        }
-       return newarray
+
+     setFilteredArray(newarray)
+  
       }
     
-     const tempvalue =  sendfunction() 
-    tempvalue.then(res=>{
-        setFilteredArray(res)
-    })
+    sendfunction()
   
-  },[checkarray])
-  
+  },[checkarray, currentfiltertype])
+
+
   
   
-  const handlecheckclick =  ( val,len)=>{
+  
+  const handlecheckclick =  ( val,len, type)=>{
      
        let newfilearray=[]
+      
   
      if(document.getElementById(`checkinput_${len}`).checked){
 
        
       
-        setCheckArray([...checkarray, val])  
+        setCheckArray([...checkarray, val
+         
+        ])  
+
+        setCurrentFilterType(type)
       
      
      }else{
@@ -719,12 +768,14 @@ const Walls = () => {
            item != val
         ))
         setCheckArray(newarr)
+        setCurrentFilterType(type)
+
       }
   
      
   }
   
-  
+  console.log(checkarray)
   const handleviewall =()=>{
       setViewAll(true)
       document.getElementById('view-all-button').style.display = 'none'
@@ -902,9 +953,11 @@ const Walls = () => {
     };
   }, []);
   
-  const handleSearchedMobileItemClick = async (e, val, productname, patternno)=>{
+  const handleSearchedMobileItemClick = async (e, val, productname, patternno, len)=>{
     e.preventDefault()
     e.stopPropagation()
+    showSlide(len)
+    setActiveIndex(len)
    
      
     const activewallpapername = productname.toLowerCase().trim().replace(/\s+/g, '-');
@@ -913,7 +966,7 @@ const Walls = () => {
   
     const patternvalue = patternno;
     
-    setCurrentProductMobile(searchwalldata[0])
+    setCurrentProductMobile(activewallpapername)
     document.querySelector('.loadingcontainermobile').style.display = 'block';
 
     let newres;
@@ -1065,6 +1118,7 @@ const Walls = () => {
                try{
                  await axios.get(`${searchapi && searchapi}?token=${tokenvalue && tokenvalue}&pattern_number=${val}&test=`).then(res=>{
                      if(res.data.data.length > 0){
+                    
                         setSearchWallData(res.data.data)
                         setIsSearch(true)
                           
@@ -1927,10 +1981,11 @@ const getSegmentImage = async()=>{
     }
   }
 
-  const handlewallpaperclicksearchgrid = async (e,val,productname, designstyle, patternno)=>{
+  const handlewallpaperclicksearchgrid = async (e,val,productname, designstyle, patternno,len)=>{
+   
 
-    if(document.getElementById('searchitembox').checked){
-      document.getElementById('maincontaineritemsearch').classList.add('activesearchitem')
+    if(document.getElementById(`searchitembox_${len}`).checked){
+      document.getElementById(`maincontaineritemsearch_${len}`).classList.add('activesearchitem')
       document.querySelector('.loadingcontainermain').style.display= 'block'
       let newres;
       let urlproductname = productname
@@ -1988,7 +2043,8 @@ const getSegmentImage = async()=>{
 
     }
     else{
-      document.getElementById('maincontaineritemsearch').classList.remove('activesearchitem')
+      document.getElementById(`maincontaineritemsearch_${len}`).classList.remove('activesearchitem')
+      
     document.querySelector('.loadingcontainermain').style.display= 'none'   
 
 
@@ -1997,10 +2053,10 @@ const getSegmentImage = async()=>{
 
 
 
-  const handlewallpaperclicksearch = async (e,val,productname, designstyle, patternno)=>{
+  const handlewallpaperclicksearch = async (e,val,productname, designstyle, patternno, len)=>{
 
-      if(document.getElementById('searchitemboxnormal').checked){
-        document.getElementById('maincontaineritemsearchnormal').classList.add('activesearchitem')
+      if(document.getElementById(`searchitemboxnormal_${len}`).checked){
+        document.getElementById(`maincontaineritemsearchnormal_${len}`).classList.add('activesearchitem')
         document.querySelector('.loadingcontainermain').style.display= 'block'
         let newres;
         let urlproductname = productname
@@ -2058,7 +2114,8 @@ const getSegmentImage = async()=>{
 
       }
       else{
-        document.getElementById('maincontaineritemsearchnormal').classList.remove('activesearchitem')
+        document.getElementById(`maincontaineritemsearchnormal_${len}`).classList.remove('activesearchitem')
+       
       document.querySelector('.loadingcontainermain').style.display= 'none'   
 
 
@@ -2576,7 +2633,7 @@ const getSegmentImage = async()=>{
                                                     checkarray.includes(item) 
                                                   }
                                                  
-                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i)} id= {`checkinput_${i}`}/>
+                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i, 'color_name')} id= {`checkinput_${i}`}/>
                                                   </label>
                                               
                                                  </div>
@@ -2607,7 +2664,7 @@ const getSegmentImage = async()=>{
                                                     checkarray.includes(item) 
                                                   }
                                                  
-                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i)} id= {`checkinput_${i}`}/>
+                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i,'Design')} id= {`checkinput_${i}`}/>
                                                   </label>
                                               
                                                  </div>
@@ -2638,7 +2695,7 @@ const getSegmentImage = async()=>{
                                                     checkarray.includes(item) 
                                                   }
                                                  
-                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i)} id= {`checkinput_${i}`}/>
+                                                  className='checkbox-input' value={item} onClick={()=>handlecheckclick(item, i, 'collection')} id= {`checkinput_${i}`}/>
                                                   </label>
                                               
                                                  </div>
@@ -3010,9 +3067,15 @@ const getSegmentImage = async()=>{
        ))  :
 
          issearch ?  
-         <div  >
-         <img className='mobilesliderimage'  id= 'mobilesliderimagesearch'  src={searchwalldata[0]?.Imageurl2} alt="No data"   onClick={(e)=>handleSearchedMobileItemClick(e, searchwalldata[0].Imageurl,searchwalldata[0].Productname, searchwalldata[0].Patternnumber )} />
-        </div> :
+
+         searchwalldata?.map((item,len)=>(
+          <div  >
+          <img className='mobilesliderimage'  id= 'mobilesliderimagesearch'  src={item.Imageurl2} alt="No data"   onClick={(e)=>handleSearchedMobileItemClick(e, item.Imageurl,item.Productname, item.Patternnumber,len )} />
+         </div>
+         ))
+
+         
+       :
           walldata && walldata.map((item,i)=>(
             <div  >
             <img className='mobilesliderimage'  src={item.Imageurl2} alt="Image 1"   onClick={()=>mobileImageClick(i, item.Imageurl)} />
@@ -3134,37 +3197,42 @@ const getSegmentImage = async()=>{
                 )) : 
                 issearch ?
 
-                <div    className='maincontaineritems'  id='maincontaineritemsearch' >
-                <label  className='labelcontainer' >
-
-                <input  type='checkbox' style={{display:'none'}}  id= 'searchitembox'  onClick={(e)=>handlewallpaperclicksearchgrid(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
-               <div className='itemdetailscontainer'>
-               <div className='wallpaperimage'>
-               <img  src= {searchwalldata[0]?.Imageurl2}/>
-             </div>
-             <div className='wallpaperdetails'>
-             
-
-               <div className='wallpaperdetailsinside'>
-                 <p>{searchwalldata[0]?.Collection}</p>
-                 <p className='categoryname'>{searchwalldata[0]?.Productname}</p>
-                 <p >{searchwalldata[0]?.Patternnumber}</p>
-                 <div className='dimensions'>
-                 <p className='productid'>size: {searchwalldata[0]?.length}*{searchwalldata[0]?.wide} mtrs </p>
-                 <p>Roll size: {searchwalldata[0]?.Rollsize} sqft</p>
-                 </div>
-                
+                 searchwalldata?.map((item,len)=>(
+                  <div    className='maincontaineritems'  id= {`maincontaineritemsearch_${len}`} >
+                  <label  className='labelcontainer' >
+  
+                  <input  type='checkbox' style={{display:'none'}}  id= {`searchitembox_${len}`}  onClick={(e)=>handlewallpaperclicksearchgrid(e, item.Imageurl,item.Productname,item.Designstyle, item.Patternnumber,len)}  />
+                 <div className='itemdetailscontainer'>
+                 <div className='wallpaperimage'>
+                 <img  src= {item.Imageurl2}/>
                </div>
-
+               <div className='wallpaperdetails'>
+               
+  
+                 <div className='wallpaperdetailsinside'>
+                   <p>{item.Collection}</p>
+                   <p className='categoryname'>{item.Productname}</p>
+                   <p >{item.Patternnumber}</p>
+                   <div className='dimensions'>
+                   <p className='productid'>size: {item.length}*{item.wide} mtrs </p>
+                   <p>Roll size: {item.Rollsize} sqft</p>
+                   </div>
+                  
+                 </div>
+  
+               </div>
+               </div>
+  
+               
+         
+            </label>
+  
+      
              </div>
-             </div>
 
-             
-       
-          </label>
+                 ))
 
-    
-           </div>
+           
 
                     :
                      walldata && walldata.map((item,i)=>(
@@ -3242,24 +3310,26 @@ const getSegmentImage = async()=>{
                 )) : 
                      issearch ?
 
-                     <div    className='maincontaineritems'  id='maincontaineritemsearchnormal' >
+                        searchwalldata?.map((item,len)=>(
+                          
+                     <div    className='maincontaineritems'  id= {`maincontaineritemsearchnormal_${len}`} >
                      <label  className='labelcontainer' >
 
-                     <input  type='checkbox' style={{display:'none'}}  id= 'searchitemboxnormal'  onClick={(e)=>handlewallpaperclicksearch(e, searchwalldata[0]?.Imageurl,searchwalldata[0]?.Productname,searchwalldata[0]?.Designstyle, searchwalldata[0]?.Patternnumber)}  />
+                     <input  type='checkbox' style={{display:'none'}}  id= {`searchitemboxnormal_${len}`}  onClick={(e)=>handlewallpaperclicksearch(e, item.Imageurl,item.Productname,item.Designstyle, item.Patternnumber, len)}  />
                     <div className='itemdetailscontainer'>
                     <div className='wallpaperimage'>
-                    <img  src= {searchwalldata[0]?.Imageurl2}/>
+                    <img  src= {item.Imageurl2}/>
                   </div>
                   <div className='wallpaperdetails'>
                   
   
                     <div className='wallpaperdetailsinside'>
-                      <p>{searchwalldata[0]?.Collection}</p>
-                      <p className='categoryname'>{searchwalldata[0]?.Productname}</p>
-                      <p >{searchwalldata[0]?.Patternnumber}</p>
+                      <p>{item?.Collection}</p>
+                      <p className='categoryname'>{item.Productname}</p>
+                      <p >{item.Patternnumber}</p>
                       <div className='dimensions'>
-                      <p className='productid'>size: {searchwalldata[0]?.length}*{searchwalldata[0]?.wide} mtrs </p>
-                      <p>Roll size: {searchwalldata[0]?.Rollsize} sqft</p>
+                      <p className='productid'>size: {item.length}*{item.wide} mtrs </p>
+                      <p>Roll size: {item.Rollsize} sqft</p>
                       </div>
                      
                     </div>
@@ -3273,6 +3343,12 @@ const getSegmentImage = async()=>{
 
          
                 </div>
+
+                        ))
+                        
+
+                   
+
 
 
                        :
