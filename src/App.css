@@ -1682,7 +1682,7 @@ body {
   z-index: 9999;
  
   left: 50%;
-  top:  -180px;
+  top:  -100px;
 
 }
 
@@ -2295,12 +2295,14 @@ margin-top: 2px;
 }
 
 .slider-container {
-  position: relative;
+  position: absolute;
    max-width: 450px;
-   margin: 0 auto;
+   width: 100%;
  
   overflow : hidden;
- display: block;
+ display: flex;
+ bottom: 0;
+ flex-direction: column;
   
  }
  .mobileslider{
@@ -2404,10 +2406,11 @@ margin-top: 2px;
 }
 .filtermobilecontainer{
   width: auto;
-  max-height: 120px;
+  height: auto;
  
  
   display: flex;
+ 
  
 background-color: #dad9d9;
 
@@ -2427,6 +2430,7 @@ flex-direction: column;
   display: flex;
   width: 95%;
   height: 80px;
+  margin-top: 40px;
   
   
   justify-content: space-between;
@@ -2442,6 +2446,7 @@ flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2px;
+  margin-top: 30px;
   
 }
 .searchcontainerinsidemobile{
@@ -2474,6 +2479,7 @@ flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-left: 5px;
+  margin-top: 25px;
   
 }
 .productoptioncontainerinside{
@@ -2590,9 +2596,10 @@ flex-direction: column;
  
 }
 .mobilemaindiv{
- 
+  display: flex;
   height: 100%;
-  overflow: scroll;
+  overflow-y: scroll;
+  flex-direction: column;
   
 }
 .searchdivmobile{
@@ -2670,7 +2677,16 @@ flex-direction: column;
     margin-top: -50px;
    }
    .mobilemaindisplay{
-    margin-top: -120px;
+   
+    position: absolute;
+    top: 30;
+    max-height: 300px;
+   
+   }
+   .mobilemaindisplay img{
+    object-fit: cover;
+    padding-top: 10px;
+    
    }
    .changeroomsidebutton{
     bottom: 220px;

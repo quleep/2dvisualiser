@@ -72,9 +72,6 @@ function App() {
     <Route path="/test" exact component={Test} />
 
 
-
-
-    
     </Router>
     <Helmet>
     <title>Visualiser | ArNXT </title>

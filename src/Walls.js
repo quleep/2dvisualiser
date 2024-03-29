@@ -3004,6 +3004,9 @@ const getSegmentImage = async()=>{
   
 
   
+ 
+    <div class="slider-container">
+
     <div className='filtermobilecontainer'>
     <div className='searchdivmainmobile'>
      <div className='searchcontainerinsidemobile'>
@@ -3052,7 +3055,6 @@ const getSegmentImage = async()=>{
  
 
 </div>
-    <div class="slider-container">
 
        <div className='mobileslider' ref={scrollContainerRef}>
       
