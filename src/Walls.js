@@ -911,7 +911,7 @@ const Walls = () => {
       
        const config = {
          headers: {
-           'Access-Control-Allow-Origin': '*',
+         
            'Content-Type': 'application/json',
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
@@ -992,7 +992,7 @@ const Walls = () => {
 
     const config = {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+   
         'Content-Type': 'application/json',
         'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
       },
@@ -1063,7 +1063,7 @@ const Walls = () => {
   
         const config = {
           headers: {
-            'Access-Control-Allow-Origin': '*',
+        
             'Content-Type': 'application/json',
             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
           },
@@ -1084,12 +1084,7 @@ const Walls = () => {
     };
   
     getSegmentImage();
-   
-   
-   
     
-   
-   
   }
  
 
@@ -1209,7 +1204,7 @@ const getSegmentImage = async()=>{
    
     const config = {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+       
         'Content-Type': 'application/json',
         'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
       },
@@ -1279,7 +1274,7 @@ const getSegmentImage = async()=>{
    
     const config = {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+     
         'Content-Type': 'application/json',
         'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
       },
@@ -1364,7 +1359,7 @@ const getSegmentImage = async()=>{
     
      const config = {
        headers: {
-         'Access-Control-Allow-Origin': '*',
+      
          'Content-Type': 'application/json',
          'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
        },
@@ -2014,7 +2009,7 @@ const getSegmentImage = async()=>{
 
     const config = {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+       
         'Content-Type': 'application/json',
         'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
       },
@@ -2085,7 +2080,7 @@ const getSegmentImage = async()=>{
   
       const config = {
         headers: {
-          'Access-Control-Allow-Origin': '*',
+       
           'Content-Type': 'application/json',
           'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
         },
@@ -2165,6 +2160,8 @@ const getSegmentImage = async()=>{
       
           const config = {
             headers: {
+
+         
               
               'Content-Type': 'application/json',
               'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
@@ -2231,11 +2228,9 @@ const getSegmentImage = async()=>{
      
          const config = {
            headers: {
-           
+       
              'Content-Type': 'application/json',
-          
-          
-             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
+               'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
              
            },
          };
@@ -2304,7 +2299,7 @@ const getSegmentImage = async()=>{
      
          const config = {
            headers: {
-             'Access-Control-Allow-Origin': '*',
+          
              'Content-Type': 'application/json',
              'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
            },
@@ -2360,7 +2355,7 @@ const getSegmentImage = async()=>{
      
          const config = {
            headers: {
-             'Access-Control-Allow-Origin': '*',
+         
              'Content-Type': 'application/json',
              'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
            },
