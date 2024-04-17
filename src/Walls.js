@@ -916,7 +916,7 @@ const Walls = () => {
            'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
          },
        };
-     axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+     axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
       
        document.querySelector('.loadingcontainermobile').style.display = 'none' 
        setSegmentImg(true)
@@ -998,7 +998,7 @@ const Walls = () => {
       },
     };
 
-    axios.post('https://wallserver.arnxt.com/api/v1/infer', body, config).then((res) => {
+    axios.post('https://theaiserver.com/api/v1/infer', body, config).then((res) => {
       document.querySelector('.loadingcontainermobile').style.display = 'none';
       setSegmentImg(true);
       imgref.current.src = `data:image/png;base64, ${res.data}`;
@@ -1069,7 +1069,7 @@ const Walls = () => {
           },
         };
   
-        axios.post('https://wallserver.arnxt.com/api/v1/infer', body, config).then((res) => {
+        axios.post('https://theaiserver.com/api/v1/infer', body, config).then((res) => {
           document.querySelector('.loadingcontainermobile').style.display = 'none';
           setSegmentImg(true);
           imgref.current.src = `data:image/png;base64, ${res.data}`;
@@ -1215,7 +1215,7 @@ const getSegmentImage = async()=>{
       },
     };
     
- await axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+ await axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
 
    
     document.querySelector('.loadingcontainermobile').style.display = 'none' 
@@ -1285,7 +1285,7 @@ const getSegmentImage = async()=>{
       },
     };
     
- await axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+ await axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
 
    
     document.querySelector('.loadingcontainermobile').style.display = 'none' 
@@ -1369,7 +1369,7 @@ const getSegmentImage = async()=>{
          'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
        },
      };
-   axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+   axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
     
      document.querySelector('.loadingcontainermobile').style.display = 'none' 
      setSegmentImg(true)
@@ -2019,7 +2019,7 @@ const getSegmentImage = async()=>{
         'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
       },
     };
-  await  axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+  await  axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
      
  
     document.querySelector('.loadingcontainermain').style.display= 'none'   
@@ -2090,7 +2090,7 @@ const getSegmentImage = async()=>{
           'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
         },
       };
-    await  axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+    await  axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
        
    
       document.querySelector('.loadingcontainermain').style.display= 'none'   
@@ -2165,12 +2165,12 @@ const getSegmentImage = async()=>{
       
           const config = {
             headers: {
-              'Access-Control-Allow-Origin': '*',
+              
               'Content-Type': 'application/json',
               'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
             },
           };
-        await  axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+        await  axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
            
        
           document.querySelector('.loadingcontainermain').style.display= 'none'   
@@ -2231,12 +2231,15 @@ const getSegmentImage = async()=>{
      
          const config = {
            headers: {
-             'Access-Control-Allow-Origin': '*',
+           
              'Content-Type': 'application/json',
-             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
+          
+          
+             'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c',
+             
            },
          };
-         axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+         axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
         
          document.querySelector('.loadingcontainermain').style.display= 'none'   
          setSegmentImg(true)
@@ -2306,7 +2309,7 @@ const getSegmentImage = async()=>{
              'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
            },
          };
-         axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+         axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
         
          document.querySelector('.loadingcontainermain').style.display= 'none'   
          setSegmentImg(true)
@@ -2362,7 +2365,7 @@ const getSegmentImage = async()=>{
              'auth-token': 'c0110aa4490cd8a4e5c024c4779d976f6927b6b0e4b12c2675e9558a453e933c'
            },
          };
-         axios.post( 'https://wallserver.arnxt.com/api/v1/infer', body, config).then(res=>{
+         axios.post( 'https://theaiserver.com/api/v1/infer', body, config).then(res=>{
         
          document.querySelector('.loadingcontainermain').style.display= 'none'   
          setSegmentImg(true)
