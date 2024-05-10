@@ -16,14 +16,15 @@ const Test = () => {
 
       <div class="carpet-container">
       <img
-        src="https://arnxtsellerproductimages.s3.ap-south-1.amazonaws.com/rct_adwl-13219-0001.webp"
+        src="https://arnxtmodelstest.s3.ap-south-1.amazonaws.com/Shivam.png"
         alt="Carpet Image"
         style={{
           position: 'absolute',
-          bottom :  '0',
+     
+        
          
           left: carpetPosition.x - 50, 
-          width: '400px', 
+          width: '600px', 
           height: '400px', 
         }}
       />

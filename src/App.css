@@ -10,11 +10,12 @@
 }
 .carpet-container {
   position: absolute;
-  bottom: 0;
+   top: 200px;
   left: 0;
   width: 100%;
   height: auto;
   transform-style: preserve-3d;
+  z-index: 1;
   
  
 }
@@ -22,7 +23,7 @@
 .carpet-container img {
   width: 100%;
   height: auto;
-  transform: rotateX(90deg) translateY(40%) translateX(40%);
+  /* transform:  translateY(40%) translateX(40%); */
 }
 
 .App-logo {

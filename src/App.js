@@ -51,14 +51,7 @@ import Paints from './Paints';
 import Test from './Test';
 
 
-
-
-
-
 function App() {
-
-
-
 
   return (
 
